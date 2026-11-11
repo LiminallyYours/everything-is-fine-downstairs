@@ -443,6 +443,91 @@ with its git history, and is where all new work happens.
       dark, 16.7 to 15.3; at the highest fear, 43.5 to 38.6. The bots seldom meet the Tuck-You-In
       and never reach the boss, and they are rarely quiet through a whole nap, so these changes
       barely show in bot games; they matter in a long, careful run.
+    - **Tougher horrors on floors 3 to 5?** (the question left open above). Asked: in 40 bot games
+      none got past floor 3; with the candle lit and calm, a bot crossing one floor with 60 health
+      died 3 in 8 times on floor 3, 5 in 8 on floor 4 and 7 in 8 on floor 5; but the bots play
+      badly on purpose, and the hand-played run that found these floors too easy came before the
+      surprises, bolder horrors and trembling. Options offered: (1) not yet: JW plays this version
+      first and it is decided after; (2) tougher horrors there now; (3) more horrors there now;
+      (4) no, and close the question. Claude suggested 1. JW: "1". Settled: no change for now;
+      the question stays open until JW has played this version.
+    - **How you play, 1: should a rhyme become a choice?** Asked: today there is one kind of rhyme,
+      which shoves, stuns and hurts every horror within three steps and calms you a lot, so there
+      is never a reason not to rhyme. Options offered: (1) three kinds of rhyme, picked before you
+      recite: a shove (as now), a lullaby (nearby horrors fall asleep, no harm done) and a
+      tongue-twister (heavy harm to one horror, the rest untouched); (2) the choice inside the
+      couplet, each word on offer doing something different; (3) keep one kind and fix only the
+      cost. Claude suggested 1. JW: "1". Settled: three kinds of rhyme. Not yet built.
+    - **How you play, 2: what should a rhyme cost?** Asked: today a rhyme costs one ♪, a ♪ comes
+      back every 30 turns, and you can hold 3 (more as you level up), so it feels free. Options
+      offered: (1) each rhyme burns candle wax, the tongue-twister most; (2) your voice gets
+      hoarse: a rhyme soon after the last one gets a shorter fuse and trickier words, and resting
+      brings your voice back; (3) a ♪ comes back every 60 turns instead of 30; (4) no extra cost.
+      Claude suggested 1. JW: "2". Settled: a hoarse voice. A ♪ still costs one ♪ as now. Not yet
+      built.
+    - **How you play, 3: what reason should there be to go into the dark?** Asked: "the dark" is
+      not a place but your own light shrinking (candle low or out, the clock's lights-out on floor
+      5, hiding in a barrel), so you cannot choose it. Options offered: (1) a key blows out and
+      relights your candle, and in the dark the ink shows things the light hides (loot, a door, a
+      shortcut); (2) dark rooms with a prize: some rooms are always dark, whatever your candle,
+      and always hold something good; (3) rhymes are stronger in the dark; (4) leave it. Claude
+      suggested 1. JW: "2. for #1, is there a mechanic to relight the candle?" Answered: no; the
+      only way a candle lights again is walking onto a candle stub, and there is no way to blow
+      it out on purpose. Settled: dark rooms with a prize. Claude will choose the details while
+      building (about one per floor, the prize a piece of gear a little better than the floor
+      usually gives) and show them to JW afterwards. Not yet built.
+    - **How you play, 4: tricks for the plain horrors.** Asked: most horrors just walk at you;
+      only the Put-Away, the Nothing-to-Worry-About, the Ahem and the Empty Sandwich do something
+      you can outwit; in bot games the Second Opinion and the Mumbling Mold-Mite were the biggest
+      killers. Options offered: (1) a trick for every plain horror (eight); (2) a trick for the
+      three you meet most: the Mumbling Mold-Mite, the Second Opinion and the Tick-Tock Tot;
+      (3) leave it. Claude suggested 2. JW: "2." Settled: tricks for those three, each proposed
+      to JW one at a time. Not yet built.
+    - **JW's note for the "how it looks" group: the candle status needs to be better.** JW: "the
+      candle status needs to be better. maybe an illustrated candle that has a fill level?" Today
+      the margin's drawn candle does shrink as wax burns, but against the most wax a candle can
+      ever hold (450), with no outline of a full candle to compare, so an ordinary candle looks
+      short and the amount left is hard to judge. To be taken up with that group.
+    - **Trick 1 of 3: the Mumbling Mold-Mite.** Asked: it mumbles lullabies, apologizes while it
+      nibbles, and in its own verse ends up sitting in your lap; today it just chases and bites.
+      Options offered: (1) it would rather sit in your lap: stand still next to it instead of
+      fighting and it climbs into your lap and falls asleep, harmless and riding along, until any
+      noise wakes it and it bites, apologizing; (2) its mumbling is a warning: louder as it nears,
+      quiet just before it bites; (3) its lullaby makes you drowsy (a lost turn) unless you hum
+      back with a rhyme. Claude suggested 1. JW: "1". Settled: the Mold-Mite sits in your lap if
+      you let it. Not yet built.
+    - **Trick 2 of 3: the Second Opinion.** Asked: a doctor-ish horror ("Let's have a look at
+      you", "I DISAGREE!") and the biggest killer in bot games. Options offered: (1) it takes
+      notes: after each blow that lands it stops a turn to write down its findings, giving you a
+      free turn; (2) it always disagrees, doing the opposite of you (Claude noted this does
+      exactly what its name says, which the naming rule warns against); (3) it calls for another
+      opinion: if a fight with it drags on, a second Second Opinion arrives, so it gets more
+      dangerous, not less. Claude suggested 1. JW: "3". Settled: it calls for another opinion.
+      Claude will choose the details while building (how long a fight must last, and that each
+      one calls only once, so they don't multiply without end) and show them to JW afterwards;
+      the danger measurements before and after will show what it does to deaths. Not yet built.
+    - **Trick 3 of 3: the Tick-Tock Tot.** Asked: a wind-up toy with a key in its back, the
+      fastest horror, whose verse says it ticks when it's coming. Options offered: (1) it winds
+      down: after a few turns of running it stops for a couple of turns to wind itself up again;
+      (2) turn its key: step into it from behind and it totters off backwards (needs a drawing
+      that shows which way it faces); (3) you can hear it coming: its ticking shows through walls
+      as written "tick... tock", and it goes silent just before it pounces. Claude suggested 1.
+      JW: "3". Settled: you can hear it coming. Not yet built.
+    - **JW's note: the eyes in the dark** (for the "how it looks" group). JW: "there are eyes in
+      the dark in the game...but rarely actual monsters when you get to that areas. i think we
+      need a creepy sense of things in the dark...but those eyes imply an actual thing might be
+      there, just not what. should there be monsters somewhere where there are eyes? should we
+      change the creepy things in the dark visual implications to something more abstract? both?
+      something else?" Claude explained: there are two kinds of eyes that look the same, real
+      ones for an awake horror you can't see and made-up ones that belong to nothing (more often
+      the more frightened you are), so eyes teach you to ignore them; and JW's theme rules out a
+      creature that hides in the dark and jumps out. Options offered: (1) eyes always mean
+      something real, and the made-up dark becomes abstract and on-theme (ink creeping in, words
+      written in the dark, a smile with no face, a toy that wasn't there); (2) monsters where the
+      eyes are; (3) both, with an abstract thing sometimes becoming real at the highest fear;
+      (4) eyes tell the truth only when you are calm. Claude suggested 1. JW: "1". Settled: eyes
+      only for real horrors; the made-up things in the dark become abstract. To be built with the
+      "how it looks" group.
 
 Everything below this line is **proposed by Claude and not yet agreed**. Treat the lists as
 possibly incomplete.
