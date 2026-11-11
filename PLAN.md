@@ -663,6 +663,16 @@ with its git history, and is where all new work happens.
       full terrified look for a few seconds when you meet a horror for the first time, step into a
       dark room, or a floor surprise starts, then settles (could feel like a gimmick); (4) leave
       it. Claude suggested 2. JW: "2 and 3?"
+      Claude proposed the shape: the page always looks at least as frightened as the floor (floor 1
+      as now, the bottom floor about "afraid" even when calm); only the look changes, and everything
+      fear does in play (whispers, made-up things at the edge of the light, broken rhymes, the
+      shorter fuse, trembling) stays tied to real fear; eerie moments when each kind of horror first
+      appears in a run, on the first step into a dark room, when a floor surprise starts and when
+      the Tuck-You-In arrives, no more than one every 50 turns or so, gentler with calmer effects
+      (F). JW: "Eerie moments: just make them infrequent but random?" Settled: the depth and
+      look-only parts as proposed; eerie moments come at random times, not tied to events, and
+      seldom (Claude's numbers: about once a floor on average, never two within 50 turns), gentler
+      with calmer effects.
 
 Everything below this line is **proposed by Claude and not yet agreed**. Treat the lists as
 possibly incomplete.
