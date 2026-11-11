@@ -855,9 +855,110 @@ with its git history, and is where all new work happens.
          1. JW: "1". Settled: hold your finger down to keep walking, with the same stop as holding
          a key.
       The whole phone design is written out as item 12, for Claude Code to build.
+    - **A mobile version: asked while building** (11 November, Claude Code). JW, before the
+      questions: "This is one game, not two: the same files and the same web address, with the
+      phone layout switching on by itself when the screen is an upright phone. Don't make a separate
+      page, folder or copy of the game, and don't add a switch to choose between layouts." Built
+      that way.
+      1. **The bestiary in the phone's menu.** Asked: the design puts the bestiary in the menu, but
+         during a run no key opens it (B only works on the title page), and every tap must be a key
+         press. Options offered: (1) B opens the bestiary during a run, on a computer too (the only
+         change on a computer; the help page doesn't mention it); (2) the phone menu opens it
+         directly, without a key; (3) leave it off the menu. Claude suggested 1. JW: "im not sure.
+         agree with #1 i think". Settled: 1.
+      2. **Words that name keys, on a phone.** Asked: page prompts ("Enter, to go down"), the
+         face-off card's key letters, the tags ("on the stairs: press >"), the tombstone's line and
+         a few story lines ("Press > or Enter to descend", "(G to pick it up)", "Press Q again")
+         name keys. Options offered: (1) touch words everywhere, story lines included (the rules
+         code would have to know about phones); (2) touch words for everything the layout draws,
+         story lines left as written; (3) every word as it is. Claude suggested 2. JW: "go with
+         whatever you think best; in the future add a recommended tag and explanation to what you
+         think the best option is". Settled: 2. (And from now on the recommended option is marked
+         and the reason given.)
+    - **Mobile version: built** (11 November, Claude Code). Everything in item 12, in the same files
+      as the computer's game. Details Claude decided while building, which **JW has not yet seen**:
+      - **When the phone layout is on:** a screen taller than it is wide and at most 700 pixels
+        wide (`RULES.phone.maxWidth`). It doesn't ask whether the screen is a touch screen, so a
+        narrow, tall computer window also gets the phone layout (it used to be cut off), and the
+        keys work there. "Turn your phone upright" shows only on a touch screen held sideways and
+        at most 500 pixels tall (`RULES.phone.sidewaysHeight`); a short, wide computer window keeps
+        the computer layout.
+      - **The map's width:** 15 squares across (`RULES.phone.across`, the one number to change).
+        A square is the screen's width divided by that, rounded down: 26 pixels on a 390-wide
+        phone, 27 on a 412-wide one (15.3 across). The map is only 26 squares tall and a phone
+        shows about 25, so warnings pinned to the edge nearly always come from the left or right.
+      - **The top line:** your name over the floor ("Floor 2 of 6"), a health bar with the numbers
+        under it, the candle inside the outline of a full one, rhymes as notes, coins, and a square
+        menu button with "menu" under its three lines. Your level, attack and defense aren't in it;
+        they are on the pockets page, as on a computer's pockets page.
+      - **Conditions** are drawn as the margin's little tags across the top of the map, over it,
+        rather than as a row that pushes the map down, so the map doesn't jump when one comes or
+        goes. Three say what to tap: "on the stairs: tap yourself to go down", "something here:
+        Pick up", "it went for you: answer on its card".
+      - **The story strip** shows the last two lines as wrapped to the phone's width, so one long
+        message can fill both.
+      - **The four buttons:** face to face with a horror, Hold still and Pick up are greyed out
+        and do nothing (space there would back you away, as it does on a keyboard). Over the
+        pockets or the gear, a button closes them first and then does its job; Pockets opens and
+        closes the pockets.
+      - **Warnings outside the view** sit in a small paper tab inside the map's edge, with a little
+        arrow pointing the way they came from, below any condition tags.
+      - **Walking:** a tap acts the moment the finger comes down. Held, the first step is at once,
+        the next after 0.35 seconds, then one every 0.15 seconds (`RULES.phone.holdDelayMs`,
+        `holdRepeatMs`). The direction is fixed when the finger comes down; sliding it doesn't
+        turn you. Once a held step is refused (a horror in view, a page or card), that walk is
+        over; it doesn't pick up again, even if the horror goes.
+      - **The menu** opens only from the map (not during a card or the pockets). It covers the map;
+        a tap outside it closes it. Sound, voice and calmer effects say "on" or "off" and the menu
+        stays open when you change them. The first tap on Give up turns it into "Tap again to give
+        up for good"; any step you take after that keeps you going, as Q does.
+      - **The face-off card:** its answers are four buttons, two by two, without the key letters.
+        After a blow, the card has three buttons and "or walk away" in the fourth place.
+      - **Pockets:** tapping a row chooses it; the buttons are Use (Wear for a thing to wear),
+        Throw it (only a potion, aimed at a horror), Drop and Close. No gear button: gear is in the
+        menu. Under the rows: what the chosen thing is, then your level, attack, defense and coins.
+      - **Gear:** tapping a slot chooses it; tapping a thing listed for it puts it on straight away
+        (its number key; a turn passes); the buttons are Take it off, Pockets and Close.
+      - **Which rhyme:** three big boxes and a "never mind" button, the last kind used marked in
+        purple. A tap anywhere else does nothing (on a keyboard Enter repeats the last kind; on a
+        phone a stray tap mustn't). **The rhyme words** are four boxes in reading order (not by
+        arrow); a stray tap never answers.
+      - **The odd rooms:** a tap on a choice moves the choice to it and presses Enter, so during
+        the half-second it only highlights it, and a second tap chooses.
+      - **The title page:** the title on two lines; the lines to tap use the computer's words
+        without the keys. The line about M, V and F isn't shown on a phone (they are in the menu
+        once you're playing); "No sound? Turn the silent switch off." is at the bottom instead.
+        "Press any key." is "Tap anywhere." on a phone.
+      - **The tombstone** is wider and higher up, with three buttons below it; nothing else on that
+        page does anything once they show. **The bestiary** has back, close and next buttons.
+        **The graveyard:** tap a headstone to read it, and a Go back button. **Help and the log:**
+        any tap closes them.
+      - **The help page on a phone** explains touch (ten lines, in `TEXT.ui.phone.help`, ending
+        "A keyboard works too, with the same keys as on a computer"), then the pictures and the
+        closing lines, the lettering shrinking until it fits. The computer's help page is unchanged
+        (it doesn't mention B either).
+      - **Fingertip:** nothing tappable is smaller than 44 by 44 pixels (`RULES.phone.fingertip`).
+      - **The notch and the bar:** the page reads the phone's safe area and keeps clear of it.
+        The page doesn't ask to be drawn under the notch, so browsers keep it clear anyway.
+      - **Speed:** measured first, in Chrome pretending to be a phone at 390 by 844: about 1 to 2
+        milliseconds to draw a frame, keeping 30 frames a second even with the processor slowed
+        four times. So neither speed fix is switched on, but both are settings, ready:
+        `RULES.phone.pixelRatio` (3, full sharpness; try 2) and `RULES.phone.idleFrameMs` (30, as
+        always; try 100 to redraw less often when nothing is happening). JW's Android phone is the
+        real test.
+      - **Verse on a narrow screen** shrinks to fit the width, as it does on a computer, so a long
+        couplet in a rhyme duel comes out at about 15 pixels on a 390-wide phone. Worth a look on
+        the phone.
+      - **Found, not fixed:** in the dark, a faint straight line sometimes runs down (or across)
+        the map where the ink texture's tiles meet. It is there on a computer too, older than the
+        phone work; easy to fix if JW wants it gone.
+      - **Tests:** a new suite, `tests/suites/phone.js` (45 checks). The golden transcript was
+        re-recorded for one reason: two bot games end still on the map and then press B (meant for
+        the title page), which now opens the bestiary; everything before that B is identical.
 
 12. **The mobile version: the design to build** (agreed with JW, 11 November 2026; the questions
-    and his answers are in item 11, under "A mobile version"). Not built yet.
+    and his answers are in item 11, under "A mobile version"). **Built** 11 November 2026: what
+    was decided while building is in item 11, under "Mobile version: built".
 
     **What it is.** The same game, playable on a phone held upright, with touch. Nothing about the
     rules, numbers, words, drawings or saves changes. On a computer, nothing changes at all: the

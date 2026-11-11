@@ -333,6 +333,23 @@ const RULES = (function freezeDeep(o) {
     titleEyes: 0.0006,        // eyes appearing on the title page, per millisecond
   },
 
+  // The phone layout (js/draw/phone.js) and touch (js/touch.js). It switches on by itself when the
+  // screen is taller than it is wide and no wider than `maxWidth`; a computer never sees any of it.
+  phone: {
+    across: 15,               // HOW MANY SQUARES ACROSS the phone's map shows. Change this one number after trying it on a phone.
+    maxWidth: 700,            // the phone layout is used on a screen taller than it is wide and at most this wide (CSS pixels)
+    sidewaysHeight: 500,      // a touch screen held sideways and at most this tall asks to be turned upright
+    fingertip: 44,            // the smallest any button or choice is drawn, in CSS pixels (a fingertip)
+    // speed
+    holdDelayMs: 350,         // hold a finger down this long and you keep walking that way...
+    holdRepeatMs: 150,        // ...one step every this many milliseconds, until you lift it (or a horror comes into view)
+    // If the ink stutters on a phone, these two help. As set, they change nothing (measured in Chrome at phone
+    // size: about 1-2 ms to draw a frame, keeping up at 30 a second even with the CPU slowed 4 times).
+    pixelRatio: 3,            // sharpness: draw at most this many pixels per CSS pixel (try 2, or 1.5, to draw less)
+    idleFrameMs: 30,          // with nothing happening (no tap for idleAfterMs, nothing moving), draw at most this often (try 100)
+    idleAfterMs: 1500,
+  },
+
   // The sound mix (each sound effect's own shape stays in js/sound/audio.js).
   audio: {
     master: 0.8,              // master volume when not muted

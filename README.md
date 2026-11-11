@@ -10,9 +10,10 @@ candle goes out and before bedtime comes for you.
 ## Running it
 
 **On the web:** https://liminallyyours.com/everything-is-fine-downstairs/ (GitHub Pages, served
-straight from this repository, LiminallyYours/everything-is-fine-downstairs). It needs a desktop
-browser and a keyboard. Saves and the graveyard stay in each browser, so the web copy and a copy
-on your Mac keep separate ones.
+straight from this repository, LiminallyYours/everything-is-fine-downstairs). Play it on a
+computer with a keyboard, or on a phone held upright (see "On a phone" below): it's the same page,
+and it switches to the phone layout by itself. Saves and the graveyard stay in each browser, so
+the web copy, your phone and a copy on your Mac each keep their own.
 
 **On your Mac:** there's nothing to install. Double-click **`index.html`** (or drag it onto Safari or Chrome),
 keeping the `js/` folder next to it. From Terminal: `open index.html`.
@@ -25,8 +26,8 @@ store those per file.
 dist/ is not in git; run python3 build.py
 
 **Turn the sound on.** Every sound is synthesized live in the browser, with no audio files.
-Browsers won't play audio until you press a key, which is why the game opens on a
-"press any key" screen.
+Browsers won't play audio until you press a key (or tap), which is why the game opens on a
+"press any key" screen. On an iPhone, the silent switch also has to be off.
 
 ## Controls
 
@@ -47,8 +48,38 @@ Browsers won't play audio until you press a key, which is why the game opens on 
 | `?` | Help. |
 | `M` / `V` / `F` | Mute sound / turn the narrator voice on or off / calmer effects (no shaking or flashing). |
 
-On the title screen, **G** opens the graveyard and **B** opens the bestiary. If you left a run
-unfinished, **C** carries on with it.
+On the title screen, **G** opens the graveyard and **B** opens the bestiary (B also opens it
+during a run). If you left a run unfinished, **C** carries on with it.
+
+## On a phone
+
+Open the same web address on your phone and hold it upright: the game switches to a phone layout
+by itself (held sideways, it asks you to turn it). Every tap is turned into the key press the
+keyboard would send, so the game itself is exactly the same. A keyboard attached to the phone
+works too.
+
+- **The screen:** a slim line at the top (who and where you are, health, your candle, rhymes,
+  coins, and the **menu** button), your conditions along the top of the map, the map (15 squares
+  across), the last two lines of the story, and four buttons: **Hold still**, **Rhyme**,
+  **Pockets**, **Pick up**.
+- **Walking:** tap anywhere on the map and you step that way: the map is cut into four triangles
+  meeting at you, so you don't have to hit an exact square. Hold your finger down to keep walking;
+  you stop when you lift it, or when an awake horror comes into view, or a page or card opens, just
+  as holding an arrow key does. Walk into a horror and its card asks what to do: tap attack, rhyme,
+  use something, or back off.
+- **Going downstairs:** stand on the stairs and tap yourself.
+- **Rhyming:** tap Rhyme, tap the kind (or "never mind"), then tap the word that rhymes, from four
+  big boxes.
+- **Pockets and gear:** tap a row to choose it, then tap what to do with it (use or wear, throw a
+  potion at a horror, drop; or, on the gear page, put it on or take it off).
+- **Pages of verse:** a tap anywhere does what Enter does. In the odd rooms, tap a choice; right
+  after the verse finishes there's half a second when a tap only highlights it, so you can't pick
+  one unread.
+- **The menu button:** what you wear and wield, the story so far (or tap the story strip), the
+  bestiary, help, sound, the narrator's voice, calmer effects, and give up (tap it twice).
+- **The title page** has separate lines to tap: carry on (when a run is saved), begin (or begin
+  again), the graveyard, the bestiary, help. A tap anywhere else does nothing, so a stray tap can
+  never throw a saved run away.
 
 **Your run is saved as you go.** Close the tab or the browser whenever you like: next time, the
 title screen offers to carry on from exactly where you were. The save is wiped when you die, win,
@@ -273,7 +304,9 @@ js/draw/vignette-art.js  ink drawings of the odd rooms
 js/draw/terrain.js       ink drawings of walls, floors, water, grass, stairs and props
 js/draw/verse.js         full-page verse: story, floor verses, bestiary, rhyme duel, tombstone, ending
 js/draw/screens.js       title, splash, bestiary book, pockets, help, log, graveyard
+js/draw/phone.js         the phone layout (upright, narrow screens): top line, buttons, menu, the pages for a finger, and what can be tapped
 js/main.js               keyboard handling and the animation loop
+js/touch.js              touch on a phone: each tap becomes the key press the keyboard would send
 build.py                 bundles everything into dist/everything-is-fine-downstairs.html
 tests/                   headless tests, the golden transcript and screenshots (cd tests && npm ci && npm test; see tests/README.md)
 SUGGESTED-EDITIONS.md    ideas for future versions that haven't been built yet
@@ -315,6 +348,7 @@ every number commented. Each monster's, item's and floor's own numbers stay with
 | Dark rooms: which floors, how much better the prize | `RULES.darkRooms` |
 | The Mold-Mite's lap, the Second Opinion's call, the Tick-Tock Tot's ticking | each horror's own entry in `js/content/data.js` (`lap`, `call` with its footstep word, `tick`) |
 | How long verse lines hang; captions, cards and effects | `RULES.pages`, `RULES.ui`, `RULES.fx` |
+| The phone: how many squares across its map shows (`across`), when the phone layout is used, the fingertip size, how fast a held finger walks, and the two speed settings (sharpness, redrawing less often when nothing is happening) | `RULES.phone` (its words are in `TEXT.ui.phone`) |
 | Loudness of the drone, music box, heartbeat and narrator | `RULES.audio` (each sound's own shape is in `js/sound/audio.js`) |
 | A monster's health, attack, speed, XP, and its tricks (snuffing, stealing, splitting, the Nibbler's phases) | its entry in `MONSTERS`, `js/content/data.js` |
 | What a potion or scroll does (`power`, `thrown`), how often items turn up (`freq`), and what you read when you drink, throw or read one (`drink`, `splash`, `read`) | `POTIONS`, `SCROLLS`, `FOODS`, `WEAPONS`, `ARMORS` in `js/content/data.js` (the words all items share, like names, slots and equipping, are in `TEXT.items`) |

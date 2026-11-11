@@ -14,10 +14,27 @@ const LogBox = { x: 0, y: 0, w: 0, h: 0 };
 const INK_RGB = [27, 21, 25];
 let fog = null, fogCtx = null, fogImg = null;
 
+// Which layout: a computer's, or (a screen taller than it is wide, and narrow) a phone's, which
+// js/draw/phone.js lays out and draws. A touch screen held sideways asks to be turned upright.
+const Phone = { on: false, sideways: false };
+function whichLayout() {
+  const w = window.innerWidth, h = window.innerHeight, P = RULES.phone;
+  const touch = typeof window.matchMedia === 'function' && window.matchMedia('(pointer: coarse)').matches;
+  Phone.on = h > w && w <= P.maxWidth;
+  Phone.sideways = !Phone.on && touch && w > h && h <= P.sidewaysHeight;
+}
+
 function resize() {
   dpr = window.devicePixelRatio || 1;
-  W = Math.max(640, window.innerWidth);
-  H = Math.max(420, window.innerHeight);
+  whichLayout();
+  if (Phone.on || Phone.sideways) {
+    dpr = Math.min(dpr, RULES.phone.pixelRatio);
+    W = window.innerWidth;
+    H = window.innerHeight;
+  } else {
+    W = Math.max(640, window.innerWidth);
+    H = Math.max(420, window.innerHeight);
+  }
   canvas.width = Math.round(W * dpr);
   canvas.height = Math.round(H * dpr);
   canvas.style.width = W + 'px';
@@ -31,6 +48,7 @@ function resize() {
   View.S = Math.max(24, Math.floor(Math.min(View.w / 21, View.h / 14)));
   Object.assign(Margin, { x: W - mw, y: 0, w: mw, h: H });
   Object.assign(LogBox, { x: 0, y: H - lh, w: W - mw, h: lh });
+  if (Phone.on) layoutPhone();
   paper = makePaper(W, H);
   draw();
 }
@@ -143,7 +161,8 @@ function draw() {
   ctx.lineCap = 'round';
   ctx.lineJoin = 'round';
   const inGame = G.player && G.level && G.back === 'play';
-  switch (G.mode) {
+  if (Phone.on || Phone.sideways) drawPhone(inGame); // js/draw/phone.js
+  else switch (G.mode) {
     case 'splash': drawSplash(); break;
     case 'title': drawTitle(); break;
     case 'play': drawPlay(); break;
@@ -252,6 +271,7 @@ function drawPlay() {
   drawFaceOff(p, S);
   drawFloats(S);
   ctx.restore();
+  if (Phone.on) return drawPhoneBars(p);
   drawMargin(p);
   drawLog();
 }
@@ -406,6 +426,7 @@ function drawWords(L, S) {
     if (!inMap(w.x, w.y)) continue;
     const age = FX.now - w.t0, a = clamp(Math.min(age / 200, (life - age) / 500), 0, 1);
     const lit = L.visible[idx(w.x, w.y)];
+    if (Phone.on && pinnedWord(w, a, S)) continue; // outside the phone's smaller view: at its edge
     serif(S * (w.big ? 0.55 : 0.32), 'italic');
     ctx.globalAlpha = a * 0.85;
     ctx.fillStyle = lit ? INK : '#efe3c8';
@@ -755,6 +776,7 @@ function drawFaceOff(p, S) {
   if (!m || !G.level.monsters.includes(m)) return;
   const th = G.threat;
   if (!enc && FX.now - (th.t || 0) < RULES.ui.threatCardDelayMs) return; // let the blow land (and be seen to land) before you answer it
+  if (Phone.on) return drawPhoneFaceOff(p, S, m, enc, th);
   const [lean, wob] = [Ink.lean, Ink.wobble];
   Ink.lean = 0;
   Ink.wobble = Math.min(wob, 1.2);
@@ -917,6 +939,29 @@ function candleWord(wick) {
   return [CW.tall, C.gray];
 }
 
+// Your conditions, as [_, words, colour], for the margin's tags (and the phone's strip under its
+// top line, which says how to tap rather than which key to press).
+function conditionTags(p) {
+  const L = G.level, due = stalkerDue(G.depth);
+  const tg = TEXT.ui.tags, ph = Phone.on ? TEXT.ui.phone.tags : tg;
+  return [
+    [p.poisoned, p.poisoned && fill(tg.poisoned, { n: p.poisoned }), C.green],
+    [p.confused, p.confused && fill(tg.confused, { n: p.confused }), C.pink],
+    [p.sensing, p.sensing && fill(tg.sensing, { n: p.sensing }), C.teal],
+    [p.hidden, tg.hidden, C.green],
+    [p.darkTurns, tg.dark, C.red],
+    [p.wick <= 0, tg.candleOut, C.red],
+    [clumsy(), tg.trembling, C.red],
+    [p.hoarse > 0, p.hoarse > 0 && fill(tg.hoarse, { n: p.hoarse }), C.pink],
+    [p.lap && p.lap.length, p.lap && (p.lap.length > 1 ? fill(tg.laps, { n: p.lap.length }) : tg.lap), C.green],
+    [L.stalker, tg.bedtime, C.red],
+    [!L.stalker && !L.isBoss && L.turnsHere >= due - RULES.stalker.musicBoxLead, tg.musicBox, C.pink],
+    [L.tiles[idx(p.x, p.y)] === T.STAIRS, ph.stairs, C.blue],
+    [itemsHere().length, ph.here, C.blue],
+    [currentThreat() && FX.now - (G.threat.t || 0) >= RULES.ui.threatCardDelayMs, ph.threat, C.red],
+  ].filter(t => t[0]);
+}
+
 function drawMargin(p) {
   const m = Margin, pad = 22, x = m.x + pad, w = m.w - pad * 2, L = G.level, U = TEXT.ui.margin;
   const bottom = H - 30;
@@ -1019,24 +1064,7 @@ function drawMargin(p) {
   y += 6;
 
   // conditions, as little inked tags
-  const due = stalkerDue(G.depth);
-  const tg = TEXT.ui.tags;
-  const tags = [
-    [p.poisoned, p.poisoned && fill(tg.poisoned, { n: p.poisoned }), C.green],
-    [p.confused, p.confused && fill(tg.confused, { n: p.confused }), C.pink],
-    [p.sensing, p.sensing && fill(tg.sensing, { n: p.sensing }), C.teal],
-    [p.hidden, tg.hidden, C.green],
-    [p.darkTurns, tg.dark, C.red],
-    [p.wick <= 0, tg.candleOut, C.red],
-    [clumsy(), tg.trembling, C.red],
-    [p.hoarse > 0, p.hoarse > 0 && fill(tg.hoarse, { n: p.hoarse }), C.pink],
-    [p.lap && p.lap.length, p.lap && (p.lap.length > 1 ? fill(tg.laps, { n: p.lap.length }) : tg.lap), C.green],
-    [L.stalker, tg.bedtime, C.red],
-    [!L.stalker && !L.isBoss && L.turnsHere >= due - RULES.stalker.musicBoxLead, tg.musicBox, C.pink],
-    [L.tiles[idx(p.x, p.y)] === T.STAIRS, tg.stairs, C.blue],
-    [itemsHere().length, tg.here, C.blue],
-    [currentThreat() && FX.now - (G.threat.t || 0) >= RULES.ui.threatCardDelayMs, tg.threat, C.red],
-  ].filter(t => t[0]);
+  const tags = conditionTags(p);
   if (tags.length) {
     let tx = x;
     hand(13, 'italic');

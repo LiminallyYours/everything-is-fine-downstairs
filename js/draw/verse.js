@@ -175,6 +175,7 @@ function drawPage(pg) {
   }
   if (pg.title) {
     ctx.font = `${Math.round(clamp(H * 0.05, 24, 52))}px ${FONT_TITLE}`;
+    if (Phone.on) fitTitle(pg.title, clamp(H * 0.05, 24, 52));
     ctx.fillStyle = pg.titleColor || INK;
     ctx.fillText(pg.title.toUpperCase().split('').join(' '), W / 2, y);
     y += H * 0.07;
@@ -194,12 +195,14 @@ function drawPage(pg) {
   if (pg.tip && lastStanza(pg)) {
     serif(clamp(H * 0.024, 14, 22), 'italic');
     ctx.fillStyle = C.teal;
-    ctx.fillText(pg.tip, W / 2, y + H * 0.03);
+    if (Phone.on) wrapPx(pg.tip, W * 0.88).forEach((l, i) => ctx.fillText(l, W / 2, y + H * 0.03 + i * clamp(H * 0.024, 14, 22) * 1.3));
+    else ctx.fillText(pg.tip, W / 2, y + H * 0.03);
   }
   pagePrompt(lastStanza(pg) ? pg.prompt : TEXT.pages.next);
 }
 
 function pagePrompt(str) {
+  if (Phone.on) str = phonePrompt(str); // the same prompt, for a finger (js/draw/phone.js)
   if (!str) return;
   serif(clamp(H * 0.02, 12, 18), 'italic');
   ctx.textAlign = 'center';
@@ -211,7 +214,8 @@ function pagePrompt(str) {
 
 // A headstone, a single sock left draped over it, and the epitaph set inside.
 function drawTomb(pg, lines, el) {
-  const w = Math.min(W * 0.62, 720), x0 = (W - w) / 2, x1 = x0 + w, top = H * 0.1, base = H * 0.8, arch = w * 0.2;
+  const w = Phone.on ? W * 0.9 : Math.min(W * 0.62, 720), x0 = (W - w) / 2, x1 = x0 + w;
+  const top = H * 0.1 + (Phone.on ? Safe.t : 0), base = H * (Phone.on ? 0.6 : 0.8), arch = w * 0.2;
   const stone = [[x0, base]];
   for (let k = 0; k <= 12; k++) {
     const a = Math.PI - (k / 12) * Math.PI;
@@ -249,6 +253,7 @@ function drawTomb(pg, lines, el) {
   if (!pageDone(pg)) return;
   serif(clamp(H * 0.019, 12, 17), 'italic');
   ctx.fillStyle = C.gray;
+  if (Phone.on) return phoneTombEnd(pg, base);
   ctx.fillText(pg.stats, W / 2, base + H * 0.06);
   pagePrompt(pg.prompt);
 }
@@ -292,6 +297,7 @@ function drawRhymePage(pg, lines, el) {
     return;
   }
   if (!r.fuseT0) return;
+  if (Phone.on) return drawPhoneRhymeWords(r);
   const cx = W / 2, cy = H * 0.66, dx = Math.min(W * 0.24, 300), dy = H * 0.085;
   const tier = dreadTier();
   const words = r.shown || r.options; // a hoarse voice smudges them
@@ -331,6 +337,7 @@ function drawRhymePage(pg, lines, el) {
 
 // Which rhyme? Three kinds, by arrow (left, up, right) or 1 to 3. The last kind used is marked.
 function drawRhymeKinds() {
+  if (Phone.on) return drawPhoneRhymeKinds();
   const p = G.player, K = TEXT.rhymeKinds, last = p.lastRhymeKind || 'shove';
   serif(clamp(H * 0.026, 14, 24), 'italic');
   ctx.fillStyle = C.red;
@@ -377,7 +384,7 @@ function showChoicePage(fx) {
 
 function drawChoicePage(pg, lines, el) {
   let y = H * 0.08;
-  const S = H * 0.14;
+  const S = Phone.on ? Math.min(H * 0.11, W * 0.24) : H * 0.14;
   pg.art(W / 2, y + S * 1.85, S, el);
   y += S * 2.15;
   ctx.textAlign = 'center';
@@ -387,6 +394,7 @@ function drawChoicePage(pg, lines, el) {
   ctx.fillText(pg.over, W / 2, y);
   y += H * 0.055;
   ctx.font = `${Math.round(clamp(H * 0.042, 22, 44))}px ${FONT_TITLE}`;
+  if (Phone.on) fitTitle(pg.title, clamp(H * 0.042, 22, 44));
   ctx.fillStyle = INK;
   ctx.fillText(pg.title.toUpperCase().split('').join(' '), W / 2, y);
   y += H * 0.055;
@@ -420,6 +428,7 @@ function drawChoicePage(pg, lines, el) {
     pagePrompt(TEXT.pages.roomNext);
     return;
   }
+  if (Phone.on) return drawPhoneChoices(pg, y);
   const os = clamp(H * 0.027, 15, 24);
   pg.choices.forEach((c, i) => {
     const cy = y + i * os * 1.8, sel = i === pg.sel;

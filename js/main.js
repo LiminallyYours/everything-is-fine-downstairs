@@ -56,6 +56,7 @@ function onPlayKey(k) {
     case 'g': case 'G': case ',': return act(pickUp);
     case '?': case '/': case 'h': case 'H': return openOverlay('help');
     case 'l': case 'L': return openOverlay('log');
+    case 'b': case 'B': G.bestSel = 0; G.page = null; return openOverlay('bestiary'); // (the phone's menu has it too)
   }
 }
 
@@ -242,15 +243,24 @@ function dangerInView() {
   return L.monsters.some(m => m.awake && !m.disguised && L.visible[idx(m.x, m.y)]) || L.phantoms.length > 0;
 }
 
-window.addEventListener('keydown', e => {
-  if (e.metaKey || e.ctrlKey || e.altKey) return; // leave Cmd+R, Cmd+Q etc. alone
-  if (e.key.startsWith('Arrow') || e.key === ' ' || e.key === '/' || e.key === "'") e.preventDefault();
+// Every key press comes through here, from the keyboard or (on a phone) from a tap (js/touch.js).
+// `repeat` is a key held down. False when a held key is refused (the walk stops there).
+let lastInputAt = -1e9;
+function pressKey(k, repeat) {
+  lastInputAt = performance.now();
   Sound.init();
   if (Sound.scene == null) Sound.setScene('title');
   // Holding a key down: fine for walking an empty hall, not for skipping pages or walking into teeth.
-  if (e.repeat && (G.mode !== 'play' || !MOVE[e.key] || dangerInView())) return;
-  if (G.mode !== 'rhyme' && globalKey(e.key)) return;
-  handleKey(e.key);
+  if (repeat && (G.mode !== 'play' || !MOVE[k] || dangerInView())) return false;
+  if (G.mode !== 'rhyme' && globalKey(k)) return true;
+  handleKey(k);
+  return true;
+}
+
+window.addEventListener('keydown', e => {
+  if (e.metaKey || e.ctrlKey || e.altKey) return; // leave Cmd+R, Cmd+Q etc. alone
+  if (e.key.startsWith('Arrow') || e.key === ' ' || e.key === '/' || e.key === "'") e.preventDefault();
+  pressKey(e.key, e.repeat);
 });
 
 // How the soundtrack should feel right now.
@@ -272,10 +282,19 @@ function soundState() {
   return s;
 }
 
+// Nothing happening on a phone: no key or tap for a moment (a held walk presses keys), and
+// nothing on the page moving (no bubble, number, death, shake or flash, no verse still appearing,
+// no fuse burning). Frames can then come at RULES.phone.idleFrameMs, which as set is the same as always.
+function phoneIdle(t) {
+  if (t - lastInputAt < RULES.phone.idleAfterMs) return false;
+  if (FX.bubbles.length || FX.floats.length || FX.deaths.length || FX.shake > 0.2 || FX.flash > 0.01) return false;
+  return G.mode === 'play' || G.mode === 'title' || (!!G.page && pageDone(G.page) && G.mode !== 'rhyme');
+}
+
 let last = 0;
 function frame(t) {
   requestAnimationFrame(frame);
-  if (t - last < RULES.ui.frameMs) return; // ~30 fps is plenty for candlelight
+  if (t - last < (Phone.on && phoneIdle(t) ? RULES.phone.idleFrameMs : RULES.ui.frameMs)) return; // ~30 fps is plenty for candlelight
   const dt = Math.min(100, t - (last || t));
   last = t;
   FX.now = t;

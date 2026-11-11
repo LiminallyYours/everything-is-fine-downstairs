@@ -34,10 +34,15 @@ The first version of the game is kept, untouched, in `../sillygame/` on the Mac 
   each settled item recorded there with JW's answer word for word; a group is built once all of it
   has been discussed, then tests, `python3 build.py`, README, this file and `PLAN.md`, commit
   (author `LiminallyYours <64442823+LiminallyYours@users.noreply.github.com>`) and push.
-- **Next:** the mobile version, built by Claude Code from the design in `PLAN.md`, item 12
-  (agreed with JW; his answers are in item 11, under "A mobile version"). Then the story group,
-  then sound. JW is happy with the new look. Still open: whether floors 3 to 5 need tougher horrors, once JW
-  has played; and a mobile version (JW: "we need a mobile version"), not yet discussed.
+- **Next:** JW tries the mobile version on his Android phone (section 16). The details Claude
+  decided while building it are listed in `PLAN.md`, item 11, under "Mobile version: built", for
+  JW to look over. The likeliest things to tune after that are all in `RULES.phone`: how many squares
+  across (`across`), how fast a held finger walks, and, if the ink stutters, the two speed settings.
+  Then the story group, then sound. Still open: whether floors 3 to 5 need tougher horrors, once
+  JW has played.
+- **Looking at the phone layout:** the same headless Chrome, pretending to be a phone (touch,
+  390 by 844 and 412 by 915, upright, and once sideways). `SW=390 SH=844 node shots/shots.js
+  out/phone-shots` in `tests/` takes the usual screenshots at phone size.
 - **Project tracking stays in these files** in the repository (JW, 11 November), not a Claude
   artifact.
 
@@ -45,8 +50,8 @@ The first version of the game is kept, untouched, in `../sillygame/` on the Mac 
 
 - **Play it:** open `index.html`, keeping `js/` next to it. Or use the single-file copy,
   `dist/everything-is-fine-downstairs.html`, which you rebuild with `python3 build.py` after any change.
-- **Size:** 32 JavaScript files in folders (`config/`, `content/`, `rules/`, `sound/`, `draw/`),
-  about 7,700 lines. No libraries, no build step, nothing to install to play.
+- **Size:** 34 JavaScript files in folders (`config/`, `content/`, `rules/`, `sound/`, `draw/`),
+  about 10,300 lines. No libraries, no build step, nothing to install to play.
 - **Git and the web:** see "Next session: start here". GitHub's history starts fresh on 11
   November 2026 (section 12). `dist/` is not in git; `python3 build.py` rebuilds it.
 - **Tests:** `tests/`, run with `npm test`. Screenshot baselines are kept locally in
@@ -275,6 +280,35 @@ The fourth group from `PLAN.md`, each decided by JW there:
 - New suite `tests/suites/looks.js` (25 checks). Golden re-recorded for the new way the menu pages
   are written and the toy block's letter; nothing in play changed.
 
+### 16. The mobile version (11 Nov)
+Built by Claude Code from the design in `PLAN.md`, item 12. One game, not two: the same files and
+the same web address, switching to the phone layout by itself on an upright phone (JW).
+- **Touch is key presses.** Every tap becomes the key press the keyboard would send, through the
+  same `pressKey()` the keyboard now uses (`js/main.js`). What can be tapped is listed as it is
+  drawn (`Taps`, `js/draw/phone.js`); `js/touch.js` turns a tap into its keys. No rule, number or
+  drawing changed; on a computer nothing changed, except one key JW chose: **B** opens the
+  bestiary during a run, because the phone's menu has it.
+- **The layout:** the top line, conditions, the map 15 squares across (`RULES.phone.across`),
+  written sounds from outside the view pinned to its edge, the story's last two lines, and four
+  buttons; the menu; every card, page and panel with things to tap, at least 44 pixels each; a page
+  asking you to turn a phone held sideways. Words for the phone are in `TEXT.ui.phone`; story lines
+  that name keys were left as written (JW's choice).
+- **Speed:** measured first. About 1 to 2 ms a frame in Chrome at phone size, still 30 frames a
+  second with the processor slowed four times, so the two speed fixes are settings that change
+  nothing as set (`RULES.phone.pixelRatio`, `idleFrameMs`).
+- **Checked:** new suite `tests/suites/phone.js` (45 checks); `npm test` 17 of 17. A headless
+  Chrome pretending to be a phone (touch, 390 by 844 and 412 by 915, and sideways) and at computer
+  size played through both `index.html` and the single file with a clean console: tapping to walk,
+  holding a finger to walk and lifting it, the face-off card, rhyming, pockets, gear, the menu,
+  help, the log, the bestiary, an odd room (a tap straight after hurrying its verse chose nothing),
+  dying and the tombstone's buttons. The golden transcript was re-recorded only because two bot
+  games press B on the map after they end, which now opens the bestiary.
+- **Asked while building** (PLAN.md, item 11): the bestiary in the menu (JW chose B during a run)
+  and words that name keys (Claude's pick: phone words for what the layout draws). JW asked for the
+  recommended option to be marked, with the reason, from now on.
+- **Found, not fixed:** a faint straight line in the dark where the ink texture's tiles meet, on
+  a computer too; older than this work.
+
 ## Decisions worth remembering
 
 | Decision | Why |
@@ -320,7 +354,8 @@ Before the restructure, it was checked like this:
 - Difficulty balance, especially the new defense values. In simulated play, most deaths were
   on floors 2–3. Whether the middle floors need tougher horrors is still open (`PLAN.md`, item 11).
 - Whether the floor surprises feel fair in real play, the drawer above all.
-- A mobile version: the game needs a desktop browser and a keyboard today.
+- The mobile version on a real phone: no person has played it on one yet. JW's Android phone is
+  the real test (how many squares across, walking speed, whether the ink keeps up, the voices).
 - A settings page, seeded runs, and unlocks between runs: see
   `SUGGESTED-EDITIONS.md`.
 - Small inconsistencies the restructure found and deliberately left alone (two cut-off Nibbler

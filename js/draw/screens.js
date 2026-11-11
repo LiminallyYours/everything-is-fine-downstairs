@@ -12,7 +12,7 @@ function drawSplash() {
   ctx.textBaseline = 'alphabetic';
   serif(clamp(H * 0.04, 20, 40));
   ctx.fillStyle = INK;
-  ctx.fillText(TEXT.ui.splash.press, W / 2, H * 0.64);
+  ctx.fillText(Phone.on ? TEXT.ui.phone.splash : TEXT.ui.splash.press, W / 2, H * 0.64);
   serif(clamp(H * 0.028, 15, 26), 'italic');
   ctx.fillStyle = C.gray;
   ctx.fillText(TEXT.ui.splash.dare, W / 2, H * 0.64 + H * 0.05);
@@ -22,6 +22,7 @@ function drawSplash() {
 }
 
 function drawTitle() {
+  if (Phone.on) return drawPhoneTitle(); // js/draw/phone.js
   const U = TEXT.ui.title;
   Ink.setMood(0.15, 60);
   Ink.leanY = H * 0.3;
@@ -88,10 +89,11 @@ function drawBestiary() {
     ctx.textAlign = 'center';
     serif(clamp(H * 0.03, 16, 28), 'italic');
     ctx.fillStyle = INK;
-    ctx.fillText(U.empty, W / 2, H * 0.45);
+    const lines = s => (Phone.on ? wrapPx(s, W * 0.86) : [s]); // a phone is too narrow for one line
+    lines(U.empty).forEach((l, i) => ctx.fillText(l, W / 2, H * 0.45 + i * 30));
     serif(clamp(H * 0.022, 13, 20), 'italic');
     ctx.fillStyle = C.gray;
-    ctx.fillText(U.wait, W / 2, H * 0.52);
+    lines(U.wait).forEach((l, i) => ctx.fillText(l, W / 2, H * 0.52 + (Phone.on ? 30 : 0) + i * 24));
     pagePrompt(U.close);
     return;
   }
@@ -101,7 +103,7 @@ function drawBestiary() {
   ctx.textAlign = 'right';
   serif(14, 'italic');
   ctx.fillStyle = C.dim;
-  ctx.fillText(fill(U.page, { n: G.bestSel + 1, seen: seen.length, all: Object.keys(BESTIARY).length }), W - 24, 30);
+  ctx.fillText(fill(U.page, { n: G.bestSel + 1, seen: seen.length, all: Object.keys(BESTIARY).length }), W - 24, 30 + (Phone.on ? Safe.t : 0));
 }
 
 function drawInventory() {

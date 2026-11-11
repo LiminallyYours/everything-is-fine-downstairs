@@ -362,6 +362,62 @@ const TEXT = {
       row: 'lvl {level}  turn {turns}  {date}',
       keys: '↑↓ read the headstones   Esc go back',
     },
+    // A phone held upright (js/draw/phone.js): the same game by touch. Only the words that say
+    // which key to press are different here; everything else is the computer's words.
+    phone: {
+      buttons: { hold: 'Hold still', rhyme: 'Rhyme', pockets: 'Pockets', pickUp: 'Pick up' },
+      menuButton: 'menu',
+      menu: {
+        gear: 'What you wear and wield',
+        log: 'The story so far',
+        bestiary: 'The bestiary',
+        help: 'How not to die (help)',
+        sound: 'Sound: {state}',
+        voice: "The narrator's voice: {state}",
+        calm: 'Calmer effects: {state}',
+        giveUp: 'Give up',
+        giveUpSure: 'Tap again to give up for good',
+        close: 'Close the menu',
+        on: 'on', off: 'off',
+      },
+      splash: 'Tap anywhere.',
+      sideways: ['Turn your phone upright, please.', 'Everything is fine downstairs, but only this way up.'],
+      silent: 'No sound? Turn the silent switch off.',
+      tomb: { again: 'be born again (worse)', graveyard: 'the graveyard', title: 'the title' },
+      // the prompt under a verse page, by the name of the computer's prompt in TEXT.pages
+      prompts: {
+        story: 'tap, to go down',
+        floor: 'tap, to go on down',
+        beastNext: 'tap, to turn the page',
+        ending: 'tap, to go back to the title, nameless but alive',
+        next: 'tap',
+        roomNext: 'tap, to go on',
+      },
+      roomChoose: 'tap one to decide',
+      whichNever: 'never mind',
+      whichLast: '(marked: the same as last time)',
+      pick: 'tap the word that rhymes',
+      // the face-off card
+      card: { fighting: '(backing out of a fight may fail)', sleeping: '(it has not noticed you yet)', walkAway: 'or walk away' },
+      tags: { stairs: 'on the stairs: tap yourself to go down', here: 'something here: Pick up', threat: 'it went for you: answer on its card' },
+      pockets: { use: 'Use', wear: 'Wear', throw: 'Throw it', drop: 'Drop', close: 'Close' },
+      gear: { takeOff: 'Take it off', pockets: 'Pockets', close: 'Close', wearOne: 'tap one to put it on' },
+      book: { back: 'back', close: 'close the book', next: 'next' },
+      graveyard: { close: 'Go back' },
+      close: 'Tap anywhere to close.', // the help and the log
+      help: [
+        ['Tap around you', 'walk that way: the map is cut into four, meeting at you. Hold your finger down to keep walking.'],
+        ['Into a horror', 'face it, and tap what to do. Out of a fight: maybe.'],
+        ['Tap yourself', 'on the stairs: go down.'],
+        ['Hold still', 'and hope.'],
+        ['Rhyme', 'pick the kind, then the word that rhymes. Costs 1 ♪.'],
+        ['Pockets', 'use, wear, throw or drop what you carry.'],
+        ['Pick up', 'what is here. Gold and stubs pick themselves up.'],
+        ['The story', 'tap the two lines at the bottom for all of it.'],
+        ['The menu', 'gear, the bestiary, this help, sound, voice, calmer effects, giving up.'],
+        ['A keyboard', 'works too, with the same keys as on a computer.'],
+      ],
+    },
   },
 
   // The three kinds of rhyme (js/rules/rhyme.js), picked before you recite.

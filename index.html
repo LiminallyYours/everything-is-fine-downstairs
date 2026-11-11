@@ -5,9 +5,10 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Everything Is Fine Downstairs</title>
 <style>
-  html, body { margin: 0; height: 100%; background: #efe4cc; overflow: hidden; }
+  html, body { margin: 0; height: 100%; background: #efe4cc; overflow: hidden; overscroll-behavior: none; }
   body { display: flex; align-items: center; justify-content: center; }
-  canvas { display: block; }
+  /* on a phone: no double-tap zoom, no pull-to-reload, no selecting or long-press menu */
+  canvas { display: block; touch-action: none; -webkit-user-select: none; user-select: none; -webkit-touch-callout: none; -webkit-tap-highlight-color: transparent; }
   #err { position: fixed; left: 8px; bottom: 8px; color: #a3192b; font: 12px Menlo, monospace; white-space: pre-wrap; }
 </style>
 </head>
@@ -56,6 +57,8 @@
 <script src="js/draw/terrain.js"></script>
 <script src="js/draw/verse.js"></script>
 <script src="js/draw/screens.js"></script>
+<script src="js/draw/phone.js"></script>
 <script src="js/main.js"></script>
+<script src="js/touch.js"></script>
 </body>
 </html>
