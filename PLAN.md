@@ -790,6 +790,63 @@ with its git history, and is where all new work happens.
       Is there anything you'd like changed?" JW: "assume look is good." Settled: no changes to the
       look. JW then asked what, if anything, must be done before handing a mobile version to
       Claude Code, and for the earlier mobile design to be checked against everything built since.
+    - **A mobile version: what was decided in an earlier chat** (11 November, a separate chat about
+      the GitHub copy of the game, before "how you play" was built; recorded here so Claude Code
+      has it). Claude's proposal there: taps send the game the same pretend key presses the
+      keyboard does, so no rule changes; tap a side of your character to step that way (the map
+      split into four triangles, one per direction); a row of buttons along the bottom; every
+      card, pocket row, room choice and rhyme word tappable; tap anywhere on a verse page for the
+      next line; on an upright phone, the map on top, then a slim line with health, candle, rhymes
+      and coins, then a short story strip, then the buttons, with Gear, Log, Help, sound and Give
+      Up behind a menu button in the slim line; double-tap zoom and pull-to-refresh switched off;
+      the keyboard unchanged on a computer.
+      1. **How should a phone be held?** Options offered: (1) upright only; (2) sideways only;
+         (3) both. Claude suggested 1. JW: "upright only. sketch the screen, please". Settled:
+         upright only.
+      2. **Should the fourth button change with where you stand** ("Go down" on the stairs, "Pick
+         up" on a thing)? Claude offered a fixed "Pick up" with going downstairs done by tapping
+         the stairs, if JW preferred. JW: "assume the button is fixed. go downstrairs tap on the
+         stairs." Settled: four fixed buttons, the fourth "Pick up"; you go down by tapping the
+         stairs.
+      3. **Will the voices and the ink work on a phone; is ElevenLabs needed?** (JW: "this is a
+         discussion.") Answered: the narrator uses the phone's built-in voices; the singing and
+         whispering voices are faked by pitch and speed, as the game already does without the Mac
+         voices; iPhones play no sound until the first tap and may stay silent with the silent
+         switch on (worth a line on the title). The ink should be fine on a recent phone; if it
+         stutters, draw at slightly lower sharpness and redraw less often when nothing is
+         happening. ElevenLabs is not needed: a live call would put JW's account key in a public
+         page, and most narration is put together during play, so it can't be recorded ahead.
+         Nothing decided.
+    - **Checking the mobile design against everything built since** (11 November). JW: "if you
+      have access to the earlier phone design, execute (b)". Claude's finding: the design holds;
+      these follow from decisions JW has already made, so they need no question:
+      - The title screen can't be "tap anywhere to begin": with a run saved, beginning again
+        throws it away. The title gets separate tappable lines: carry on, begin again, graveyard,
+        bestiary, help.
+      - The half-second pause after an odd room's verse applies to taps too, so a tap that
+        hurries the verse can't land on a choice unread.
+      - The candle in the slim line is the drawn candle inside the outline of a full one, not a
+        number.
+      - The slim line also shows anything that changes your odds: "trembling", "hoarse", a
+        Mold-Mite in your lap.
+      - The first button is "Hold still" (next to a horror it is now a gamble), not "Wait".
+      - Rhyming: tap Rhyme, then tap the kind (shove, lullaby, tongue-twister), then a word. The
+        fuse starts only once the couplet is shown, so the extra tap costs no time.
+      - The ink is heavier now, so the two speed fixes are more likely to be needed: Claude Code
+        measures first, then applies them; JW's Android phone is the real test.
+      1. **How much of the map should a phone show?** Asked: the earlier sketch showed about 11
+         squares across (5 each side of you); a computer shows 21; your candle reaches up to 8
+         squares on floor 1 and 6 on the deepest floors, so with 11 a horror could stand in your
+         light but off the screen; the tick-tock, the colleague's squeak and the "ahem" often
+         start further off than 5 squares. Options offered: (1) 11 across, bigger drawings;
+         (2) about 15 across, smaller drawings (each square about the smallest a computer draws);
+         (3) 11 across, with written warnings from further away pinned to the edge of the map on
+         their side; (4) about 15 across, plus pinned warnings. Claude suggested 4. JW: "4 with a
+         note that the screen size should be written in a way that's as easy as possible for
+         claude code to adjust later as it may take a few rounds of testing (or not)". Settled:
+         about 15 squares across, and any written warning outside the view is shown at the edge
+         of the map on its side. How many squares a phone shows is one number in
+         `js/config/rules.js`, easy to change after testing on a phone.
 
 Everything below this line is **proposed by Claude and not yet agreed**. Treat the lists as
 possibly incomplete.
