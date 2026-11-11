@@ -56,6 +56,22 @@ function pageAdvance(pg) {
   return true;
 }
 
+// Skip (S, or the phone's skip button): the rest of this page at once, and the narrator stops.
+// Only while a page is still unfolding line by line. What comes after is as if you had waited:
+// an odd room's half-second starts now, and a rhyme's fuse starts on the next frame.
+function canSkip() {
+  const pg = G.page;
+  if (!pg || pg.hold || pg.result || !['story', 'floorcard', 'card', 'choice', 'rhyme', 'dead', 'win'].includes(G.mode)) return false;
+  if (G.mode === 'rhyme' && (!G.rhyme || G.rhyme.fuseT0 || G.rhyme.result)) return false;
+  return !pageDone(pg);
+}
+
+function skipPage(pg) {
+  pg.t0 = FX.now - pg.doneAt;
+  pg.spoken = pg.times.length - 1; // the lines not yet read out stay unread
+  Voice.stop();
+}
+
 // Every frame: narrate lines as they appear, and fire the page's onDone once.
 function pageTick(pg) {
   if (pg.hold) return; // waiting for something first (which kind of rhyme)

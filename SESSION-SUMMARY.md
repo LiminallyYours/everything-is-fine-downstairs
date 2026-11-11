@@ -308,6 +308,10 @@ the same web address, switching to the phone layout by itself on an upright phon
   recommended option to be marked, with the reason, from now on.
 - **Found, not fixed:** a faint straight line in the dark where the ink texture's tiles meet, on
   a computer too; older than this work.
+- **Two follow-ups the same day** (PLAN.md, item 11): the phone's map a little larger, 13 squares
+  across instead of 15 (JW); and a **skip** button on pages still appearing line by line, which
+  shows the rest at once and stops the narrator (JW chose this of four options; S on a computer).
+  `tests/suites/phone.js` has 50 checks now.
 
 ## Decisions worth remembering
 

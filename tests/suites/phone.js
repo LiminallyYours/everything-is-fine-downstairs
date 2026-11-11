@@ -1,7 +1,8 @@
 'use strict';
 // The phone layout (js/draw/phone.js) and touch (js/touch.js): every tap becomes the right key
 // press in every mode; holding a finger walks and stops as holding a key does; a stray tap on the
-// title can't throw a saved run away; the odd rooms' half-second holds for taps; at 390x844 and
+// title can't throw a saved run away; the odd rooms' half-second holds for taps; skip shows the
+// rest of an unfolding page at once; at 390x844 and
 // 412x915 nothing is cut off and everything you can tap is at least a fingertip; written sounds
 // from outside the view are pinned to its edge on their side; a phone held sideways asks to be
 // turned; and on a computer none of it does anything.
@@ -471,6 +472,57 @@ for (const [w, h] of SIZES.slice(1)) { // the second size, quickly through the m
   Hz.run('PhoneMenu.open = true'); Hz.tick(60); sizesOK(Hz, `${w} menu`); Hz.run('PhoneMenu.open = false');
   Hz.press('r'); Hz.tick(100); sizesOK(Hz, `${w} which rhyme`);
   check(`${w}x${h}: everything you can tap is at least a fingertip, and on the screen`, tooSmall.length === 0 && offScreen.length === 0, tooSmall.concat(offScreen).slice(0, 10));
+}
+
+// --- 6b. Skip: the rest of an unfolding page at once (the corner button, or S) -------------
+{
+  const Hk = phone(390, 844), Gk = Hk.G;
+  Hk.tapXY(100, 100);
+  Hk.tap('title:Enter');
+  Hk.tick(1200); // a line or two of the story has appeared
+  Hk.keys();
+  const shownBefore = Hk.run('pageShown(G.page)'), lines = Hk.run('G.page.times.length');
+  const btn = Hk.find('skip');
+  sizesOK(Hk, 'story, unfolding');
+  Hk.tap('skip', 34);
+  const keys = Hk.keys(), spoke = Hk.spoken.length;
+  const all = Hk.run('pageShown(G.page) === G.page.times.length && pageDone(G.page)');
+  Hk.tick(1500);
+  check('a page unfolding line by line has a skip button in its corner; it sends S and shows the rest of the page at once',
+    !!btn && btn.y < 80 && shownBefore < lines && same(keys, ['s']) && all && Gk.mode === 'story', { btn, shownBefore, lines, keys });
+  check('after a skip the narrator reads none of the skipped lines, and the button is gone (a tap goes on, as before)',
+    Hk.spoken.length === spoke && !Hk.find('skip') && (Hk.tapXY(195, 400), same(Hk.keys(), ['Enter'])), { spoke, now: Hk.spoken.length });
+  for (let i = 0; i < 30 && Gk.mode !== 'play'; i++) { Hk.press('Enter'); Hk.tick(40); }
+  // an odd room: skipping the verse still leaves the half-second before a choice can be picked
+  Hk.run(`showChoicePage({ kind: 'well', x: G.player.x, y: G.player.y })`);
+  Hk.tick(200);
+  Hk.tap('skip', 34);
+  Hk.keys();
+  Hk.tap('choice:2', 0);
+  const early = Hk.run('!!G.page.result');
+  Hk.tick(Hk.run('RULES.ui.choicePauseMs') + 20);
+  Hk.tap('choice:2', 60);
+  check("an odd room: after a skip, the half-second still holds (a choice tapped at once isn't picked; after it, it is)", !early && Hk.run('!!G.page.result'), { early });
+  Hk.tick(800); Hk.tapXY(195, 400, 60);
+  // a rhyme: skipping the couplet starts the fuse
+  Hk.run('G.mode = "play"; G.back = "play"; G.page = null; G.player.verve = 3;');
+  Hk.tick(40);
+  Hk.tap('button:Rhyme', 60);
+  const noSkipOnKinds = !Hk.find('skip');
+  Hk.tap('kind:shove', 60);
+  Hk.tap('skip', 68);
+  check('a rhyme: no skip while choosing the kind; skipping the couplet starts the fuse at once', noSkipOnKinds && Hk.run('G.rhyme.fuseT0 > 0') && !Hk.find('skip'), { noSkipOnKinds });
+  Hk.press('1'); Hk.tick(2500);
+  // a computer: S does the same, and nothing anywhere else
+  const Hc2 = createGame({ seed: SEED, width: 1440, height: 900 });
+  Hc2.tick(60); Hc2.press('x'); Hc2.press('Enter'); Hc2.tick(800);
+  const before2 = Hc2.run('pageShown(G.page)');
+  Hc2.press('s'); Hc2.tick(40);
+  const skipped = Hc2.run('pageDone(G.page) && pageShown(G.page) === G.page.times.length');
+  for (let i = 0; i < 30 && Hc2.G.mode !== 'play'; i++) { Hc2.press('Enter'); Hc2.tick(40); }
+  const turn = Hc2.G.turn;
+  Hc2.press('s'); Hc2.tick(40);
+  check('a computer: S skips an unfolding page the same way; on the map it does nothing (no turn passes)', before2 < 99 && skipped && Hc2.G.mode === 'play' && Hc2.G.turn === turn, { before2, skipped });
 }
 
 // --- 7. A phone held sideways --------------------------------------------------------------

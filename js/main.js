@@ -189,6 +189,7 @@ function turnPage(k, then) {
 }
 
 function handleKey(k) {
+  if ((k === 's' || k === 'S') && canSkip()) return skipPage(G.page);
   switch (G.mode) {
     case 'splash':
       G.mode = 'title';

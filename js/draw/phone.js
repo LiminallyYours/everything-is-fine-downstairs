@@ -144,6 +144,11 @@ function drawPhone(inGame) {
     case 'bestiary': drawBestiary(); drawPhoneBookButtons(); break;
     default: if (pageMode) drawPage(G.page);
   }
+  // a page still unfolding line by line: a skip button in its corner (S); a tap elsewhere is Enter, as before
+  if (canSkip()) {
+    const f = RULES.phone.fingertip;
+    phoneButton(W - Safe.r - 84, Safe.t + 8, 76, f, TEXT.ui.phone.skip, ['s'], { size: 16, style: 'italic', color: C.gray, name: 'skip' });
+  }
   if (PhoneMenu.open) drawPhoneMenu();
 }
 

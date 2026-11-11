@@ -381,6 +381,7 @@ const TEXT = {
         on: 'on', off: 'off',
       },
       splash: 'Tap anywhere.',
+      skip: 'skip', // on a page still unfolding line by line: the rest of it at once (S on a keyboard)
       sideways: ['Turn your phone upright, please.', 'Everything is fine downstairs, but only this way up.'],
       silent: 'No sound? Turn the silent switch off.',
       tomb: { again: 'be born again (worse)', graveyard: 'the graveyard', title: 'the title' },

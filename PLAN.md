@@ -962,6 +962,30 @@ with its git history, and is where all new work happens.
       candlelight now fits across the screen on floors 4 to 6 (it reaches 6); on floors 1 to 3 (8,
       7 and 7) its edges can be off the sides, as floor 1's already could at 15. Warnings from
       outside the view are still pinned to its edge. 14 or 12 are the next steps either way.
+    - **Mobile version: a skip button** (11 November). JW: "where lines are playing out one line at
+      a time - or anywhere else where there is a dramatic pause - there should be a skip button.
+      thoughts?" Claude's thoughts: the line-by-line pages are the story, the floor verses, a
+      horror's first page, the odd rooms, the rhyme couplet, the tombstone and the ending; the
+      other pauses are short and deliberate (the card waits 0.35 seconds so you see the blow land;
+      the odd rooms' half-second stops a hurried tap picking unread; a rhyme's verdict already
+      gives way to a tap after 0.4 seconds) and are best left. Every tap is a key, so a skip needs
+      a key on a computer too: S. Asked what a skip should do. Options offered: (1) show the rest
+      of the page now, the narrator stopping, then tap on as now; (2) skip the page entirely;
+      (3) no button, every tap shows the whole page; (4) shorter pauses everywhere. Claude
+      recommended 1 (you lose the wait, not the words). JW chose 1. **Built.** Details Claude
+      decided while building, which **JW has not yet seen**:
+      - "skip" is a small button in the top right corner of a page while it is still appearing;
+        it goes once the page is all there. A tap anywhere else still brings the next line sooner.
+      - It shows the rest of the current verse at once; a page with more than one verse (the story,
+        the ending) unfolds its next verse as usual, with its own skip.
+      - The narrator stops, and doesn't read the skipped lines.
+      - After a skip, the odd rooms' half-second still starts, and a rhyme's fuse starts at once.
+        No skip while choosing which kind of rhyme (nothing is unfolding there).
+      - On a computer, S does the same, and nothing anywhere else. The computer's pages show no
+        hint for it, and its help page doesn't mention it (only the README), so the computer looks
+        exactly as before; a small "S skip" in the corner would be easy to add.
+      - Tests: 5 more checks in `tests/suites/phone.js` (50 now). The golden transcript didn't
+        change.
 
 12. **The mobile version: the design to build** (agreed with JW, 11 November 2026; the questions
     and his answers are in item 11, under "A mobile version"). **Built** 11 November 2026: what

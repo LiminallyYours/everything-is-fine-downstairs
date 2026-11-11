@@ -47,6 +47,7 @@ Browsers won't play audio until you press a key (or tap), which is why the game 
 | `Q` | Give up and return to the title (press twice). To close the game entirely, close the browser tab (Cmd+W). |
 | `?` | Help. |
 | `M` / `V` / `F` | Mute sound / turn the narrator voice on or off / calmer effects (no shaking or flashing). |
+| `S` | Skip: while a page of verse is still appearing line by line, show the rest of it at once (the narrator stops). |
 
 On the title screen, **G** opens the graveyard and **B** opens the bestiary (B also opens it
 during a run). If you left a run unfinished, **C** carries on with it.
@@ -72,9 +73,10 @@ works too.
   big boxes.
 - **Pockets and gear:** tap a row to choose it, then tap what to do with it (use or wear, throw a
   potion at a horror, drop; or, on the gear page, put it on or take it off).
-- **Pages of verse:** a tap anywhere does what Enter does. In the odd rooms, tap a choice; right
-  after the verse finishes there's half a second when a tap only highlights it, so you can't pick
-  one unread.
+- **Pages of verse:** a tap anywhere does what Enter does (the next line sooner). While a page is
+  still appearing line by line, **skip** in its top corner shows the rest of it at once. In the odd
+  rooms, tap a choice; right after the verse finishes (or is skipped) there's half a second when a
+  tap only highlights it, so you can't pick one unread.
 - **The menu button:** what you wear and wield, the story so far (or tap the story strip), the
   bestiary, help, sound, the narrator's voice, calmer effects, and give up (tap it twice).
 - **The title page** has separate lines to tap: carry on (when a run is saved), begin (or begin
@@ -121,7 +123,8 @@ wall and puddle is drawn live in shaky ink lines that are never quite straight o
   highlighter. Wounded monsters show a thin red health line under their feet.
 - **Verse is set as verse.** The story, each floor's verse, bestiary pages, rhyme duels,
   your epitaph and the ending take over the whole page in large type. It appears one line at
-  a time, and each line hangs a little too long. Enter brings the next line sooner.
+  a time, and each line hangs a little too long. Enter brings the next line sooner; S (or skip, on a
+  phone) shows the rest of the page at once.
 
 - **Things move like drawings come to life.** You and the horrors hop from cell to cell, lunge
   when attacking, and flinch when hit. A slain horror gets scribbled out by a frantic pen and
