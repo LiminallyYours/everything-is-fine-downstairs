@@ -1,0 +1,60 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Everything Is Fine Downstairs</title>
+<style>
+  html, body { margin: 0; height: 100%; background: #efe4cc; overflow: hidden; }
+  body { display: flex; align-items: center; justify-content: center; }
+  canvas { display: block; }
+  #err { position: fixed; left: 8px; bottom: 8px; color: #a3192b; font: 12px Menlo, monospace; white-space: pre-wrap; }
+</style>
+</head>
+<body>
+<canvas id="screen"></canvas>
+<div id="err"></div>
+<script>
+  window.onerror = function (m, src, line) {
+    document.getElementById('err').textContent =
+      'A gremlin got into the code: ' + m + ' (' + String(src || '').split('/').pop() + ':' + line + ')';
+  };
+</script>
+<script src="js/util.js"></script>
+<!-- config: the global rules and the player's settings -->
+<script src="js/config/rules.js"></script>
+<script src="js/config/settings.js"></script>
+<!-- content: palette, monsters, items, words -->
+<script src="js/content/data.js"></script>
+<script src="js/content/text.js"></script>
+<script src="js/content/speech.js"></script>
+<script src="js/content/bestiary.js"></script>
+<script src="js/content/couplets.js"></script>
+<script src="js/content/vignette-words.js"></script>
+<!-- rules: the map, the turn loop and everything that happens in it -->
+<script src="js/rules/map.js"></script>
+<script src="js/rules/game.js"></script>
+<script src="js/rules/dread.js"></script>
+<script src="js/rules/monsters.js"></script>
+<script src="js/rules/items.js"></script>
+<script src="js/rules/floors.js"></script>
+<script src="js/rules/ghosts.js"></script>
+<script src="js/rules/rhyme.js"></script>
+<script src="js/rules/vignettes.js"></script>
+<script src="js/rules/surprises.js"></script>
+<script src="js/rules/save.js"></script>
+<!-- sound: music, effects and the narrator -->
+<script src="js/sound/audio.js"></script>
+<script src="js/sound/voice.js"></script>
+<!-- draw: the ink kit (recolors the content above), effects, sprites and every page -->
+<script src="js/draw/fx.js"></script>
+<script src="js/draw/ink.js"></script>
+<script src="js/draw/render.js"></script>
+<script src="js/draw/sprites.js"></script>
+<script src="js/draw/vignette-art.js"></script>
+<script src="js/draw/terrain.js"></script>
+<script src="js/draw/verse.js"></script>
+<script src="js/draw/screens.js"></script>
+<script src="js/main.js"></script>
+</body>
+</html>

@@ -1,0 +1,32 @@
+{
+  "name": "everything-is-fine-downstairs-tests",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Tests for the game: name lint, per-file load check, golden transcript, suites, screenshots.",
+  "license": "UNLICENSED",
+  "type": "commonjs",
+  "scripts": {
+    "test": "node run-all.js",
+    "lint": "node lint-globals.js",
+    "load": "node load-check.js",
+    "guards": "node guards.js",
+    "text": "node check-text.js",
+    "rooms": "node check-rooms.js",
+    "golden": "node golden/golden.js",
+    "golden:record": "node golden/golden.js --record",
+    "golden:twice": "node golden/golden.js --twice",
+    "golden:coverage": "node golden/coverage.js",
+    "smoke": "node suites/smoke.js",
+    "shots": "node shots/shots.js",
+    "shots:baseline": "node shots/shots.js && node shots/compare.js --save",
+    "shots:compare": "node shots/shots.js && node shots/compare.js",
+    "perf": "node shots/perf.js",
+    "prof": "node shots/prof.js",
+    "caption": "node shots/caption.js",
+    "single": "node shots/single.js"
+  },
+  "dependencies": {
+    "@napi-rs/canvas": "1.0.9",
+    "acorn": "8.15.0"
+  }
+}
