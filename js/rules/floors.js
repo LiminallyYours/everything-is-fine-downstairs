@@ -118,6 +118,7 @@ function floorTurn(L) {
   if (L.depth === 6) chewTurn(L);
   totTicks(L);
   colleagueSteps(L);
+  eerieTurn(L);
   // An Ahem clears its throat in the dark before it reaches you.
   for (const m of L.monsters) {
     if (m.type !== 'wraith' || !m.awake || L.visible[idx(m.x, m.y)]) continue;

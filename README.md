@@ -61,11 +61,25 @@ wall and puddle is drawn live in shaky ink lines that are never quite straight o
 
 - **Darkness is ink.** Wherever your light doesn't reach, ink has soaked into the page.
   Places you remember are left as a faint grey pencil wash.
+- **Ink that looks like ink.** Lines swell where the pen pressed and thin where it lifted, and
+  filled shapes are shaded with fine hatching on their shadow side. On an eerie page the hatching
+  crosses in the deepest shadows, and the pen leaves more blots where it paused.
+- **The deeper you go, the eerier the page.** Floor 1 looks calm; each floor down starts a step
+  further along, and the bottom floor looks frightened even when you aren't. Now and then, at
+  random and seldom (about once a floor), the page lurches to its worst look for a moment and
+  eases back. This is only the look: your real fear still decides what fear does in play.
+- **Nothing here is quite right.** Every horror has one thing wrong with it all the time (the
+  Second Opinion's second row of teeth, the Mold-Mite's one arm too many), and more creeps in as
+  the page gets eerier.
 - **Your fear is in the drawing, not a number.** As Dread rises, the lines wobble harder, the
   whole page leans off true, strokes break up and double as if the pen were trembling, and
   the ink creeps closer. At its worst, thin tendrils crawl in from the dark toward you.
+- **Hand lettering.** Headings, labels, the margin and the help pages are lettered by hand (the
+  Patrick Hand typeface, built into the game so it looks the same on every computer). The verse
+  is in book type, printed like ink: each letter a little off its line, the odd blot.
 - **The margin is your character page.** It shows who and where you are, your health and
-  progress to the next level, and your candle burning down (you're holding it on the map too).
+  progress to the next level, and your candle burning down inside a faint outline of the fullest
+  candle there can be, so you can see how much is left (you're holding it on the map too).
   Beside that are your attack, defense, rhymes left (as notes) and coins. Below come what
   you're carrying, tags for conditions like *poisoned* or *a music box is playing…*, the
   horrors in view with tiny portraits and health dots, and your pockets.
@@ -119,13 +133,15 @@ wall and puddle is drawn live in shaky ink lines that are never quite straight o
 - **Your candle is burning down.** You start with 350 wax (max 450). It drops by 1 every
   turn, and your light radius shrinks once it falls below 120. Candle stubs (`¡`) add 150 each. Yesterday's Soup,
   the Ahem and the Tuck-You-In can put your flame out. In total darkness you can see
-  only the cells next to you, plus the **eyes**.
+  only the cells next to you, plus the **eyes** of any horror awake out there. Eyes in the dark are
+  always a real horror.
 - **Dread (0–100, never shown as a number).** It rises in the dark, when you're badly hurt, when you meet new horrors
   and while something is hunting you. Light, food, good poetry, levelling up and hiding
   bring it down. It has four stages (calm, uneasy, afraid, undone), and each one makes the
   game stranger:
   - whispers in the dark
-  - eyes that belong to nothing
+  - things in the dark that belong to nothing: a smile with no face, a toy that wasn't there, a
+    ripple in the ink
   - fake monsters and fake loot at the edge of your light
   - the narrator failing to finish a rhyme
   - old log lines turning to static
@@ -246,8 +262,10 @@ js/rules/surprises.js    the floor surprises: the drawer, bath time, nap time
 js/rules/save.js         saving a run as you go, and carrying on with it from the title screen
 js/sound/audio.js        the synthesized soundtrack and sound effects (WebAudio)
 js/sound/voice.js        the narrator (browser speech), line by line
-js/draw/fx.js            real-time effects: shake, flash, bubbles, eyes, rustles
-js/draw/ink.js           the ink kit: wobbly strokes, Dread-driven wobble/lean/scratch, aged paper
+js/draw/fx.js            real-time effects: shake, flash, bubbles, rustles, the made-up things in the dark
+js/draw/hand-font.js     the hand-lettered typeface (Patrick Hand, SIL Open Font License), built in
+js/draw/hand-font-LICENSE.txt  the font's licence
+js/draw/ink.js           the ink kit: wobbly strokes with pen pressure, hatching and blots, verse printed like ink, aged paper
 js/draw/render.js        the page: camera, ink-flood darkness, margin, message log, menu cards
 js/draw/sprites.js       ink drawings of you, every horror, and every item
 js/draw/vignette-art.js  ink drawings of the odd rooms
@@ -281,6 +299,9 @@ every number commented. Each monster's, item's and floor's own numbers stay with
 | Candle length, stub size, when it counts as dark | `RULES.candle` |
 | How long you get before bedtime, and the Tuck-You-In | `RULES.stalker` (`due` is turns per floor, by depth) |
 | How fast Dread rises and falls, and what each stage does | `RULES.dread` |
+| How eerie each floor looks, and the eerie moments (how often, how long) | `RULES.look` |
+| How often the pen blots, calm and eerie | `INK_BLOT` in `js/draw/ink.js` |
+| What is wrong with each horror, and how eerie the page must be for more to creep in | `WRONG` in `js/draw/sprites.js` |
 | Bolder horrors in the dark (how near, how likely they wake, how much faster, who never does) | `RULES.bold` |
 | Trembling at the last stage of Dread (how much worse blows and getting away are) | `RULES.clumsy` |
 | Holding still beside a horror (the chance it wanders off, for how long, how much harder its blow lands otherwise, who is never fooled) | `RULES.holdStill` (the couplets are in `TEXT.holdStill`) |

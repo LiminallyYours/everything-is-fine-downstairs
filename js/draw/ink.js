@@ -1,12 +1,14 @@
 'use strict';
 // The ink-on-paper drawing kit. Every stroke passes through warp(), which bends it with slow
-// sine waves so nothing is ever quite straight or quite still. Dread turns the knobs:
-// more wobble, the page leaning further off true, and broken, scratchy lines.
+// sine waves so nothing is ever quite straight or quite still. Like a real pen, a line swells
+// where it is pressed and thins where it lifts, and filled shapes are shaded with hatching on
+// their shadow side. How eerie the page looks turns the knobs: more wobble, the page leaning
+// further off true, broken, scratchy lines, crossed hatching, and more blots where the pen paused.
 
 const PAPER = '#efe4cc', INK = '#1b1519';
 const FONT_VERSE = '"Baskerville", "Hoefler Text", "Big Caslon", Georgia, serif';
 const FONT_TITLE = '"Big Caslon", "Baskerville", "Didot", Georgia, serif';
-const FONT_HAND = '"Noteworthy", "Bradley Hand", "Marker Felt", "Baskerville", serif';
+const FONT_HAND = `"${HAND_FONT}", "Noteworthy", "Bradley Hand", "Marker Felt", "Baskerville", serif`; // headings, labels, the margin, the help pages
 
 const Ink = {
   t: 0,          // seconds, for animation
@@ -26,7 +28,7 @@ const Ink = {
     this.lean = (0.012 + 0.11 * d) * Math.sin(this.t * 0.33);
     this.scratch = clamp((d - 0.3) / 0.7, 0, 1);
     this.weight = Math.max(1.1, S / 26) * (1 - 0.25 * this.scratch);
-    this.bleed = d;
+    this.bleed = d; // blots, and crossed hatching, grow with this
   },
   calm(S) { this.setMood(0, S); this.lean = 0; },
 };
@@ -96,8 +98,9 @@ function stroke(pts, o = {}) {
     ctx.fill();
   }
   if (o.w === 0) { ctx.globalAlpha = 1; return; }
+  if (o.fill && o.hatch !== false && !paleInk(o.fill)) hatch(w, o); // no shading on paper-coloured cards and bubbles
   const seed = pts[0][0] * 0.37 + pts[0][1] * 1.91;
-  ctx.lineWidth = (o.w || 1) * Ink.weight;
+  ctx.lineWidth = (o.w || 1) * Ink.weight * (w.length >= 4 ? 0.85 : 1);
   ctx.strokeStyle = o.color || Ink.color;
   ctx.globalAlpha = (o.alpha == null ? 1 : o.alpha) * Ink.alpha;
   const sc = o.noScratch ? 0 : Ink.scratch;
@@ -107,6 +110,24 @@ function stroke(pts, o = {}) {
     ctx.setLineDash(dash);
   }
   ctx.stroke();
+  // Pen pressure: part of the line, somewhere in its middle, pressed harder.
+  if (w.length >= 4 && !o.noPress) {
+    const n = w.length, i0 = Math.floor(n * (0.15 + 0.25 * hash(seed + 3))), i1 = Math.min(n - 1, i0 + Math.max(2, Math.floor(n * (0.3 + 0.3 * hash(seed + 4)))));
+    tracePath(w.slice(i0, i1 + 1), false);
+    const lw = ctx.lineWidth;
+    ctx.lineWidth = lw * 1.75;
+    ctx.stroke();
+    ctx.lineWidth = lw;
+  }
+  // A blot where the pen paused: seldom on a calm page, more as it gets eerier.
+  if (!o.noBlot && hash(seed + 11) < INK_BLOT.calm + INK_BLOT.eerie * Ink.bleed * Ink.bleed) {
+    const [bx, by] = hash(seed + 12) < 0.5 ? w[0] : w[w.length - 1], r = ctx.lineWidth * (0.9 + hash(seed + 13) * 0.9);
+    ctx.fillStyle = ctx.strokeStyle;
+    ctx.beginPath();
+    ctx.arc(bx, by, r, 0, Math.PI * 2);
+    ctx.arc(bx + (hash(seed + 14) - 0.5) * r * 5, by + (hash(seed + 15) - 0.2) * r * 4, r * 0.35, 0, Math.PI * 2);
+    ctx.fill();
+  }
   if (sc > 0.3) { // a second, shakier pass: the pen is trembling
     const w2 = raw.map((p, i) => warp(p[0] + Math.sin(i + seed) * 1.5 * sc, p[1] + Math.cos(i * 1.3 + seed) * 1.5 * sc));
     tracePath(w2, closed);
@@ -119,6 +140,52 @@ function stroke(pts, o = {}) {
 }
 
 const line = (x1, y1, x2, y2, o) => stroke([[x1, y1], [x2, y2]], o);
+
+// Is this a pale colour (paper, a card, a bubble)? Those aren't shaded.
+const paleCache = {};
+function paleInk(c) {
+  if (typeof c !== 'string') return true; // a gradient or pattern: leave it alone
+  if (c in paleCache) return paleCache[c];
+  let r = 0, g = 0, b = 0, m;
+  if (c[0] === '#' && c.length === 7) { const n = parseInt(c.slice(1), 16); r = n >> 16; g = (n >> 8) & 255; b = n & 255; }
+  else if ((m = c.match(/rgba?\((\d+),\s*(\d+),\s*(\d+)/))) [r, g, b] = [+m[1], +m[2], +m[3]];
+  else return (paleCache[c] = true);
+  return (paleCache[c] = 0.299 * r + 0.587 * g + 0.114 * b > 190);
+}
+
+// How often a stroke ends in a blot: `calm` on a calm page, rising by up to `eerie` as it gets eerier.
+const INK_BLOT = { calm: 0.012, eerie: 0.16 };
+
+// Shading on a filled shape's shadow side (lower right): fine diagonal lines, clipped to the
+// shape. On an eerie page a second set crosses them in the deepest part. Small shapes are left
+// plain: hatching there would only be a smudge.
+function hatch(w, o) {
+  let x0 = Infinity, y0 = Infinity, x1 = -Infinity, y1 = -Infinity;
+  for (const [x, y] of w) { x0 = Math.min(x0, x); y0 = Math.min(y0, y); x1 = Math.max(x1, x); y1 = Math.max(y1, y); }
+  const bw = x1 - x0, bh = y1 - y0;
+  if (bw < 14 || bh < 14) return;
+  const gap = Math.max(3, Math.min(bw, bh) / 7), cx = (x0 + x1) / 2, cy = (y0 + y1) / 2;
+  ctx.save();
+  ctx.clip();
+  ctx.lineWidth = Math.max(0.6, Ink.weight * 0.45);
+  ctx.strokeStyle = o.color || Ink.color;
+  ctx.globalAlpha = 0.42 * Ink.alpha;
+  ctx.beginPath();
+  // lines running down-left, only past the middle toward the lower right
+  for (let k = cx + cy; k <= x1 + y1; k += gap) { ctx.moveTo(k - y0, y0); ctx.lineTo(k - y1, y1); }
+  ctx.stroke();
+  if (Ink.bleed > 0.35) { // crossed, in the deepest corner
+    const t = cx + cy + (bw + bh) * 0.22; // the corner past the line x + y = t
+    ctx.beginPath();
+    ctx.moveTo(t - y1, y1); ctx.lineTo(x1, y1); ctx.lineTo(x1, t - x1); ctx.closePath();
+    ctx.clip();
+    ctx.beginPath();
+    for (let k = x0 - y1; k <= x1 - y0; k += gap) { ctx.moveTo(k + y0, y0); ctx.lineTo(k + y1, y1); }
+    ctx.stroke();
+  }
+  ctx.restore();
+  tracePath(w, !!o.closed); // put the shape's path back for its outline
+}
 
 // A lumpy ellipse. lump=0 is a clean oval; 0.2 is a potato.
 function ellipse(cx, cy, rx, ry, o = {}, lump = 0.05, seed = 0) {
@@ -176,6 +243,41 @@ function star(cx, cy, r, o) {
     pts.push([cx + Math.cos(a) * rr, cy + Math.sin(a) * rr]);
   }
   stroke(pts, Object.assign({ closed: true, step: 0 }, o));
+}
+
+// A line of verse printed like ink: each letter sits a little off the line and comes out a
+// little darker or lighter, with the odd blot, and the letters tremble more as the page gets
+// eerier. Uses the current font, colour, alpha and alignment, like fillText.
+function inkLine(str, x, y, seed = 0) {
+  str = String(str);
+  const align = ctx.textAlign, a0 = ctx.globalAlpha, size = parseFloat((ctx.font.match(/([\d.]+)px/) || [0, 16])[1]);
+  const widths = [];
+  let total = 0;
+  for (const ch of str) { const w = ctx.measureText(ch).width; widths.push(w); total += w; }
+  let cx = align === 'center' ? x - total / 2 : align === 'right' ? x - total : x;
+  const tremble = Ink.bleed || 0;
+  ctx.textAlign = 'left';
+  let i = 0;
+  for (const ch of str) {
+    if (ch !== ' ') {
+      const h1 = hash(seed * 31.7 + i * 7.13), h2 = hash(seed * 17.3 + i * 91.7);
+      const dy = (h1 - 0.5) * size * 0.07 + Math.sin(Ink.t * 3 + i * 1.7) * size * 0.03 * tremble;
+      const dx = (h2 - 0.5) * size * 0.02;
+      ctx.globalAlpha = a0 * (0.84 + 0.16 * h2);
+      ctx.translate(dx, dy); // (moved by the pen, not by where the letter is written)
+      ctx.fillText(ch, cx, y);
+      ctx.translate(-dx, -dy);
+      if (hash(seed * 5.1 + i * 11.3) < 0.006 + 0.03 * tremble * tremble) { // a blot by the letter
+        ctx.globalAlpha = a0 * 0.8;
+        ctx.beginPath();
+        ctx.arc(cx + widths[i] * h1, y + size * 0.05, size * (0.04 + 0.05 * h2), 0, Math.PI * 2);
+        ctx.fill();
+      }
+    }
+    cx += widths[i++];
+  }
+  ctx.textAlign = align;
+  ctx.globalAlpha = a0;
 }
 
 // Draw an object leaning from its feet, then put the lean back.

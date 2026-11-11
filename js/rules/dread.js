@@ -139,8 +139,43 @@ function fakeRustle(L) {
   }
 }
 
-// Called every animation frame: eyes in the dark (real ones for awake monsters you can't see,
-// and, when you're frightened, some that belong to nothing at all).
+// --- How eerie the page looks (drawing only) -------------------------------------------------
+
+// 0..1: at least as frightened as you are, at least as frightened as the floor, and lifted
+// toward the worst by an eerie moment while one is on. Nothing in play reads this.
+function lookFrac(p = G.player) {
+  const R = RULES.look, real = p ? dreadFrac(p) : 0;
+  const floor = G.level ? R.floor[clamp(G.level.depth, 1, R.floor.length) - 1] : 0;
+  const base = Math.max(real, floor);
+  return base + (1 - base) * eerieLift();
+}
+
+// How far an eerie moment is lifting the page right now (0 none, 1 all the way).
+function eerieLift() {
+  const M = RULES.look.moment, t0 = G.eerieAt;
+  if (t0 == null) return 0;
+  const age = FX.now - t0;
+  let k = 0;
+  if (age < 0) k = 0;
+  else if (age < M.riseMs) k = age / M.riseMs;
+  else if (age < M.riseMs + M.holdMs) k = 1;
+  else if (age < M.riseMs + M.holdMs + M.fadeMs) { const f = (age - M.riseMs - M.holdMs) / M.fadeMs; k = 1 - f * f * (3 - 2 * f); }
+  return k * (FX.reduced ? M.reduced : 1);
+}
+
+// Once a turn: maybe an eerie moment. It is decided from the run, the floor and the turn, not
+// from the game's dice, so it never changes anything that happens in play.
+function eerieTurn(L) {
+  const M = RULES.look.moment;
+  if (L.eerieTurn != null && G.turn - L.eerieTurn < M.gap) return;
+  if (hash(G.runNo * 7919 + L.depth * 104729 + G.turn * 1.618) >= M.chance) return;
+  L.eerieTurn = G.turn;
+  G.eerieAt = FX.now;
+}
+
+// Called every animation frame: things in the dark that belong to nothing (more of them the more
+// frightened you are): a smile with no face, a toy that wasn't there, a ripple in the ink. Eyes
+// in the dark are only ever real: an awake horror you can't see (drawn in render.js).
 function dreadFrame(dt) {
   if (G.mode !== 'play' || !G.level) return;
   const L = G.level, p = G.player, r = lightRadius();
@@ -149,7 +184,7 @@ function dreadFrame(dt) {
   for (let i = 0; i < 20; i++) {
     const x = p.x + RNG.int(-(r + 8), r + 8), y = p.y + RNG.int(-(r + 6), r + 6);
     if (!inMap(x, y) || L.visible[idx(x, y)] || L.tiles[idx(x, y)] === T.WALL) continue;
-    FX.eye(x, y, RNG.pick(['#ffd84a', '#ff5b5b', '#c8ffb0']), RNG.int(900, 2600));
+    FX.haunt(x, y, RNG.pick(['smile', 'toy', 'ripple']), RNG.int(900, 2600));
     return;
   }
 }

@@ -19,6 +19,7 @@ const SUITES = [
   ['saveresume', ['suites/saveresume.js']],
   ['danger', ['suites/danger.js']],
   ['howyouplay', ['suites/howyouplay.js']],
+  ['looks', ['suites/looks.js']],
   ['smoke (quick)', ['suites/smoke.js', '--quick']],
 ];
 const verbose = process.argv.includes('-v');

@@ -188,7 +188,7 @@ const MONSTER_ART = {
     for (const s of [-1, 1]) {
       stroke([p(0.12 * s, -0.72), p(0.14 * s + sw, -0.86), p(0.15 * s + sw, -0.94)], { w: 1 });
       ellipse(...p(0.15 * s + sw, ey), 0.1 * S, 0.1 * S, { w: 1, fill: PAPER, fillAlpha: 0.9 }, 0.02);
-      dot(...p(0.15 * s + sw + 0.02, ey + 0.01), 0.03 * S);
+      dot(...p(0.15 * s + sw + (s < 0 ? -0.04 : 0.02), ey + 0.01), 0.03 * S); // the left one is looking somewhere else
     }
     line(...p(-0.05 + sw, ey), ...p(0.05 + sw, ey), { w: 1 });
     ellipse(...p(0, -0.45), 0.4 * S, 0.3 * S, Object.assign({ w: 1.3 }, wash(c, 0.35)), 0.08, 4);
@@ -381,6 +381,66 @@ const MONSTER_ART = {
   },
 };
 
+// What is wrong with each horror. Every one has one thing wrong with it all the time, cute at a
+// glance and wrong on a second look (`always`); and as the page gets eerier (how eerie it looks,
+// not your real fear), more creeps in (`eerie`, faded in between WRONG_FROM and WRONG_FULL).
+const WRONG_FROM = 0.3, WRONG_FULL = 0.5;
+const WRONG = {
+  mite: {
+    always(p, S) { const a = Math.PI * 1.97, [x, y] = p(Math.cos(a) * 0.27, -0.2 + Math.sin(a) * 0.21); stroke([[x, y], [x + S * 0.05, y - S * 0.06], [x + S * 0.08, y - S * 0.04]], { w: 0.7, step: 0 }); }, // one arm too many, waving
+    eerie(p, S) { ellipse(...p(0, -0.32), 0.03 * S, 0.02 * S, { w: 0.7, fill: PAPER, fillAlpha: 1 }); dot(...p(0, -0.32), 0.012 * S); }, // a third eye, wide awake
+  },
+  bat: {
+    always(p, S) { stroke([p(0.12, -0.52), p(0.12, -0.6), p(0.14, -0.63), p(0.16, -0.6), p(0.16, -0.52)], { w: 0.8, step: 0 }); }, // a finger, poking up out of the soup
+    eerie(p, S) { for (const x of [0.03, 0.2]) stroke([p(x, -0.52), p(x, -0.59), p(x + 0.02, -0.62), p(x + 0.04, -0.59), p(x + 0.04, -0.52)], { w: 0.7, step: 0 }); eye(p, -0.2, -0.5, 0.03, S, 1); }, // more fingers, and something looking up out of the broth
+  },
+  putaway: {
+    always(p, S) { for (const x of [-0.08, -0.02, 0.04]) stroke([p(x, -0.26), p(x + 0.01, -0.22), p(x + 0.03, -0.25)], { w: 0.8, step: 0 }); }, // fingers curled over the edge of the drawer, from inside
+    eerie(p, S) { zigzag(...p(-0.22, -0.6), ...p(0.22, -0.61), 6, 0.025 * S, { w: 0.7 }); }, // the top drawer has teeth along it
+  },
+  opinion: {
+    // (its other wrong thing, one eye looking the other way, is in its drawing)
+    always(p, S) { zigzag(...p(-0.2, -0.36), ...p(0.2, -0.36), 5, -0.05 * S, { w: 0.8, color: PAPER }); }, // a second row of teeth, behind the first
+    eerie(p, S) { stroke([p(0, -0.74), p(0.02, -0.92), p(0, -1.1)], { w: 1 }); ellipse(...p(0, -1.17), 0.08 * S, 0.08 * S, { w: 1, fill: PAPER, fillAlpha: 0.9 }); dot(...p(0, -1.17), 0.03 * S); }, // a third eye-stalk, for a closer look
+  },
+  zombie: {
+    always(p, S) { leaning(0.14, p(0, 0)[1], () => stroke([p(0.03, -0.26), p(0.06, -0.12), p(0.03, 0), p(0.09, 0)], { w: 1 })); }, // a third leg, keeping up
+    eerie(p, S) { leaning(0.14, p(0, 0)[1], () => stroke([p(0.22, -0.34), p(0.33, -0.27), p(0.46, -0.33)], { w: 0.8 })); }, // its smile goes on past its face
+  },
+  wraith: {
+    always(p, S) { line(...p(0.26, -0.93), ...p(0.3, -0.99), { w: 0.6 }); line(...p(0.3, -0.99), ...p(0.29, -0.9), { w: 0.6 }); }, // one knuckle too many on the polite fist
+    eerie(p, S) { stroke([p(-0.24, -0.97), p(-0.12, -0.9), p(0, -0.97)], { w: 0.9 }); zigzag(...p(-0.21, -0.955), ...p(-0.03, -0.955), 4, 0.02 * S, { w: 0.5 }); }, // and, after all, a mouth
+  },
+  mimic: {
+    always(p, S) { stroke([p(0.05, -0.36), p(0.12, -0.24), p(0.2, -0.27)], { w: 1.4, color: RED_INK }); }, // a tongue, hanging out, quite relaxed
+    eerie(p, S) { for (const [x, y] of [[-0.2, -0.43], [0.2, -0.45], [0, -0.48]]) dot(...p(x, y), 0.022 * S, RED_INK); }, // more eyes in the dark inside it
+  },
+  thing: {
+    always(p, S, m) { const gap = 0.06 + 0.025 * Math.sin(Ink.t * 4 + m.x); line(...p(0.04 + gap, -0.46), ...p(0.045 + gap, -0.4), { w: 1.6, color: PAPER }); }, // a single tooth, in the filling that isn't there
+    eerie(p, S, m) { const gap = 0.06 + 0.025 * Math.sin(Ink.t * 4 + m.x); for (const y of [-0.62, -0.55]) dot(...p(0.045 + gap, y), 0.016 * S, PAPER); }, // something looking out from between the slices
+  },
+  tot: {
+    always(p, S) { const [hx, hy] = p(0, -0.98); line(hx, hy + 0.02 * S, hx, hy - 0.06 * S, { w: 0.9 }); ellipse(hx - 0.04 * S, hy - 0.08 * S, 0.035 * S, 0.02 * S, { w: 0.7 }); ellipse(hx + 0.04 * S, hy - 0.08 * S, 0.035 * S, 0.02 * S, { w: 0.7 }); }, // a second key, on top of its head
+    eerie(p, S) { for (const s of [-1, 1]) line(...p(0.08 * s, -0.82), ...p(0.08 * s + Math.cos(Ink.t * 6 * s) * 0.04, -0.82 + Math.sin(Ink.t * 6 * s) * 0.04), { w: 0.7 }); }, // its eyes have hands, and they're going round
+  },
+  giraffe: {
+    always(p, S, m, c) { ellipse(...p(0.12, -1.2), 0.05 * S, 0.06 * S, Object.assign({ w: 0.9 }, wash(c, 0.6)), 0.1, 3); }, // one leg has two knees
+    eerie(p, S) { for (const x of [-0.1, 0.0, 0.2]) { const f = (Ink.t * 0.3 + x * 3) % 1; stroke([p(x, -1.85), p(x, -1.85 + 0.25 * f)], { w: 0.8, alpha: 1 - f }); } }, // something up there is drooling
+  },
+  sockling: {
+    always(p, S) { leaning(Math.sin(Ink.t * 5) * 0.2, p(0, 0)[1], () => ellipse(...p(0.31, -0.11), 0.03 * S, 0.035 * S, { w: 0.8, fill: '#e8c0a8', fillAlpha: 0.8 })); }, // a real toe, poking out of the end
+    eerie(p, S) { zigzag(...p(-0.07, -0.47), ...p(0.07, -0.47), 4, 0.03 * S, { w: 0.7 }); }, // the stitching opens into a mouth
+  },
+  tuck: {
+    always(p, S) { dot(...p(0.57, -1.26), 0.025 * S); }, // the bobble on its nightcap is an eye
+    eerie(p, S) { for (const x of [-0.3, 0.05, 0.35]) ellipse(...p(x, -0.02), 0.05 * S, 0.03 * S, { w: 0.8, fill: '#e8c0a8', fillAlpha: 0.7 }); }, // far too many feet, under the hem
+  },
+  nibbler: {
+    always(p, S) { dot(...p(0.15, -1.25), 0.06 * S); }, // one eye much bigger than the other
+    eerie(p, S) { stroke([p(0.62, -0.95), p(0.75, -0.9), p(0.78, -0.75), p(0.66, -0.8)], { closed: true, w: 1, fill: INK, fillAlpha: 0.85 }); zigzag(...p(0.64, -0.92), ...p(0.76, -0.85), 3, 0.03 * S, { w: 0.6, color: PAPER }); }, // a second, smaller mouth, on its side
+  },
+};
+
 // Returns false if there's no drawing for this monster (the caller falls back to its letter).
 function drawMonster(m, cx, by, S) {
   const art = MONSTER_ART[m.type];
@@ -388,7 +448,19 @@ function drawMonster(m, cx, by, S) {
   const lift = m.d.ai === 'ghost' ? Math.sin(Ink.t * 2 + m.x) * 0.05 * S : 0;
   if (m.type === 'nibbler') S *= 1.9; // the boss is enormous; it spills over everything around it
   const p = unit(cx, by + lift, S);
-  leaning(0.08 * Math.sin(Ink.t * 0.9 + m.x + m.y), by, () => art(p, S, m, m.d.color));
+  leaning(0.08 * Math.sin(Ink.t * 0.9 + m.x + m.y), by, () => {
+    art(p, S, m, m.d.color);
+    const wrong = WRONG[m.type];
+    if (!wrong) return;
+    wrong.always(p, S, m, m.d.color);
+    const k = clamp((lookFrac() - WRONG_FROM) / (WRONG_FULL - WRONG_FROM), 0, 1);
+    if (k > 0) {
+      const a = Ink.alpha;
+      Ink.alpha *= k;
+      wrong.eerie(p, S, m, m.d.color);
+      Ink.alpha = a;
+    }
+  });
   if (m.stun > 0) dizzy(p, S, m.type === 'nibbler' ? -1.6 : -1.15);
   return true;
 }

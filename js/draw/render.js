@@ -1,7 +1,7 @@
 'use strict';
 // Paints the game onto aged paper: the inked map (zoomed in, following you), darkness as ink
 // flooding in from beyond your light, a nearly empty margin, and the message log.
-// Menus (help, pockets, log, graveyard) still use a typewritten 80x34 character grid.
+// Menus (help, pockets, log, graveyard) are laid out on an 80x34 grid, lettered by hand.
 
 const COLS = 80, ROWS = 34;
 const canvas = document.getElementById('screen');
@@ -50,7 +50,7 @@ function shade(hex, f) {
 }
 
 function gridFont() {
-  ctx.font = `${fontPx}px "Courier New", Courier, Menlo, monospace`;
+  ctx.font = `${Math.round(fontPx * 1.15)}px ${FONT_HAND}`;
   ctx.textAlign = 'center';
   ctx.textBaseline = 'middle';
 }
@@ -65,12 +65,21 @@ function put(x, y, ch, fg, bg) {
   ctx.fillText(ch, GRID_X + x * cellW + cellW / 2, y * cellH + cellH / 2 + 1);
 }
 
+// A run of hand lettering starting at a grid cell. The letters keep their own widths (they
+// are written, not typed), so a run is usually a little shorter than its cells.
 function text(x, y, str, fg, bg) {
-  for (let i = 0; i < str.length; i++) put(x + i, y, str[i], fg, bg);
+  if (bg) for (let i = 0; i < str.length; i++) put(x + i, y, ' ', null, bg);
+  if (!str) return;
+  ctx.textAlign = 'left';
+  ctx.fillStyle = fg || C.ink;
+  ctx.fillText(str, GRID_X + x * cellW + cellW * 0.15, y * cellH + cellH / 2 + 1);
+  ctx.textAlign = 'center';
 }
 
 function centerText(y, str, fg) {
-  text(Math.floor((COLS - str.length) / 2), y, str, fg);
+  ctx.textAlign = 'center';
+  ctx.fillStyle = fg || C.ink;
+  ctx.fillText(str, GRID_X + (COLS * cellW) / 2, y * cellH + cellH / 2 + 1);
 }
 
 // A paper card with an inked, slightly wobbly border.
@@ -85,9 +94,11 @@ function box(x0, y0, w, h, title) {
   stroke([a, [b[0], a[1]], b, [a[0], b[1]]], { closed: true, w: 1.3 });
   gridFont();
   if (title) {
-    const tx = x0 + Math.floor((w - title.length) / 2);
-    for (let i = 0; i < title.length; i++) put(tx + i, y0, ' ', null, PAPER);
-    text(tx, y0, title, C.red);
+    const tw = ctx.measureText(title).width, mid = GRID_X + (x0 + w / 2) * cellW;
+    ctx.fillStyle = PAPER;
+    ctx.fillRect(mid - tw / 2 - cellW, y0 * cellH, tw + cellW * 2, cellH);
+    ctx.fillStyle = C.red;
+    ctx.fillText(title, mid, y0 * cellH + cellH / 2 + 1);
   }
 }
 
@@ -96,6 +107,12 @@ function box(x0, y0, w, h, title) {
 
 function serif(size, style) {
   ctx.font = `${style || ''} ${Math.round(size)}px ${FONT_VERSE}`;
+}
+
+// Hand lettering (the margin, headings and labels). It has no italic or bold of its own, so
+// those are left to the browser; it runs a little small, so it is drawn a little larger.
+function hand(size, style) {
+  ctx.font = `${style || ''} ${Math.round(size * 1.12)}px ${FONT_HAND}`;
 }
 
 function wrapPx(str, maxW) {
@@ -203,7 +220,7 @@ function updateCamera(snap) {
 }
 
 function drawPlay() {
-  const L = G.level, p = G.player, S = View.S, d = dreadFrac(p);
+  const L = G.level, p = G.player, S = View.S, d = lookFrac(p);
   updateCamera(View.level !== L);
   View.level = L;
   Ink.setMood(d, S, p.confused ? S * 0.08 : 0);
@@ -471,7 +488,7 @@ let floodKey = '', floodAt = -1e9, floodBox = null;
 // The ink layer is rebuilt a few times a second (or when anything changes), in map space, so
 // moving the camera only slides it. Its texture is anchored to the map, so the ink stays put.
 function drawFlood(L, p, x0, y0, x1, y1) {
-  const S = View.S, d = dreadFrac(p);
+  const S = View.S, d = lookFrac(p);
   const key = [L.depth, G.turn, x0, y0, x1, y1, S, Math.round(d * 20), lightRadius(), p.x, p.y].join();
   if (key !== floodKey || FX.now - floodAt > 140) {
     buildFlood(L, p, x0, y0, x1, y1);
@@ -484,7 +501,7 @@ function drawFlood(L, p, x0, y0, x1, y1) {
 }
 
 function buildFlood(L, p, x0, y0, x1, y1) {
-  const S = View.S, cw = x1 - x0 + 1, ch = y1 - y0 + 1, d = dreadFrac(p), r = lightRadius();
+  const S = View.S, cw = x1 - x0 + 1, ch = y1 - y0 + 1, d = lookFrac(p), r = lightRadius();
   floodBox = { x0, y0, cw, ch };
   if (cellInk.length < cw * ch) cellInk = new Float32Array(cw * ch);
   for (let y = y0; y <= y1; y++) {
@@ -627,14 +644,69 @@ function drawDarkThings(L, p, S) {
       drawEyes(cx, cy - S * 0.2, S * 0.35, m.type === 'tuck' ? '#f4f0ff' : '#ffd84a');
     }
   }
-  for (const e of FX.eyes) {
-    if (e.space !== 'map' || L.visible[idx(e.x, e.y)] || (FX.now + e.seed) % blink < shut) continue;
-    drawEyes(sx(e.x) + S / 2, sy(e.y) + S / 2, S * 0.35, e.color);
+  for (const h of FX.haunts) {
+    if (!inMap(h.x, h.y) || L.visible[idx(h.x, h.y)]) continue;
+    drawHaunt(h, sx(h.x) + S / 2, sy(h.y) + S / 2, S);
   }
   for (const rs of FX.rustles) {
     if (L.visible[idx(rs.x, rs.y)]) continue;
     tuft(sx(rs.x) + S / 2, sy(rs.y) + S * 0.85, S * 0.5, 4, Math.sin(Ink.t * 30) * S * 0.2, { w: 1.2, color: '#9fc88a' });
   }
+}
+
+// Made-up things in the dark, pale on the ink, there and then not: a smile with nobody behind it,
+// a toy that wasn't there a moment ago, a ripple as if something dropped into the ink.
+const HAUNT_INK = '#efe3c8';
+function drawHaunt(h, cx, cy, S) {
+  const life = h.until - h.t0, age = FX.now - h.t0;
+  const a = clamp(Math.min(age / 350, (life - age) / 450), 0, 1) * 0.8;
+  if (a <= 0) return;
+  const [al, col] = [Ink.alpha, Ink.color];
+  Ink.alpha = a;
+  Ink.color = HAUNT_INK;
+  const o = { w: 1.2, color: HAUNT_INK, noScratch: true };
+  if (h.kind === 'smile') {
+    // a wide, delighted smile, and some teeth in it
+    const w = S * 0.42, pts = [], low = [];
+    for (let k = 0; k <= 10; k++) {
+      const f = k / 10, x = cx - w + 2 * w * f;
+      pts.push([x, cy - S * 0.02 + Math.sin(f * Math.PI) * S * 0.2]);
+      low.push([x, cy - S * 0.02 + Math.sin(f * Math.PI) * S * 0.11]);
+    }
+    stroke(pts, Object.assign({ step: 0 }, o));
+    stroke(low, Object.assign({ step: 0, w: 0.8 }, o));
+    for (let k = 1; k < 8; k++) {
+      const f = k / 8, x = cx - w + 2 * w * f, top = cy - S * 0.02 + Math.sin(f * Math.PI) * S * 0.11;
+      line(x, top, x, top + S * 0.07, Object.assign({}, o, { w: 0.8 }));
+    }
+  } else if (h.kind === 'toy') {
+    const which = Math.floor(h.seed) % 3, by = cy + S * 0.25;
+    if (which === 0) { // a ball with a stripe
+      ellipse(cx, by - S * 0.17, S * 0.17, S * 0.17, o, 0.02, h.seed);
+      stroke([[cx - S * 0.16, by - S * 0.2], [cx, by - S * 0.12], [cx + S * 0.16, by - S * 0.2]], Object.assign({ step: 0 }, o));
+    } else if (which === 1) { // a spinning top, still spinning
+      const tilt = Math.sin(FX.now * 0.01 + h.seed) * S * 0.03;
+      stroke([[cx + tilt, by], [cx - S * 0.18, by - S * 0.2], [cx + tilt, by - S * 0.36], [cx + S * 0.18, by - S * 0.2]], Object.assign({ closed: true, step: 0 }, o));
+      line(cx + tilt, by - S * 0.36, cx + tilt, by - S * 0.46, o);
+    } else { // a wooden letter block
+      const s = S * 0.17;
+      stroke([[cx - s, by], [cx + s, by], [cx + s, by - 2 * s], [cx - s, by - 2 * s]], Object.assign({ closed: true, step: 0 }, o));
+      serif(S * 0.26, 'bold');
+      ctx.textAlign = 'center';
+      ctx.textBaseline = 'middle';
+      ctx.globalAlpha = a;
+      ctx.fillStyle = HAUNT_INK;
+      ctx.fillText('ABZ'[Math.floor(h.seed / 3) % 3], cx, by - s);
+      ctx.globalAlpha = 1;
+    }
+  } else { // ripples, spreading
+    const k = clamp(age / life, 0, 1);
+    for (let i = 0; i < 2; i++) {
+      const r = S * (0.12 + 0.4 * ((k + i * 0.35) % 1));
+      ellipse(cx, cy + S * 0.15, r, r * 0.45, Object.assign({}, o, { w: 0.9, alpha: 1 - ((k + i * 0.35) % 1) }), 0.04, h.seed + i);
+    }
+  }
+  [Ink.alpha, Ink.color] = [al, col];
 }
 
 // Where the face-off card goes: next to you, on whichever side covers the least. Below you is
@@ -694,13 +766,13 @@ function drawFaceOff(p, S) {
     : th.result === 'steal' ? fill(K.steal, { Them: cap(theM(m)) }) : fill(K.miss, { Them: cap(theM(m)) });
   const opts = [['A', K.attack], ['R', p.verve > 0 ? K.rhyme : K.noRhymes], ['U', K.use],
     enc ? ['Esc', enc.engaged ? K.backAway : K.leave] : [K.arrows, K.getAway]];
-  serif(16);
+  hand(16);
   const titleW = ctx.measureText(title).width;
   let optsW = 0;
   for (const [k, label] of opts) {
-    serif(14, 'bold');
+    hand(14, 'bold');
     optsW += ctx.measureText(k).width + 6;
-    serif(14);
+    hand(14);
     optsW += ctx.measureText(label).width + 18;
   }
   const w = Math.max(titleW + 110, optsW + 24), h = enc ? 74 : 58;
@@ -720,7 +792,7 @@ function drawFaceOff(p, S) {
   drawMonster(m, x0 + 20, y0 + 30, m.type === 'nibbler' ? 9 : 20);
   ctx.textAlign = 'left';
   ctx.textBaseline = 'alphabetic';
-  serif(16);
+  hand(16);
   ctx.fillStyle = enc ? INK : C.red;
   ctx.fillText(title, x0 + 40, y0 + 22);
   if (!m.d.invulnerable) {
@@ -731,17 +803,17 @@ function drawFaceOff(p, S) {
   }
   let ox = x0 + 14;
   for (const [k, label] of opts) {
-    serif(14, 'bold');
+    hand(14, 'bold');
     ctx.fillStyle = C.red;
     ctx.fillText(k, ox, y0 + 45);
     ox += ctx.measureText(k).width + 6;
-    serif(14);
+    hand(14);
     ctx.fillStyle = INK;
     ctx.fillText(label, ox, y0 + 45);
     ox += ctx.measureText(label).width + 18;
   }
   if (enc) {
-    serif(12, 'italic');
+    hand(12, 'italic');
     ctx.fillStyle = C.gray;
     ctx.fillText(enc.engaged ? K.fighting : K.sleeping, x0 + 14, y0 + 64);
   }
@@ -827,7 +899,7 @@ const BLANK_GEAR = { hand: { kind: 'weapon', id: 'spork' }, head: { kind: 'armor
 const nib = (text, seed) => (G.uiNibble ? nibble(text, seed, G.uiNibble) : text);
 
 function sectionLabel(label, x, y, w) {
-  ctx.font = `600 ${Math.round(clamp(Margin.w * 0.034, 10, 12))}px ${FONT_VERSE}`;
+  ctx.font = `${Math.round(clamp(Margin.w * 0.04, 12, 14))}px ${FONT_HAND}`;
   ctx.textAlign = 'left';
   ctx.textBaseline = 'alphabetic';
   ctx.fillStyle = C.red;
@@ -861,7 +933,7 @@ function drawMargin(p) {
   ctx.fillStyle = INK;
   ctx.fillText(phrase('somebody', { n: G.runNo }), x, y);
   y += 21;
-  serif(14, 'italic');
+  hand(14, 'italic');
   ctx.fillStyle = C.gray;
   ctx.fillText(fill(U.level, { level: p.level, floor: phrase('floorOf', { n: G.depth, of: FLOORS.length }) }), x, y);
   y += 17;
@@ -874,13 +946,13 @@ function drawMargin(p) {
   const bh = 16, barW = w - 66, low = p.hp <= p.maxHp / 3, frac = clamp(p.hp / p.maxHp, 0, 1);
   if (frac > 0) stroke(rect(x, y, barW * frac, bh), { closed: true, w: 0, fill: C.red, fillAlpha: low ? 0.85 : 0.55, step: 0 });
   stroke(rect(x, y, barW, bh), { closed: true, w: 1.1 });
-  serif(18, 'bold');
+  hand(18, 'bold');
   ctx.fillStyle = low ? C.red : INK;
   ctx.fillText(`${Math.max(0, p.hp)}/${p.maxHp}`, x + barW + 10, y + bh - 1);
   y += bh + 9;
   line(x, y, x + barW, y, { w: 0.6, color: C.dim, noScratch: true });
   if (p.xp > 0) line(x, y, x + barW * clamp(p.xp / p.xpNext, 0, 1), y, { w: 2, color: C.purple, noScratch: true });
-  serif(12, 'italic');
+  hand(12, 'italic');
   ctx.fillStyle = C.gray;
   ctx.fillText(fill(U.toLevel, { n: p.xpNext - p.xp, next: p.level + 1 }), x, y + 15);
   y += 26;
@@ -890,9 +962,13 @@ function drawMargin(p) {
   const ch = 92, base = y + ch, candleX = x + 26;
   Ink.calm(60);
   ellipse(candleX, base + 2, 24, 5, { w: 1, fill: '#8a847a', fillAlpha: 0.3 });
-  drawCandle(candleX, base, ch * (0.08 + 0.66 * clamp(p.wick / RULES.candle.max, 0, 1)), 15, p.wick > 0, 64);
+  // The candle you have, inside a faint outline of the fullest candle there can be, so you can
+  // see at a glance how much of it is left.
+  const fullH = ch * 0.74, waxH = Math.max(ch * 0.03, fullH * clamp(p.wick / RULES.candle.max, 0, 1));
+  stroke(rect(candleX - 7.5, base - fullH, 15, fullH), { closed: true, w: 0.8, alpha: 0.32, noScratch: true, step: 0 });
+  drawCandle(candleX, base, waxH, 15, p.wick > 0, 64);
   const [word, wordCol] = candleWord(p.wick);
-  serif(12, 'italic');
+  hand(12, 'italic');
   ctx.textAlign = 'center';
   ctx.fillStyle = wordCol;
   ctx.fillText(word, candleX, base + 18);
@@ -902,11 +978,11 @@ function drawMargin(p) {
     const ry = y + 4 + i * rh;
     Ink.calm(22);
     icon(colX + 10, ry + rh / 2);
-    serif(15);
+    hand(15);
     ctx.fillStyle = C.gray;
     ctx.fillText(label, colX + 28, ry + rh / 2 + 5);
     if (value !== null) {
-      serif(17, 'bold');
+      hand(17, 'bold');
       ctx.fillStyle = INK;
       ctx.textAlign = 'right';
       ctx.fillText(String(value), x + w, ry + rh / 2 + 5);
@@ -929,12 +1005,12 @@ function drawMargin(p) {
     Ink.alpha = it ? 1 : 0.28;
     drawItem(it || BLANK_GEAR[slot], x + 10, y + 10, 20);
     Ink.alpha = 1;
-    serif(14, it ? '' : 'italic');
+    hand(14, it ? '' : 'italic');
     ctx.fillStyle = it ? INK : C.gray;
     ctx.textAlign = 'left';
     ctx.fillText(fitText(nib(it ? itemName(it) : TEXT.items.empty[slot], y), w - 64), x + 28, y + 15);
     if (it) {
-      serif(12, 'italic');
+      hand(12, 'italic');
       ctx.fillStyle = C.gray;
       ctx.textAlign = 'right';
       ctx.fillText(fill(slot === 'hand' ? U.atk : U.def, { n: gearBonus(it) }), x + w, y + 15);
@@ -965,13 +1041,13 @@ function drawMargin(p) {
   ].filter(t => t[0]);
   if (tags.length) {
     let tx = x;
-    serif(13, 'italic');
+    hand(13, 'italic');
     for (const [, label, col] of tags) {
       const tw = ctx.measureText(label).width + 16;
       if (tx + tw > x + w) { tx = x; y += 26; }
       Ink.calm(40);
       stroke(rect(tx, y, tw, 20), { closed: true, w: 0.9, color: col, fill: col, fillAlpha: 0.08, noScratch: true });
-      serif(13, 'italic');
+      hand(13, 'italic');
       ctx.fillStyle = col;
       ctx.fillText(label, tx + 8, y + 14);
       tx += tw + 6;
@@ -999,12 +1075,12 @@ function drawMargin(p) {
       drawMonster(n.m, x + 11, y + 23, n.m.type === 'nibbler' ? 7 : 21);
       Ink.alpha = 1;
       Ink.scratch = 0;
-      serif(14);
+      hand(14);
       ctx.fillStyle = INK;
       ctx.fillText(fitText(n.name, w - 96), x + 28, y + 17);
       for (let i = 0; i < 5; i++) {
         const px = x + w - 58 + i * 12, filled = n.frac === null || (n.frac !== undefined && i < Math.ceil(n.frac * 5));
-        if (n.frac === undefined) { serif(12, 'italic'); ctx.fillStyle = C.dim; ctx.fillText(U.unknownHealth, px - 3, y + 17); continue; }
+        if (n.frac === undefined) { hand(12, 'italic'); ctx.fillStyle = C.dim; ctx.fillText(U.unknownHealth, px - 3, y + 17); continue; }
         ellipse(px, y + 12, 4, 4, { w: 0.8, fill: n.frac === null ? C.purple : C.red, fillAlpha: filled ? 0.8 : 0, noScratch: true }, 0);
       }
       y += 26;
@@ -1013,22 +1089,22 @@ function drawMargin(p) {
   }
   y = sectionLabel(fill(U.pockets, { n: p.inv.length, of: RULES.player.pockets }), x, y, w);
   if (!p.inv.length) {
-    serif(14, 'italic');
+    hand(14, 'italic');
     ctx.fillStyle = C.dim;
     ctx.fillText(U.noPockets, x + 8, y + 14);
   }
   rows.forEach(({ it, idx: all }, i) => {
     const ry = y + i * pocketH, name = all.length > 1 ? fill(TEXT.ui.pockets.count, { name: itemName(it), n: all.length }) : itemName(it);
-    serif(12);
+    hand(12);
     ctx.fillStyle = C.dim;
     ctx.fillText(slotKey(i), x, ry + pocketH * 0.7);
     Ink.calm(pocketH);
     drawItem(it, x + 22, ry + pocketH / 2, pocketH * 0.95);
-    serif(clamp(pocketH * 0.62, 12, 15));
+    hand(clamp(pocketH * 0.62, 12, 15));
     ctx.fillStyle = INK;
     ctx.fillText(fitText(nib(name, i + 11), w - 40), x + 38, ry + pocketH * 0.7);
   });
-  serif(12, 'italic');
+  hand(12, 'italic');
   ctx.fillStyle = C.dim;
   ctx.fillText(U.keys, x, H - 14);
 }
@@ -1134,7 +1210,7 @@ function drawLog() {
   spiral(px + 1, py + ph / 2, 10, 1.6, { w: 0.9 });
   spiral(px + pw - 1, py + ph / 2, 10, 1.6, { w: 0.9 });
   const title = TEXT.ui.storySoFar.split('').join(' ');
-  ctx.font = `600 11px ${FONT_VERSE}`;
+  ctx.font = `13px ${FONT_HAND}`;
   const ttw = ctx.measureText(title).width;
   ctx.fillStyle = '#f7f0dd';
   ctx.fillRect(b.x + b.w / 2 - ttw / 2 - 10, py - 7, ttw + 20, 14);

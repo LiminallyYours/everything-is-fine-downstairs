@@ -153,7 +153,7 @@ function verseSize(lines, scale) {
 function drawPage(pg) {
   if (!pg) return;
   const lines = pageLines(pg), el = FX.now - pg.t0;
-  Ink.setMood(G.player && G.mode !== 'win' ? dreadFrac() * 0.7 : 0, 44);
+  Ink.setMood(G.player && G.mode !== 'win' ? lookFrac() * 0.7 : 0, 44);
   Ink.leanY = H / 2;
   if (FX.reduced) { Ink.wobble *= 0.3; Ink.lean *= 0.2; }
   if (pg.style === 'tomb') return drawTomb(pg, lines, el);
@@ -186,7 +186,7 @@ function drawPage(pg) {
     if (a <= 0) return;
     ctx.globalAlpha = a;
     ctx.fillStyle = INK;
-    ctx.fillText(l, W / 2, y + i * lh + (1 - a) * 8);
+    inkLine(l, W / 2, y + i * lh + (1 - a) * 8, i + 1);
   });
   ctx.globalAlpha = 1;
   y += lines.length * lh;
@@ -243,7 +243,7 @@ function drawTomb(pg, lines, el) {
     serif(size, last ? 'italic' : '');
     ctx.globalAlpha = a;
     ctx.fillStyle = last ? C.red : INK;
-    ctx.fillText(l, W / 2, y + i * lh + (last ? lh * 0.4 : 0));
+    inkLine(l, W / 2, y + i * lh + (last ? lh * 0.4 : 0), i + 1);
   });
   ctx.globalAlpha = 1;
   if (!pageDone(pg)) return;
@@ -281,7 +281,7 @@ function drawRhymePage(pg, lines, el) {
     } else {
       serif(size);
       ctx.fillStyle = INK;
-      ctx.fillText(l, W / 2, y + i * lh);
+      inkLine(l, W / 2, y + i * lh, i + 1);
     }
   });
   ctx.globalAlpha = 1;
@@ -397,7 +397,7 @@ function drawChoicePage(pg, lines, el) {
     if (a <= 0) return;
     ctx.globalAlpha = a * (pg.result ? 0.45 : 1);
     ctx.fillStyle = INK;
-    ctx.fillText(l, W / 2, y + i * lh + (1 - a) * 8);
+    inkLine(l, W / 2, y + i * lh + (1 - a) * 8, i + 1);
   });
   ctx.globalAlpha = 1;
   y += lines.length * lh + H * 0.02;

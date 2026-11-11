@@ -1,15 +1,16 @@
 'use strict';
 // Short-lived visual effects that live in real time (milliseconds), not game turns:
-// shake, flashes, speech bubbles, floating numbers, rustling grass, biting walls, fake eyes.
+// shake, flashes, speech bubbles, floating numbers, rustling grass, biting walls, eyes on the
+// title page, and the made-up things in the dark.
 
 const FX = {
   now: 0,
   shake: 0, flash: 0, flashColor: '#ff2040',
   reduced: Settings.get('reducedFx'),
-  bubbles: [], floats: [], rustles: [], teeth: [], eyes: [], deaths: [], words: [],
+  bubbles: [], floats: [], rustles: [], teeth: [], eyes: [], haunts: [], deaths: [], words: [],
 
   clear() {
-    this.bubbles = []; this.floats = []; this.rustles = []; this.teeth = []; this.eyes = []; this.deaths = []; this.words = [];
+    this.bubbles = []; this.floats = []; this.rustles = []; this.teeth = []; this.eyes = []; this.haunts = []; this.deaths = []; this.words = [];
     this.shake = 0; this.flash = 0;
   },
 
@@ -62,6 +63,11 @@ const FX = {
     this.eyes.push({ x, y, space: space || 'map', color: color || '#ffd84a', until: this.now + ms, seed: Math.random() * 5000 });
   },
 
+  // Something in the dark that belongs to nothing: 'smile' (no face), 'toy', or 'ripple'.
+  haunt(x, y, kind, ms) {
+    this.haunts.push({ x, y, kind, t0: this.now, until: this.now + ms, seed: Math.random() * 5000 });
+  },
+
   update(dt) {
     const n = this.now, R = RULES.fx;
     this.shake = Math.max(0, this.shake - dt * 0.03);
@@ -71,6 +77,7 @@ const FX = {
     this.rustles = this.rustles.filter(r => r.until > n);
     this.teeth = this.teeth.filter(r => r.until > n);
     this.eyes = this.eyes.filter(e => e.until > n);
+    this.haunts = this.haunts.filter(e => e.until > n);
     this.deaths = this.deaths.filter(d => n - d.t0 < R.deathMs);
     this.words = this.words.filter(w => n - w.t0 < R.wordMs);
   },

@@ -129,7 +129,7 @@ const RULES = (function freezeDeep(o) {
     whispers: { fromTier: 1, perTier: 0.018, logged: 0.6 },
     fakeRustle: { fromTier: 1, perTier: 0.04 },   // in the Gloomwood Glen
     brokenRhyme: { fromTier: 2, afraid: 0.35, undone: 0.7 }, // chance a rhyme loses its last word
-    eyes: { perMs: 0.00003, plus: 5 },            // eyes in the dark: chance dt * perMs * (plus + dread) per frame
+    eyes: { perMs: 0.00003, plus: 5 },            // things in the dark that belong to nothing (a faceless smile, a toy, a ripple): chance dt * perMs * (plus + dread) per frame
   },
 
   // Each floor's map.
@@ -295,6 +295,21 @@ const RULES = (function freezeDeep(o) {
   },
 
   // How long the little effects last, in milliseconds.
+  // How eerie the page looks. Only the drawing: everything fear does in play stays tied to your
+  // real Dread. The page looks at least as frightened as the floor (0 calm ... 1 the worst),
+  // and now and then, at random, it lurches to the worst look and eases back.
+  look: {
+    floor: [0, 0.12, 0.24, 0.36, 0.46, 0.56], // floors 1 to 6 (0.55 is where "afraid" starts)
+    moment: {
+      chance: 1 / 200,        // each turn, the chance of an eerie moment...
+      gap: 50,                // ...but never two within this many turns
+      riseMs: 250,            // it lurches up this fast,
+      holdMs: 500,            // stays this long,
+      fadeMs: 2600,           // and eases back over this long
+      reduced: 0.5,           // with calmer effects (F) it goes only this far
+    },
+  },
+
   fx: {
     bubbleMs: 2800,           // a speech bubble, unless the speaker says otherwise
     floatMs: 900,             // a floating damage number

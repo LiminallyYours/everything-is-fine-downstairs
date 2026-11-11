@@ -131,10 +131,10 @@ module.exports = (add) => {
       for (const [name, f] of Object.entries(cases)) { __arena(); const p = G.player; p.wick = 300; p.dread = 50; p.gear.feet = null; f(p); computeFOV(G.level, p.x, p.y, lightRadius());
         for (let t = 0; t < 20; t++) { tickDread(G.level); p.dread = Math.max(p.dread, 0); } out[name] = +p.dread.toFixed(2); p.hp = p.maxHp = 9999; p.hidden = false; p.gear.feet = null; }
       return out; })()`);
-    tally(c, 'Dread: hallucinations and whispers over 300 turns at dread 90 (phantoms seen, whispers, eyes)', `(() => { __arena(); const p = G.player, L = G.level; let phantoms = 0, whispers = 0; const seen = new Set();
+    tally(c, 'Dread: hallucinations and whispers over 300 turns at dread 90 (phantoms seen, whispers, things in the dark)', `(() => { __arena(); const p = G.player, L = G.level; let phantoms = 0, whispers = 0; const seen = new Set();
       for (let t = 0; t < 300; t++) { p.dread = 90; const said = __said(); tickDread(L); L.phantoms.forEach(ph => seen.add(ph)); whispers += said().filter(t => t.startsWith('"')).length; }
-      let eyes = 0; G.mode = 'play'; for (let f = 0; f < 2000; f++) { const n = FX.eyes.length; dreadFrame(34); if (FX.eyes.length > n) eyes++; }
-      return [seen.size, whispers, eyes]; })()`);
+      let haunts = 0; G.mode = 'play'; for (let f = 0; f < 2000; f++) { const n = FX.haunts.length; dreadFrame(34); if (FX.haunts.length > n) haunts++; }
+      return [seen.size, whispers, haunts]; })()`);
     // floors: rules, generation, bedtime
     tally(c, 'barrels, 400 climbed into (mite, something, nothing)', `(() => { const out = { mite: 0, thing: 0, none: 0 }; enterFloor(1); G.mode = 'play';
       const L = G.level; let b = null; for (let i = 0; i < L.tiles.length && !b; i++) if (L.tiles[i] === T.PROP) b = [i % MAP_W, (i / MAP_W) | 0];

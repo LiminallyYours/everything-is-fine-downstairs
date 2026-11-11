@@ -704,6 +704,69 @@ with its git history, and is where all new work happens.
       on a calm page, spilled ink on a frightened one). Claude suggested 3. JW: "3". Settled: 3.
       The "how it looks" group has now all been discussed, with the candle and the eyes decided
       earlier; it is built next.
+    - **How it looks: built** (11 November). All six: the eerie look forward, the calm horrors
+      drawn wrong, the hand lettering, ink like ink, the candle and the eyes. Details Claude decided
+      while building, which JW has not yet seen:
+      - **Eerier with depth:** the page looks at least as frightened as floors 1 to 6 set it (none,
+        then a little more each floor; the bottom floor just past where "afraid" starts). From
+        floor 5 down that brings the thin ink tendrils even when calm. Numbers in `RULES.look.floor`.
+      - **Eerie moments:** each turn a 1 in 200 chance, never two within 50 turns (in a long test,
+        22 in 4000 turns, about one every 180). The page lurches up in a quarter of a second, holds
+        half a second, and eases back over about two and a half seconds; with calmer effects (F) it
+        goes half way. They are worked out from the run, the floor and the turn, not from the
+        game's dice, so they can never change what happens in play. No sound yet (sound group).
+      - **Only the look:** whispers, the made-up things at the edge of your light, broken rhymes,
+        the shorter fuse, trembling, bolder horrors and the log turning to static all still follow
+        your real fear.
+      - **Wrong horrors:** one thing always: the Mold-Mite has one arm too many; Yesterday's Soup has
+        a finger poking up out of it; the Put-Away has fingers curled over its drawer from inside;
+        the Second Opinion has a second row of teeth and one eye looking somewhere else;
+        Better-Late-Than-Never has a third leg; the Ahem's polite fist has one knuckle too many; the
+        Nothing-to-Worry-About lets its tongue hang out; the Empty Sandwich has a single tooth in its
+        missing filling; the Tick-Tock Tot has a second key on its head; Bottom Half – Giraffe has a
+        leg with two knees; the Sockling has a real toe poking out; the Tuck-You-In's nightcap bobble
+        is an eye; the Nameless Nibbler has one eye far bigger than the other. More once the page is
+        eerie (fading in between 0.3 and 0.5 of the way to the worst look): a third eye on the
+        Mold-Mite, more fingers and an eye in the soup, teeth along the Put-Away's top drawer, a third
+        eye-stalk on the Second Opinion, Better-Late's smile running past its face, a mouth on the
+        Ahem after all, more eyes inside the Nothing-to-Worry-About, something looking out from the
+        sandwich, the Tot's eyes turning into clock hands, drool coming down from the top of the
+        Giraffe, a mouth opening in the Sockling's stitching, far too many feet under the
+        Tuck-You-In, and a second, smaller mouth on the Nibbler. They are small, as a second look
+        should be; all in `WRONG` in `js/draw/sprites.js`.
+      - **Hand lettering:** the font is Patrick Hand (free, SIL Open Font License, about 24 KB,
+        kept inside the game with its licence). It is used for the margin, the section headings,
+        "The Story So Far" heading, the face-off card, and the help, pockets, gear, log and
+        graveyard pages (which were the typewriter font). Left in book type: the verse pages, the
+        title page, the story strip's lines, the news ribbon, speech bubbles and the sounds written
+        in the dark.
+      - **Verse printed like ink:** each letter sits a little off its line and comes out slightly
+        darker or lighter, with the odd blot by a letter; the letters tremble and blot more as the
+        page gets eerier.
+      - **Ink:** every line has a stretch in its middle pressed harder; filled shapes bigger than a
+        small item are hatched with fine diagonal lines on their lower right, with a crossing set in
+        the deepest corner once the page is over a third of the way to its worst; paper-coloured
+        cards, bubbles and panels are never hatched. Blots at the start or end of about 1 stroke in
+        80 on a calm page, rising to about 1 in 6 at the worst (`INK_BLOT`). Frame time in the
+        test's software drawing went from about 12–16 to 16–18 milliseconds; a browser draws much
+        faster.
+      - **The candle:** a faint outline of the fullest candle there can be (450 wax), with your
+        candle standing inside it at its real height. Nothing else was added to it (marks at each
+        quarter were tried and taken out, as not asked for; easy to put back).
+      - **Eyes:** made-up eyes are gone from the map. Eyes in the dark are only ever an awake horror
+        you can't see. The made-up things are a wide smile with nobody behind it, a toy that wasn't
+        there (a striped ball, a spinning top, a lettered block), and ripples spreading in the ink;
+        they come exactly as often as the made-up eyes did. The eyes peering in at the edges of the
+        title page are left as they were.
+      - **Not changed, for JW to decide:** the made-up horrors and treasures that appear at the edge
+        of your light when you are frightened (they are drawn as real horrors and things, then
+        vanish). They are not in the dark, so the eyes decision didn't cover them, but they do teach
+        that what you see might not be there.
+      - Tests: a new suite, `tests/suites/looks.js` (17 checks). The golden transcript was
+        re-recorded: the menu pages are now written in runs of hand lettering, not typed one letter
+        at a time, so the recording groups their words differently; the toy block's letter shows up
+        as drawn text; and one measurement now counts the made-up things in the dark instead of
+        made-up eyes (same count, 182). Nothing that happens in play changed in any scenario.
 
 Everything below this line is **proposed by Claude and not yet agreed**. Treat the lists as
 possibly incomplete.

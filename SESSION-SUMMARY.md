@@ -34,10 +34,9 @@ The first version of the game is kept, untouched, in `../sillygame/` on the Mac 
   each settled item recorded there with JW's answer word for word; a group is built once all of it
   has been discussed, then tests, `python3 build.py`, README, this file and `PLAN.md`, commit
   (author `LiminallyYours <64442823+LiminallyYours@users.noreply.github.com>`) and push.
-- **Next:** the "how it looks" group in `PLAN.md` ("Proposed improvements, by category",
-  Visual), plus two things JW already decided for it: a candle in the margin that shows how full
-  it is, and eyes in the dark only for real horrors with the made-up dark things made abstract.
-  Then the story, then sound. Still open: whether floors 3 to 5 need tougher horrors, once JW
+- **Next:** show JW the new look and take up anything he wants changed (the details are in
+  `PLAN.md`, item 11, "How it looks: built", including one open question: the made-up horrors
+  at the edge of your light). Then the story group, then sound. Still open: whether floors 3 to 5 need tougher horrors, once JW
   has played; and a mobile version (JW: "we need a mobile version"), not yet discussed.
 - **Project tracking stays in these files** in the repository (JW, 11 November), not a Claude
   artifact.
@@ -46,7 +45,7 @@ The first version of the game is kept, untouched, in `../sillygame/` on the Mac 
 
 - **Play it:** open `index.html`, keeping `js/` next to it. Or use the single-file copy,
   `dist/everything-is-fine-downstairs.html`, which you rebuild with `python3 build.py` after any change.
-- **Size:** 29 JavaScript files in folders (`config/`, `content/`, `rules/`, `sound/`, `draw/`),
+- **Size:** 32 JavaScript files in folders (`config/`, `content/`, `rules/`, `sound/`, `draw/`),
   about 7,700 lines. No libraries, no build step, nothing to install to play.
 - **Git and the web:** see "Next session: start here". GitHub's history starts fresh on 11
   November 2026 (section 12). `dist/` is not in git; `python3 build.py` rebuilds it.
@@ -253,6 +252,23 @@ The third group from `PLAN.md`, each decided by JW there:
   help and margin key lines changed on every screen, and every scenario in which a bot or a
   scenario waits beside a horror now hears a couplet and plays out differently from there. Every
   death scenario still ends in its death.
+
+### 15. How it looks (11 Nov)
+The fourth group from `PLAN.md`, each decided by JW there:
+- **Eerier the deeper you go,** and seldom, random **eerie moments** when the page lurches to its
+  worst look and eases back. Only the look: what fear does in play still follows your real fear
+  (`lookFrac()` and `eerieTurn()` in `js/rules/dread.js`, `RULES.look`).
+- **Every horror has something wrong with it,** always, and more as the page gets eerier
+  (`WRONG` in `js/draw/sprites.js`).
+- **Hand lettering** (Patrick Hand, built in: `js/draw/hand-font.js`, with its licence) for the
+  margin, headings, labels and the menu pages, which were typewritten. Verse stays in book type,
+  printed like ink (`inkLine()` in `js/draw/ink.js`).
+- **Ink like ink:** pen pressure, hatched shadows (crossed on an eerie page), blots that grow as the
+  page gets eerier (`js/draw/ink.js`).
+- **The candle** in the margin stands inside a faint outline of the fullest candle there can be.
+- **Eyes in the dark are always real.** The made-up ones became a faceless smile, a toy and a ripple.
+- New suite `tests/suites/looks.js` (17 checks). Golden re-recorded for the new way the menu pages
+  are written and the toy block's letter; nothing in play changed.
 
 ## Decisions worth remembering
 
