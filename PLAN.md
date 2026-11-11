@@ -847,6 +847,105 @@ with its git history, and is where all new work happens.
          about 15 squares across, and any written warning outside the view is shown at the edge
          of the map on its side. How many squares a phone shows is one number in
          `js/config/rules.js`, easy to change after testing on a phone.
+      2. **Walking down a long corridor on a phone.** Asked: on a computer, holding an arrow key
+         keeps you walking, and stops as soon as an awake horror comes into view; one tap per step
+         would make a 20-square hallway 20 taps. Options offered: (1) hold your finger down to keep
+         walking that way, stopping as the keyboard does; (2) one tap per step; (3) tap a faraway
+         square and walk there on your own, stopping if a horror comes into view. Claude suggested
+         1. JW: "1". Settled: hold your finger down to keep walking, with the same stop as holding
+         a key.
+      The whole phone design is written out as item 12, for Claude Code to build.
+
+12. **The mobile version: the design to build** (agreed with JW, 11 November 2026; the questions
+    and his answers are in item 11, under "A mobile version"). Not built yet.
+
+    **What it is.** The same game, playable on a phone held upright, with touch. Nothing about the
+    rules, numbers, words, drawings or saves changes. On a computer, nothing changes at all: the
+    same layout, the same keys.
+
+    **How touch works.** Every tap is turned into the key press the keyboard would send, and
+    handed to the same place key presses already go (`handleKey()` in `js/main.js`). This is why
+    no rule changes and why everything built later works on phones too. The keyboard keeps
+    working on a phone with a keyboard attached.
+
+    **When the phone layout is used.** When the screen is taller than it is wide and narrow (a
+    phone held upright). A phone held sideways shows a short page asking you to turn it upright.
+    Rejected: a sideways layout, and both (JW chose upright only: it is how people hold a phone
+    when they tap a link, and it is the layout the game most needs). The computer layout's minimum
+    size of 640 by 420 doesn't apply to the phone layout.
+
+    **The screen, top to bottom:**
+    1. **A slim top line:** who you are and the floor, health, the candle drawn inside the outline
+       of a full candle (as in the margin today, not a number), rhymes left, coins, and a menu
+       button.
+    2. **Conditions that change your odds,** under it, only when you have one: "trembling",
+       "hoarse · 2", a Mold-Mite in your lap, and the margin's other condition tags.
+    3. **The map,** filling the space left. It shows about 15 squares across, so your candlelight
+       fits on screen on every floor (it reaches up to 8 squares on floor 1, 6 on the deepest).
+       How many squares across is one setting in `js/config/rules.js`, written so it can be
+       changed in one place after testing on a phone (JW: it may take a few rounds). Rejected:
+       11 squares with bigger drawings (a horror could stand in your light, off the screen).
+    4. **Written warnings from outside the view** (the Tick-Tock Tot's "tick… tock…", the
+       colleague's "squeak…", "ahem", whispers, rustles) are shown at the edge of the map on the
+       side they come from, so you still know which way trouble is. Inside the view they are
+       drawn where they are, as now.
+    5. **The story strip:** the last two lines, the newest highlighted. Tap it for the full log.
+    6. **Four buttons, always the same:** Hold still, Rhyme, Pockets, Pick up. Rejected: a fourth
+       button that changes with where you stand ("Go down" on the stairs), because a button that
+       changes gets tapped by accident.
+
+    **The menu button** opens: Gear, the log, the bestiary, help, sound on/off (M), the narrator's
+    voice on/off (V), calmer effects (F), and Give up, which needs a second tap to confirm, as Q
+    does today.
+
+    **Walking.** The map is split into four triangles meeting at your character, one for each
+    direction: a tap anywhere in the top triangle steps up, and so on, so you don't have to hit an
+    exact square. Walking into a horror brings up the same face-off card as now. Holding your finger
+    down keeps you walking that way, one step at a time, and stops exactly as holding an arrow key
+    does: when an awake horror comes into view, or any page or card opens. Lifting your finger stops
+    you. Rejected: tapping a faraway square to walk there (new behaviour the keyboard doesn't have).
+
+    **Going downstairs:** tap the stairs while you're standing on them (that is, tap your own
+    square there). Tapping your own square anywhere else does nothing.
+
+    **Cards and pages that offer choices.** Every choice on them can be tapped: the face-off card
+    (attack, rhyme, use something, back off); the "which rhyme?" page (shove, lullaby,
+    tongue-twister, and a way to change your mind); the rhyme words, as four big boxes in a two by
+    two grid, big enough to read when the hoarse voice blots letters out; the odd rooms' three
+    choices; the rows of your pockets and your gear, with buttons for what you can do with the row
+    you've picked (use, throw when facing a horror, drop; wear or take off). These open over the
+    map and leave the four buttons in reach.
+
+    **Verse pages:** a tap anywhere does what Enter does (the next line sooner, then the next page).
+    In the odd rooms, the half-second after the verse finishes, during which Enter can't pick a
+    choice, applies to taps too, so a tap that hurries the verse can't pick a choice unread.
+
+    **The title page** has separate tappable lines: carry on (when a run is saved), begin (or begin
+    again), graveyard, bestiary, help. It must not be "tap anywhere to begin": with a run saved,
+    beginning again throws the saved run away. It also says sound may need the phone's silent
+    switch off. The death page has tappable lines too: again, graveyard, title.
+
+    **Phone housekeeping:** a fast double tap must not zoom, pulling down must not reload the page,
+    and nothing sits under the notch or the bar at the bottom of the screen. Phones keep sound off
+    until the first tap; the first tap on the title starts it.
+
+    **Speed.** The ink is redrawn about 30 times a second, and it is heavier than when phones were
+    first discussed (shading, pen pressure, blots). Measure it at phone size first. If it is too
+    slow, draw at a slightly lower sharpness and redraw less often when nothing is happening, with
+    both as settings in `js/config/rules.js`. JW's Android phone is the real test.
+
+    **The voices** stay the phone's built-in ones (no ElevenLabs; item 11 says why).
+
+    **Words to update:** the help page (touch, as well as keys) and `README.md`.
+
+    **Checks.** A new test suite for the phone: each tap becomes the right key press in every mode;
+    holding a finger walks and stops as holding a key does; a stray tap on the title can't throw a
+    saved run away; the odd rooms' half-second applies to taps; at common phone sizes (390 by 844
+    and 412 by 915) nothing is cut off and every button and choice is at least a fingertip in size;
+    warnings outside the view are pinned to the edge on their side. Screenshots at phone size, and a
+    real headless Chrome pretending to be a phone, on both `index.html` and the single file, with a
+    clean console. The golden transcript records the computer layout and should not change; if it
+    does, find out why before re-recording.
 
 Everything below this line is **proposed by Claude and not yet agreed**. Treat the lists as
 possibly incomplete.
