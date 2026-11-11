@@ -288,7 +288,7 @@ the same web address, switching to the phone layout by itself on an upright phon
   drawn (`Taps`, `js/draw/phone.js`); `js/touch.js` turns a tap into its keys. No rule, number or
   drawing changed; on a computer nothing changed, except one key JW chose: **B** opens the
   bestiary during a run, because the phone's menu has it.
-- **The layout:** the top line, conditions, the map 15 squares across (`RULES.phone.across`),
+- **The layout:** the top line, conditions, the map 15 squares across (`RULES.phone.across`; 13 since JW asked for it a little larger),
   written sounds from outside the view pinned to its edge, the story's last two lines, and four
   buttons; the menu; every card, page and panel with things to tap, at least 44 pixels each; a page
   asking you to turn a phone held sideways. Words for the phone are in `TEXT.ui.phone`; story lines

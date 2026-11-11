@@ -955,6 +955,13 @@ with its git history, and is where all new work happens.
       - **Tests:** a new suite, `tests/suites/phone.js` (45 checks). The golden transcript was
         re-recorded for one reason: two bot games end still on the map and then press B (meant for
         the title page), which now opens the bestiary; everything before that B is identical.
+    - **Mobile version: the map a little larger** (11 November). JW, after seeing the screenshots:
+      "try making the map a little bit larger (fewer squares, less visible). don't make a big
+      change." Done: `RULES.phone.across` from 15 to 13, so each square is about 15% bigger (30
+      pixels on a 390-wide phone, 31 on a 412-wide one). With 6 squares each side of you, your
+      candlelight now fits across the screen on floors 4 to 6 (it reaches 6); on floors 1 to 3 (8,
+      7 and 7) its edges can be off the sides, as floor 1's already could at 15. Warnings from
+      outside the view are still pinned to its edge. 14 or 12 are the next steps either way.
 
 12. **The mobile version: the design to build** (agreed with JW, 11 November 2026; the questions
     and his answers are in item 11, under "A mobile version"). **Built** 11 November 2026: what

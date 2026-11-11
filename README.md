@@ -59,7 +59,7 @@ keyboard would send, so the game itself is exactly the same. A keyboard attached
 works too.
 
 - **The screen:** a slim line at the top (who and where you are, health, your candle, rhymes,
-  coins, and the **menu** button), your conditions along the top of the map, the map (15 squares
+  coins, and the **menu** button), your conditions along the top of the map, the map (13 squares
   across), the last two lines of the story, and four buttons: **Hold still**, **Rhyme**,
   **Pockets**, **Pick up**.
 - **Walking:** tap anywhere on the map and you step that way: the map is cut into four triangles
