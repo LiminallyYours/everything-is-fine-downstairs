@@ -3,7 +3,8 @@
 // seldom, random eerie moments (the look only: what fear does in play is unchanged); eyes in the
 // dark only for real horrors, and the made-up things in the dark made abstract; the candle in the
 // margin drawn inside the outline of a full candle; every horror with something wrong with it;
-// the hand-lettered font; verse printed like ink.
+// the hand-lettered font; verse printed like ink; the made-up horrors and treasures at the edge
+// of your light drawn so they are unmistakably not real.
 
 const { createGame, checker, startGame } = require('./lib');
 
@@ -73,6 +74,60 @@ H.run(`Object.keys(BESTIARY).forEach(t => { markBestiary(t); G.seenTypes[t] = tr
   H.run(`G.mode = 'play'; showBeastPage('opinion');`); H.tick(8000); H.onText = null;
   const first = H.run('BESTIARY.opinion.verse[0]');
   check('verse printed like ink still reads as whole lines', verse.some(s => s === first), verse.filter(s => s.length > 20).slice(0, 3));
+}
+
+// --- 6. Made-up horrors and treasures unmistakably not real -----------------------------------
+{
+  // Every stroke and dot drawn while drawing one thing: how pale its colour is, and whether the line is broken.
+  const look = H.run(`(() => {
+    const lum = c => { const m = String(c).match(/rgba?\\(\\s*([\\d.]+),\\s*([\\d.]+),\\s*([\\d.]+)/), n = String(c)[0] === '#' ? parseInt(String(c).slice(1), 16) : 0;
+      const [r, g, b] = m ? [+m[1], +m[2], +m[3]] : [n >> 16, (n >> 8) & 255, n & 255]; return 0.299 * r + 0.587 * g + 0.114 * b; };
+    const kept = { stroke: ctx.stroke, setLineDash: ctx.setLineDash };
+    let dash = [], marks = [];
+    ctx.setLineDash = d => { dash = d; };
+    ctx.stroke = () => marks.push({ lum: lum(ctx.strokeStyle), broken: dash.length > 0 });
+    const record = (unreal, fn) => { marks = []; Ink.unreal = unreal; fn(); Ink.unreal = false; return marks; };
+    G.player.dread = 0; enterFloor(2); toPlay(); G.cardQueue = []; G.eerieAt = null; Ink.calm(40);
+    const m = { type: 'opinion', d: MONSTERS.opinion, x: 1, y: 1, stun: 0 };
+    const realHorror = record(false, () => drawMonster(m, 100, 100, 40)), madeHorror = record(true, () => drawMonster(m, 100, 100, 40));
+    const coin = { kind: 'gold' }, realCoin = record(false, () => drawItem(coin, 100, 100, 40)), madeCoin = record(true, () => drawItem(coin, 100, 100, 40));
+    Object.assign(ctx, kept);
+    const sum = ms => ({ n: ms.length, darkest: Math.min(...ms.map(k => k.lum)), solid: ms.filter(k => !k.broken).length });
+    return { realHorror: sum(realHorror), madeHorror: sum(madeHorror), realCoin: sum(realCoin), madeCoin: sum(madeCoin), paper: lum(PAPER) };
+  })()`);
+  check('a real horror on a calm page is drawn in dark, unbroken ink', look.realHorror.darkest < 60 && look.realHorror.solid > 0, look.realHorror);
+  check('a made-up horror is drawn in pale ink: even its darkest line is washed most of the way to the paper',
+    look.madeHorror.n > 0 && look.madeHorror.darkest > 120, look.madeHorror);
+  check('every line of a made-up horror is broken up', look.madeHorror.solid === 0, look.madeHorror);
+  check('a made-up treasure is drawn the same way: pale, every line broken', look.madeCoin.n > 0 && look.madeCoin.darkest > 120 && look.madeCoin.solid === 0 && look.realCoin.solid > 0, { real: look.realCoin, made: look.madeCoin });
+
+  // On the map and in the margin: the made-up horror is drawn that way, the real one next to it isn't.
+  const wired = H.run(`(() => {
+    G.player.dread = 90; enterFloor(2); toPlay(); G.cardQueue = []; G.mode = 'play'; const L = G.level, p = G.player;
+    computeFOV(L, p.x, p.y, lightRadius());
+    const open = []; for (let y = p.y - 4; y <= p.y + 4; y++) for (let x = p.x - 4; x <= p.x + 4; x++)
+      if ((x !== p.x || y !== p.y) && inMap(x, y) && L.visible[idx(x, y)] && passable(L.tiles[idx(x, y)]) && !monsterAt(x, y) && manhattan({ x, y }, p) >= 2) open.push([x, y]);
+    if (open.length < 3) return { skipped: open.length };
+    L.monsters.filter(mo => L.visible[idx(mo.x, mo.y)]).forEach(mo => { mo.x = -9; mo.y = -9; });
+    const [a, b, c] = open;
+    L.monsters.push(Object.assign({ type: 'zombie', d: MONSTERS.zombie, x: a[0], y: a[1], hp: 9, maxHp: 9, awake: true, stun: 0, frenzy: 0 }));
+    L.phantoms = [{ x: b[0], y: b[1], kind: 'monster', type: 'opinion', ch: MONSTERS.opinion.ch, color: MONSTERS.opinion.color, name: MONSTERS.opinion.name, ttl: 5 },
+      { x: c[0], y: c[1], kind: 'item', ch: ITEM_GLYPH.gold, color: ITEM_COLOR.gold, name: 'pile of coins', ttl: 5 }];
+    const calls = [], keepM = drawMonster, keepI = drawItem;
+    drawMonster = (m, ...r) => { calls.push({ what: m.type, unreal: Ink.unreal }); return keepM(m, ...r); };
+    drawItem = (it, ...r) => { calls.push({ what: it.kind, unreal: Ink.unreal }); return keepI(it, ...r); };
+    draw(); drawMonster = keepM; drawItem = keepI;
+    return { calls, after: Ink.unreal };
+  })()`);
+  if (wired.skipped !== undefined) check('room on the map to set up the made-up things', false, wired);
+  else {
+    const made = wired.calls.filter(k => k.what === 'opinion'), real = wired.calls.filter(k => k.what === 'zombie'), coin = wired.calls.filter(k => k.what === 'gold');
+    check('on the map and in the margin, the made-up horror is drawn as not real (twice: map and "nearby")', made.length >= 2 && made.every(k => k.unreal), made);
+    // (the margin's coin count draws a real coin too)
+    check('the made-up treasure on the map is drawn as not real, and only it', coin.filter(k => k.unreal).length === 1, coin);
+    check('the real horror beside them is drawn as real, on the map and in the margin', real.length >= 2 && real.every(k => !k.unreal), real);
+    check('nothing is left drawing as not real after the frame', wired.after === false, wired.after);
+  }
 }
 
 check('no console errors', !H.consoleLog.some(l => /^(warn|error)/.test(l)), H.consoleLog.filter(l => /^(warn|error)/.test(l)).slice(0, 3));

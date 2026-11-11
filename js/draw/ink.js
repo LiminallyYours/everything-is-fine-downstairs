@@ -21,6 +21,7 @@ const Ink = {
   weight: 1.6,   // base line width in px
   alpha: 1,
   color: INK,
+  unreal: false, // true while drawing a made-up horror or treasure (see INK_UNREAL)
 
   // Called once per frame from the current Dread (0..1) and cell size.
   setMood(d, S, extraWobble) {
@@ -88,6 +89,7 @@ function tracePath(w, closed) {
 // The one real drawing call. o: { w, color, closed, fill, fillAlpha, alpha, step, noScratch }
 function stroke(pts, o = {}) {
   if (!pts.length) return;
+  if (Ink.unreal) return unrealStroke(pts, o);
   const closed = !!o.closed;
   const raw = o.step === 0 ? pts : subdivide(pts, closed, o.step || 10);
   const w = raw.map(p => warp(p[0], p[1]));
@@ -140,6 +142,56 @@ function stroke(pts, o = {}) {
 }
 
 const line = (x1, y1, x2, y2, o) => stroke([[x1, y1], [x2, y2]], o);
+
+// Made-up horrors and treasures, the ones fear puts at the edge of your light, are drawn so no
+// careful player takes one for real: every colour washed most of the way to the paper (`wash`),
+// fills fainter still (`fill`), no shading, no pressed line and no blots, and every outline
+// broken into short scratches (`dash`, `gap`, in line widths) and gone over a second time a
+// little off (`jitter`, in px), as a pen draws something that isn't there.
+const INK_UNREAL = { wash: 0.6, fill: 0.4, dash: [2, 5], gap: [2.5, 5], jitter: 1.6 };
+
+// A colour moved part of the way (k, 0..1) toward the paper. Gradients and patterns are left alone.
+function towardPaper(c, k) {
+  if (typeof c !== 'string') return c;
+  let r, g, b, a = 1, m;
+  if (c[0] === '#' && c.length === 7) { const n = parseInt(c.slice(1), 16); [r, g, b] = [n >> 16, (n >> 8) & 255, n & 255]; }
+  else if ((m = c.match(/rgba?\(\s*([\d.]+),\s*([\d.]+),\s*([\d.]+)(?:,\s*([\d.]+))?/))) [r, g, b, a] = [+m[1], +m[2], +m[3], m[4] == null ? 1 : +m[4]];
+  else return c;
+  const P = parseInt(PAPER.slice(1), 16), mix = (v, pv) => Math.round(v + (pv - v) * k);
+  return `rgba(${mix(r, P >> 16)}, ${mix(g, (P >> 8) & 255)}, ${mix(b, P & 255)}, ${a})`;
+}
+
+function unrealStroke(pts, o) {
+  const U = INK_UNREAL, closed = !!o.closed;
+  const raw = o.step === 0 ? pts : subdivide(pts, closed, o.step || 10);
+  const w = raw.map(p => warp(p[0], p[1]));
+  tracePath(w, closed);
+  if (o.fill) {
+    ctx.globalAlpha = (o.fillAlpha == null ? 0.35 : o.fillAlpha) * U.fill * Ink.alpha;
+    ctx.fillStyle = towardPaper(o.fill, U.wash);
+    ctx.fill();
+  }
+  if (o.w === 0) { ctx.globalAlpha = 1; return; }
+  const seed = pts[0][0] * 0.37 + pts[0][1] * 1.91;
+  const lw = (o.w || 1) * Ink.weight * (w.length >= 4 ? 0.85 : 1);
+  ctx.lineWidth = lw;
+  ctx.strokeStyle = towardPaper(o.color || Ink.color, U.wash);
+  ctx.globalAlpha = (o.alpha == null ? 1 : o.alpha) * Ink.alpha;
+  const dash = [], span = (r, h) => (r[0] + (r[1] - r[0]) * h) * Math.max(1, lw);
+  for (let i = 0; i < 6; i++) dash.push(span(U.dash, hash(seed + i)), span(U.gap, hash(seed + i + 9)));
+  ctx.setLineDash(dash);
+  ctx.stroke();
+  // the second, shakier pass, its breaks falling in different places
+  const w2 = raw.map((p, i) => warp(p[0] + Math.sin(i * 2.1 + seed) * U.jitter, p[1] + Math.cos(i * 1.7 + seed) * U.jitter));
+  tracePath(w2, closed);
+  ctx.lineDashOffset = dash[0] * 0.6;
+  ctx.globalAlpha *= 0.6;
+  ctx.lineWidth = lw * 0.6;
+  ctx.stroke();
+  ctx.lineDashOffset = 0;
+  ctx.setLineDash([]);
+  ctx.globalAlpha = 1;
+}
 
 // Is this a pale colour (paper, a card, a bubble)? Those aren't shaded.
 const paleCache = {};
@@ -201,7 +253,7 @@ function ellipse(cx, cy, rx, ry, o = {}, lump = 0.05, seed = 0) {
 function dot(x, y, r, color) {
   const [wx, wy] = warp(x, y);
   ctx.globalAlpha = Ink.alpha;
-  ctx.fillStyle = color || Ink.color;
+  ctx.fillStyle = Ink.unreal ? towardPaper(color || Ink.color, INK_UNREAL.wash) : color || Ink.color;
   ctx.beginPath();
   ctx.arc(wx, wy, Math.max(0.6, r), 0, Math.PI * 2);
   ctx.fill();

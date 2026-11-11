@@ -769,10 +769,17 @@ with its git history, and is where all new work happens.
         a careful player can tell they're not real; (3) replace them with the abstract things (a
         faceless smile or a toy at the edge of your light). Claude suggested 2. JW: "2." Settled:
         the made-up horrors and treasures at the edge of your light are drawn so they are
-        unmistakably not real. **Not built yet:** JW asked for a hand-off to a fresh session first;
-        the next session builds it. (Today they are drawn at a little over half strength with
-        scratchy lines; "unmistakably" means going clearly further, such as pale paper-coloured ink
-        with the outline broken up, so no careful player mistakes one for a real horror.)
+        unmistakably not real. **Built** (11 November, the next session). Details Claude decided
+        while building, which JW has not yet seen:
+        - Every colour in them is washed 60% of the way to the paper colour, and their fills are
+          fainter still. No hatched shading, no pressed stretch of line and no blots.
+        - Every line is broken into short scratches with gaps between, and gone over a second time
+          a little off, with the breaks in different places, like a pen sketching something that
+          isn't there. They look the same however calm or frightened you are.
+        - The same drawing is used for a made-up horror in the margin's "Nearby" list (before, it
+          was half-faded there).
+        - Numbers in `INK_UNREAL` in `js/draw/ink.js`. What they do in play is unchanged: they
+          still drift toward you and vanish when you come next to them or reach for them.
       - Tests: a new suite, `tests/suites/looks.js` (17 checks). The golden transcript was
         re-recorded: the menu pages are now written in runs of hand lettering, not typed one letter
         at a time, so the recording groups their words differently; the toy block's letter shows up

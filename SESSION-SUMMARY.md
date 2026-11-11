@@ -34,11 +34,8 @@ The first version of the game is kept, untouched, in `../sillygame/` on the Mac 
   each settled item recorded there with JW's answer word for word; a group is built once all of it
   has been discussed, then tests, `python3 build.py`, README, this file and `PLAN.md`, commit
   (author `LiminallyYours <64442823+LiminallyYours@users.noreply.github.com>`) and push.
-- **Next:** first build the one decided change not yet built: the made-up horrors and treasures
-  that appear at the edge of your light when you're frightened must be drawn so they are
-  unmistakably not real (JW chose this; `PLAN.md`, item 11, at the end of "How it looks: built").
-  Then take up anything JW wants changed in the new look (screenshots were shown; he hasn't
-  reacted to them yet). Then the story group, then sound. Still open: whether floors 3 to 5 need tougher horrors, once JW
+- **Next:** take up anything JW wants changed in the new look (section 15; he hasn't reacted to
+  it yet). Then the story group, then sound. Still open: whether floors 3 to 5 need tougher horrors, once JW
   has played; and a mobile version (JW: "we need a mobile version"), not yet discussed.
 - **Project tracking stays in these files** in the repository (JW, 11 November), not a Claude
   artifact.
@@ -269,7 +266,12 @@ The fourth group from `PLAN.md`, each decided by JW there:
   page gets eerier (`js/draw/ink.js`).
 - **The candle** in the margin stands inside a faint outline of the fullest candle there can be.
 - **Eyes in the dark are always real.** The made-up ones became a faceless smile, a toy and a ripple.
-- New suite `tests/suites/looks.js` (17 checks). Golden re-recorded for the new way the menu pages
+- **Made-up horrors and treasures** at the edge of your light (fear's fakes) are drawn so they are
+  unmistakably not real: colours washed most of the way to the paper, no shading or blots, every
+  line broken into short scratches and gone over again a little off; the same in the margin's
+  "Nearby" list (`unrealStroke()` and `INK_UNREAL` in `js/draw/ink.js`). Built as a follow-up the
+  same day; the golden transcript didn't change, since it records words, not how lines look.
+- New suite `tests/suites/looks.js` (25 checks). Golden re-recorded for the new way the menu pages
   are written and the toy block's letter; nothing in play changed.
 
 ## Decisions worth remembering

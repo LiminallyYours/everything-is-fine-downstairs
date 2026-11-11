@@ -301,15 +301,13 @@ function drawThings(L, p, S) {
     if (!vis(ph.x, ph.y)) continue;
     const [ax, ay] = animPos(ph, 160);
     things.push([ay, 1, () => {
-      const [a, s] = [Ink.alpha, Ink.scratch];
-      Ink.alpha = 0.55;
-      Ink.scratch = Math.max(s, 0.7);
+      Ink.unreal = true; // pale, scratchy and broken: unmistakably not there
       const type = ph.type;
       const ok = ph.kind === 'monster' && MONSTERS[type]
         ? drawMonster({ type, d: MONSTERS[type], x: ph.x, y: ph.y, stun: 0 }, sx(ax) + S / 2, sy(ay) + S * 0.9, S)
         : drawItem({ kind: { '!': 'potion', '?': 'scroll', ')': 'weapon' }[ph.ch] || 'gold' }, sx(ph.x) + S / 2, sy(ph.y) + S * 0.55, S, ph.color);
-      if (!ok) glyph(ph.ch, ph.x, ph.y, ph.color);
-      [Ink.alpha, Ink.scratch] = [a, s];
+      if (!ok) glyph(ph.ch, ph.x, ph.y, towardPaper(ph.color, INK_UNREAL.wash));
+      Ink.unreal = false;
     }]);
   }
   for (const gh of L.ghosts) {
@@ -1071,10 +1069,9 @@ function drawMargin(p) {
     y = sectionLabel(U.nearby, x, y, w);
     for (const n of near.slice(0, nearRows)) {
       Ink.calm(22);
-      if (n.frac === undefined) { Ink.alpha = 0.5; Ink.scratch = 0.7; }
+      Ink.unreal = n.frac === undefined; // a made-up horror is drawn here as it is on the map
       drawMonster(n.m, x + 11, y + 23, n.m.type === 'nibbler' ? 7 : 21);
-      Ink.alpha = 1;
-      Ink.scratch = 0;
+      Ink.unreal = false;
       hand(14);
       ctx.fillStyle = INK;
       ctx.fillText(fitText(n.name, w - 96), x + 28, y + 17);

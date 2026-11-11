@@ -142,7 +142,8 @@ wall and puddle is drawn live in shaky ink lines that are never quite straight o
   - whispers in the dark
   - things in the dark that belong to nothing: a smile with no face, a toy that wasn't there, a
     ripple in the ink
-  - fake monsters and fake loot at the edge of your light
+  - made-up horrors and treasures at the edge of your light, drawn in pale, broken, scratchy
+    ink so a careful look tells you they aren't there
   - the narrator failing to finish a rhyme
   - old log lines turning to static
   - a shorter fuse on your rhymes
