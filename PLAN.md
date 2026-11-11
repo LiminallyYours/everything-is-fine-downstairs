@@ -1020,6 +1020,15 @@ with its git history, and is where all new work happens.
          rooms' pictures ("happy deathday", "LOST & FOUND"), which are part of the drawings.
       Also: a chosen row's highlighter no longer pokes past the edge of its panel. Tests: 4 more
       checks in `tests/suites/phone.js` (54 now).
+    - **Mobile version: music and hum quieter** (11 November). JW: "i need the music and buzzing
+      to both be quieter (25%?) compared to the voice (on mobile)". Asked how much (the narrator's
+      voice is the phone's own speech, separate from the rest, so only the music and the hum need
+      turning down). Options offered: (1) half as loud; (2) 25% quieter (three quarters as loud);
+      (3) a quarter as loud. Claude recommended 1 (a clear difference on a phone speaker while
+      still setting the mood). JW chose 1. **Built:** on a phone the music box and each floor's hum,
+      with its wind, play at half their loudness (`RULES.phone.musicVolume`, 0.5). Claude decided,
+      not yet heard by JW: sound effects and the heartbeat are as before; the computer is
+      unchanged. Tests: 1 more check (55 now).
 
 12. **The mobile version: the design to build** (agreed with JW, 11 November 2026; the questions
     and his answers are in item 11, under "A mobile version"). **Built** 11 November 2026: what

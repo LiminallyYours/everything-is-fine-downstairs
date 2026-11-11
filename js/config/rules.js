@@ -341,6 +341,7 @@ const RULES = (function freezeDeep(o) {
     sidewaysHeight: 500,      // a touch screen held sideways and at most this tall asks to be turned upright
     fingertip: 44,            // the smallest any button or choice is drawn, in CSS pixels (a fingertip)
     smallTextPx: 2,           // the small lettering on a phone is drawn this many pixels larger (never past 16)
+    musicVolume: 0.5,         // on a phone, the music box and each floor's hum (with its wind) play at this much of their usual loudness, so the narrator comes through (sound effects and the heartbeat as usual)
     // speed
     holdDelayMs: 350,         // hold a finger down this long and you keep walking that way...
     holdRepeatMs: 150,        // ...one step every this many milliseconds, until you lift it (or a horror comes into view)

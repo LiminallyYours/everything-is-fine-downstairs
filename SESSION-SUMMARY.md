@@ -316,6 +316,8 @@ the same web address, switching to the phone layout by itself on an upright phon
   key any more (the phone swaps those words as it draws them, `TEXT.ui.phone.instead`); skip moved
   to where "tap, to go on" appears; the small lettering 2 pixels larger (`RULES.phone.smallTextPx`).
   54 checks in `phone.js`.
+- **Then:** on a phone the music box and the floors' hum play at half their loudness, so the
+  narrator comes through (JW chose half; `RULES.phone.musicVolume`). 55 checks in `phone.js`.
 
 ## Decisions worth remembering
 

@@ -58,7 +58,9 @@ Open the same web address on your phone and hold it upright: the game switches t
 by itself (held sideways, it asks you to turn it). Every tap is turned into the key press the
 keyboard would send, so the game itself is exactly the same. A keyboard attached to the phone
 works too. Where a line would tell you to press a key ("(G to pick it up)"), the phone says what
-to tap instead ("(tap Pick up)"), and the small lettering is drawn a little larger.
+to tap instead ("(tap Pick up)"), and the small lettering is drawn a little larger. The music box
+and each floor's hum play at half their loudness on a phone, so the narrator comes through a small
+speaker.
 
 - **The screen:** a slim line at the top (who and where you are, health, your candle, rhymes,
   coins, and the **menu** button), your conditions along the top of the map, the map (12 squares
@@ -353,7 +355,7 @@ every number commented. Each monster's, item's and floor's own numbers stay with
 | Dark rooms: which floors, how much better the prize | `RULES.darkRooms` |
 | The Mold-Mite's lap, the Second Opinion's call, the Tick-Tock Tot's ticking | each horror's own entry in `js/content/data.js` (`lap`, `call` with its footstep word, `tick`) |
 | How long verse lines hang; captions, cards and effects | `RULES.pages`, `RULES.ui`, `RULES.fx` |
-| The phone: how many squares across its map shows (`across`), when the phone layout is used, the fingertip size, how much larger its small lettering is (`smallTextPx`), how fast a held finger walks, and the two speed settings (sharpness, redrawing less often when nothing is happening) | `RULES.phone` (its words are in `TEXT.ui.phone`; the lines it says for a finger instead of naming a key are `TEXT.ui.phone.instead`) |
+| The phone: how many squares across its map shows (`across`), when the phone layout is used, the fingertip size, how much larger its small lettering is (`smallTextPx`), how loud the music box and the hum are on a phone (`musicVolume`), how fast a held finger walks, and the two speed settings (sharpness, redrawing less often when nothing is happening) | `RULES.phone` (its words are in `TEXT.ui.phone`; the lines it says for a finger instead of naming a key are `TEXT.ui.phone.instead`) |
 | Loudness of the drone, music box, heartbeat and narrator | `RULES.audio` (each sound's own shape is in `js/sound/audio.js`) |
 | A monster's health, attack, speed, XP, and its tricks (snuffing, stealing, splitting, the Nibbler's phases) | its entry in `MONSTERS`, `js/content/data.js` |
 | What a potion or scroll does (`power`, `thrown`), how often items turn up (`freq`), and what you read when you drink, throw or read one (`drink`, `splash`, `read`) | `POTIONS`, `SCROLLS`, `FOODS`, `WEAPONS`, `ARMORS` in `js/content/data.js` (the words all items share, like names, slots and equipping, are in `TEXT.items`) |

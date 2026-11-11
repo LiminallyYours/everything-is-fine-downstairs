@@ -9,6 +9,10 @@ const LULLABY = [
 ];
 const DRONE_ROOT = [55, 49, 43.65, 41.2, 61.74, 36.71]; // one low hum per floor, in Hz
 
+// On a phone the music box and the floor's hum are turned down (RULES.phone.musicVolume), so the
+// narrator's voice comes through a small speaker. (Phone is worked out in js/draw/render.js.)
+const musicLevel = () => (typeof Phone !== 'undefined' && Phone.on ? RULES.phone.musicVolume : 1);
+
 const Sound = {
   ctx: null, master: null, boxBus: null, noiseBuf: null, drone: null, scene: null,
   muted: Settings.get('muted'),
@@ -68,7 +72,7 @@ const Sound = {
     const ctx = this.ctx, t = ctx.currentTime, base = DRONE_ROOT[depth - 1] || 50;
     const out = ctx.createGain();
     out.gain.setValueAtTime(0, t);
-    out.gain.linearRampToValueAtTime(RULES.audio.drone, t + 3);
+    out.gain.linearRampToValueAtTime(RULES.audio.drone * musicLevel(), t + 3);
     const lp = ctx.createBiquadFilter();
     lp.type = 'lowpass';
     lp.frequency.value = 260;
@@ -122,7 +126,7 @@ const Sound = {
   update(s) {
     if (!this.ctx || this.ctx.state !== 'running') return;
     const t = this.ctx.currentTime;
-    this.boxBus.gain.setTargetAtTime(s.box * RULES.audio.musicBox, t, 0.4);
+    this.boxBus.gain.setTargetAtTime(s.box * RULES.audio.musicBox * musicLevel(), t, 0.4);
     if (s.box > 0.01) {
       if (this.nextNote < t) this.nextNote = t + 0.05;
       while (this.nextNote < t + 0.2) {

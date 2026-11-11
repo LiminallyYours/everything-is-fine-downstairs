@@ -499,6 +499,24 @@ for (const [w, h] of SIZES.slice(1)) { // the second size, quickly through the m
   check('the phone says the first floor\'s hint and a pick-up for a finger', !/Arrow keys|Press/.test(said[0]) && said[1] === 'You pick up a nest.', said);
 }
 
+// --- 6c. On a phone the music box and the floor's hum are quieter; the voice is not ----------------
+{
+  const levels = (w, h) => {
+    const Hs = createGame({ seed: SEED, width: w, height: h });
+    Hs.tick(60); Hs.press('x'); Hs.tick(600);
+    const box = Hs.audioLog.filter(l => l.startsWith('gain gain tgt')).map(l => +l.split(' ')[3]).filter(v => v > 0);
+    startGame(Hs); Hs.tick(400);
+    const hum = Hs.audioLog.filter(l => l.startsWith('gain gain lin')).map(l => +l.split(' ')[3]).filter(v => v > 0);
+    Hs.run('Voice.queue("Hello.", "narrator")'); Hs.tick(100);
+    const voice = Hs.spoken.length ? Hs.spoken[Hs.spoken.length - 1].volume : null;
+    return { box: Math.max(...box), hum: Math.max(...hum), voice, setting: Hs.run('RULES.phone.musicVolume') };
+  };
+  const pc = levels(1440, 900), ph = levels(390, 844);
+  const near = (a, b) => Math.abs(a - b) < 1e-6;
+  check(`on a phone the music box and the floor's hum play at ${ph.setting} of their loudness (RULES.phone.musicVolume); the narrator's voice and the computer are as before`,
+    near(ph.box, pc.box * ph.setting) && near(ph.hum, pc.hum * ph.setting) && ph.voice === pc.voice && ph.voice > 0, { pc, ph });
+}
+
 // --- 6b. Skip: the rest of an unfolding page at once (the corner button, or S) -------------
 {
   const Hk = phone(390, 844), Gk = Hk.G;
