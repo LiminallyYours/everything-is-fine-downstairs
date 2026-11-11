@@ -38,7 +38,9 @@ The first version of the game is kept, untouched, in `../sillygame/` on the Mac 
   Visual), plus two things JW already decided for it: a candle in the margin that shows how full
   it is, and eyes in the dark only for real horrors with the made-up dark things made abstract.
   Then the story, then sound. Still open: whether floors 3 to 5 need tougher horrors, once JW
-  has played.
+  has played; and a mobile version (JW: "we need a mobile version"), not yet discussed.
+- **Project tracking stays in these files** in the repository (JW, 11 November), not a Claude
+  artifact.
 
 ## Where things stand
 
@@ -235,6 +237,23 @@ The third group from `PLAN.md`, each decided by JW there:
 - **Measured before and after** (numbers in `PLAN.md`): somewhat more dangerous, mostly on floor
   2, where the Second Opinion now brings a colleague.
 
+### 14. Review, footsteps and holding still (11 Nov)
+- **Reviewed** the details the last session decided alone for "how you play" (`PLAN.md`, item
+  11). One went back to JW: the Second Opinion's colleague arrived unseen, which the theme rules
+  out. **Built:** until you can see the colleague, its footsteps (*squeak…*) are written in the
+  dark where it walks.
+- **Project tracking stays in the repository files** (JW chose this over a Claude artifact).
+- **Holding still** (space or .), JW's idea: with an awake horror beside you, a narrator couplet,
+  then about one time in four it loses interest and wanders off for 3 turns; otherwise its next
+  blow lands half again as hard. Never the Tuck-You-In or the boss. The Mold-Mite still takes
+  your lap. The margin's key line and the help page say "hold still" (`RULES.holdStill`,
+  `TEXT.holdStill`).
+- **Noted for later:** the game needs a mobile version.
+- Tests: 16 new checks in `howyouplay.js` (63 now). The golden transcript was re-recorded: the
+  help and margin key lines changed on every screen, and every scenario in which a bot or a
+  scenario waits beside a horror now hears a couplet and plays out differently from there. Every
+  death scenario still ends in its death.
+
 ## Decisions worth remembering
 
 | Decision | Why |
@@ -280,6 +299,7 @@ Before the restructure, it was checked like this:
 - Difficulty balance, especially the new defense values. In simulated play, most deaths were
   on floors 2–3. Whether the middle floors need tougher horrors is still open (`PLAN.md`, item 11).
 - Whether the floor surprises feel fair in real play, the drawer above all.
+- A mobile version: the game needs a desktop browser and a keyboard today.
 - A settings page, seeded runs, and unlocks between runs: see
   `SUGGESTED-EDITIONS.md`.
 - Small inconsistencies the restructure found and deliberately left alone (two cut-off Nibbler

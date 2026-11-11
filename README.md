@@ -37,7 +37,7 @@ Browsers won't play audio until you press a key, which is why the game opens on 
 | `U` | Use something from your pockets on the monster next to you. Potions can be **thrown** (`T`): poison it, daze it, scare it off, or, oops, heal it. |
 | `G` | Pick up what's here. Walking onto an item only tells you it's there. Gold and candle stubs are still scooped up automatically. |
 | `E` | What you wear and wield: four slots (hand, head, body, feet), separate from your pockets. Put things on or take them off; each change takes a turn. |
-| Space or `.` | Wait a turn. |
+| Space or `.` | **Hold still, and hope.** With an awake horror beside you, it's a gamble: about one time in four it loses interest and wanders off for a few turns, and otherwise its next blow lands half again as hard. The Tuck-You-In and the final boss are never fooled. With nobody beside you, it just passes a turn. |
 | `R` | **Recite a Rhyme.** First pick which kind (← ↑ → or 1–3; Enter repeats the last kind; Esc changes your mind for free): **a Shove** (horrors within 3 steps are stunned, shoved and hurt a little), **a Lullaby** (horrors within 3 steps lie down asleep, unhurt, until any noise wakes them) or **a Tongue-Twister** (the nearest horror is hurt badly and reels). Then you get half a couplet and a burning fuse; pick the rhyming word with an arrow key (or 1–4). The fuse lasts 12 seconds when you're calm, down to 7.5 when you're coming undone. If you're wrong, something embarrassing happens. Costs 1 ♪. Rhyme again soon after and your voice goes **hoarse**: a shorter fuse and smudged words, for a while. |
 | `I` | Your pockets (↑↓ choose, Enter use or wear, D drop, E equipment, Esc close). |
 | `1`–`9`, `0` | Use the item in that pocket slot. |
@@ -82,7 +82,7 @@ wall and puddle is drawn live in shaky ink lines that are never quite straight o
   when attacking, and flinch when hit. A slain horror gets scribbled out by a frantic pen and
   leaves an ink blot on the floor for good.
 - **You can see sounds.** What you hear but can't see is written where it happens, pale on the
-  ink: *tick…* from an unseen Tot, *ahem* from an unseen Ahem, *rustle* in the hair, *♪* as bedtime creeps closer, *psst…*
+  ink: *tick…* from an unseen Tot, *ahem* from an unseen Ahem, *squeak…* from a Second Opinion's colleague on its way, *rustle* in the hair, *♪* as bedtime creeps closer, *psst…*
   when you're frightened, *BONG* when the clock strikes. Every horror also babbles in its own
   voice when it speaks.
 
@@ -206,10 +206,10 @@ wall and puddle is drawn live in shaky ink lines that are never quite straight o
 
 | | Name | Trick |
 | --- | --- | --- |
-| `m` | Mumbling Mold-Mite | Weak. The boss coughs them up. Wait beside one instead of fighting and it climbs into your lap and sleeps, harmless, until any noise wakes it (then it bites, apologizing). It hops off at the stairs. |
+| `m` | Mumbling Mold-Mite | Weak. The boss coughs them up. Hold still beside one instead of fighting and it climbs into your lap and sleeps, harmless, until any noise wakes it (then it bites, apologizing). It hops off at the stairs. |
 | `b` | Yesterday's Soup | Fast and erratic. Can slop your candle half out. |
 | `w` | Put-Away | Takes things from your pockets and runs. Bonk it to get them back. |
-| `g` | Second Opinion | Has brought its own teeth. Fight one for 4 turns and it calls a colleague, who arrives from somewhere out of sight (once; the colleague can't call another). |
+| `g` | Second Opinion | Has brought its own teeth. Fight one for 4 turns and it calls a colleague, who arrives from somewhere out of sight (once; the colleague can't call another). Until you can see the colleague, its footsteps (*squeak…*) are written where it walks. |
 | `z` | Better-Late-Than-Never | Slow, hits very hard. |
 | `s` | Ahem | Comes through walls. Each cough shrinks your flame. |
 | `H` | Nothing-to-Worry-About | Pretends to be a nest lying on the floor. |
@@ -283,6 +283,7 @@ every number commented. Each monster's, item's and floor's own numbers stay with
 | How fast Dread rises and falls, and what each stage does | `RULES.dread` |
 | Bolder horrors in the dark (how near, how likely they wake, how much faster, who never does) | `RULES.bold` |
 | Trembling at the last stage of Dread (how much worse blows and getting away are) | `RULES.clumsy` |
+| Holding still beside a horror (the chance it wanders off, for how long, how much harder its blow lands otherwise, who is never fooled) | `RULES.holdStill` (the couplets are in `TEXT.holdStill`) |
 | When the floor surprises come, and how long each lasts | `RULES.surprises` (the words are in `TEXT.surprises`) |
 | How many horrors and items a floor starts with; what random loot is; which floors' guaranteed gear is always a weapon | `RULES.spawn`, `RULES.loot` (`weaponFloors`), `RULES.map` |
 | Barrels, socks, the tide, the clock, the biting walls | `RULES.floors` |
@@ -290,7 +291,7 @@ every number commented. Each monster's, item's and floor's own numbers stay with
 | The odd rooms' odds and rewards | `RULES.rooms` (amounts their words mention, like the well's 20 coins, stay in `js/rules/vignettes.js`; the words are in `js/content/vignette-words.js`) |
 | Rhyme fuse length, reach and effects; the lullaby, the tongue-twister and the hoarse voice | `RULES.rhyme` |
 | Dark rooms: which floors, how much better the prize | `RULES.darkRooms` |
-| The Mold-Mite's lap, the Second Opinion's call, the Tick-Tock Tot's ticking | each horror's own entry in `js/content/data.js` (`lap`, `call`, `tick`) |
+| The Mold-Mite's lap, the Second Opinion's call, the Tick-Tock Tot's ticking | each horror's own entry in `js/content/data.js` (`lap`, `call` with its footstep word, `tick`) |
 | How long verse lines hang; captions, cards and effects | `RULES.pages`, `RULES.ui`, `RULES.fx` |
 | Loudness of the drone, music box, heartbeat and narrator | `RULES.audio` (each sound's own shape is in `js/sound/audio.js`) |
 | A monster's health, attack, speed, XP, and its tricks (snuffing, stealing, splitting, the Nibbler's phases) | its entry in `MONSTERS`, `js/content/data.js` |

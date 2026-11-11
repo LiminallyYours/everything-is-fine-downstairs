@@ -207,5 +207,63 @@ const logHas = re => G.log.some(l => re.test(l.text));
   check(`further off than ${H.run('MONSTERS.tot.tick.hear')} steps you can't hear it`, tooFar.length === 0, tooFar);
 }
 
+// --- 7. The colleague's footsteps (added 11 November, after review) -------------------------
+{
+  const steps = H.run(`(() => { __clear(); const L = G.level, p = G.player; const m = spawnMonster(L, 'opinion', p.x + 1, p.y); m.awake = true; m.hp = m.maxHp = 999;
+    const dist = distanceMap(L, p.x, p.y); computeFOV(L, p.x, p.y, lightRadius()); callForOpinion(L, m, dist);
+    const c = L.monsters.find(o => o !== m);
+    const words = []; const real = FX.word; FX.word = (x, y, w) => { words.push([w, x === c.x && y === c.y]); return real.call(FX, x, y, w); };
+    for (let k = 0; k < 3; k++) colleagueSteps(L);
+    const unseen = words.length; L.visible[idx(c.x, c.y)] = 1; colleagueSteps(L); L.visible[idx(c.x, c.y)] = 0; colleagueSteps(L);
+    FX.word = real; return { unseen, words, after: words.length - unseen, arrived: !!c.arrived, firstStill: (() => { const w = []; FX.word = (x, y, s) => w.push(s); colleagueSteps(L); FX.word = real; return w.length; })() }; })()`);
+  check(`until you can see it, the colleague's footsteps ("${H.run('MONSTERS.opinion.call.steps')}") are written where it is, every turn`,
+    steps.unseen === 3 && steps.words.every(([w, here]) => w === H.run('MONSTERS.opinion.call.steps') && here), steps);
+  check('once you have seen it, the footsteps stop for good (even if it goes out of sight again)', steps.after === 0 && steps.arrived && steps.firstStill === 0, steps);
+  const plain = H.run(`(() => { __clear(); const L = G.level, p = G.player; const m = spawnMonster(L, 'opinion', p.x + 8, p.y); m.awake = true;
+    const w = []; const real = FX.word; FX.word = (x, y, s) => w.push(s); L.visible.fill(0); colleagueSteps(L); FX.word = real; return w.length; })()`);
+  check('an ordinary Second Opinion (not a colleague on its way) makes no footsteps', plain === 0, plain);
+}
+
+// --- 8. Holding still and hoping (added 11 November, after review) --------------------------
+{
+  const HS = H.run('RULES.holdStill');
+  const trial = (type = 'opinion', setup = '') => H.run(`(() => { __clear(); const L = G.level, p = G.player; const m = spawnMonster(L, '${type}', p.x + 1, p.y); m.awake = true; m.hp = m.maxHp = 999; ${setup}
+    G.log.length = 0; const x0 = m.x, y0 = m.y; const mite = wait() && p.lap.length > 0;
+    const out = { bored: m.bored || 0, pounce: !!m.pounce, log: G.log.map(l => l.text), engaged: engaged(m), mite };
+    endTurn(); return Object.assign(out, { moved: m.x !== x0 || m.y !== y0, dist: manhattan(m, p) }); })()`);
+  const runs = []; for (let k = 0; k < 400; k++) runs.push(trial());
+  const bored = runs.filter(r => r.bored > 0).length;
+  check(`holding still beside an awake horror: the narrator sets it up in a couplet every time`,
+    runs.every(r => r.log.some(t => H.run(`TEXT.holdStill.couplets`).some(c => t.startsWith(c.split(' ').slice(0, 4).join(' '))))), runs[0].log);
+  check(`about ${Math.round(HS.wander * 100)}% of the time it loses interest (${bored} of 400)`, bored > 400 * HS.wander - 45 && bored < 400 * HS.wander + 45, bored);
+  check('each time it is one or the other: lost interest, or saving a harder blow', runs.every(r => (r.bored > 0) !== r.pounce), runs.slice(0, 5));
+  const b = runs.find(r => r.bored > 0);
+  check('when it loses interest it says so, wanders off, and is not holding onto you', b && b.log.some(t => /furniture|potters off|looks straight through/.test(t)) && b.moved && !b.engaged, b);
+  const hard = H.run(`(() => { const out = []; for (let k = 0; k < 60; k++) { __clear(); const L = G.level, p = G.player; const m = spawnMonster(L, 'opinion', p.x + 1, p.y); m.awake = true; m.hp = m.maxHp = 999;
+      G.log.length = 0; m.pounce = true; p.hp = 1000; const before = p.hp; monsterAttack(m);
+      out.push({ dmg: before - p.hp, saved: G.log.some(l => /waiting for you to stop moving/.test(l.text)), left: !!m.pounce, hit: G.threat.result === 'hit' }); }
+    return out; })()`);
+  check('otherwise its next blow says it was waiting for you to stop moving, and the extra is used up either way',
+    hard.filter(h => h.hit).every(h => h.saved) && hard.every(h => !h.left), hard.slice(0, 4));
+  const avg = (pounce) => H.run(`(() => { let tot = 0, n = 0; for (let k = 0; k < 600; k++) { __clear(); const L = G.level, p = G.player; const m = spawnMonster(L, 'zombie', p.x + 1, p.y); m.awake = true;
+      m.pounce = ${pounce}; p.hp = 1000; monsterAttack(m); if (G.threat.result === 'hit') { tot += 1000 - p.hp; n++; } } return tot / n; })()`);
+  const plain = avg(false), saved = avg(true);
+  check(`a saved blow lands about ${HS.harder} times as hard (average ${saved.toFixed(1)} against ${plain.toFixed(1)})`, saved / plain > HS.harder - 0.15 && saved / plain < HS.harder + 0.2, { plain, saved });
+  const gone = H.run(`(() => { __clear(); const L = G.level, p = G.player; const m = spawnMonster(L, 'opinion', p.x + 4, p.y); m.awake = true; m.pounce = true;
+    const dist = distanceMap(L, p.x, p.y); monsterAct(L, m, dist); return !!m.pounce; })()`);
+  check('get away from it and whatever it was saving is forgotten', gone === false);
+  for (const t of HS.exempt) {
+    const r = trial(t);
+    check(`the ${t === 'tuck' ? 'Tuck-You-In' : 'final boss'} is never fooled by it (nothing happens)`, r.bored === 0 && !r.pounce, r);
+  }
+  const alone = H.run(`(() => { __clear(); G.log.length = 0; act(wait); return G.log.map(l => l.text); })()`);
+  check('with nobody beside you, holding still is just waiting (no couplet)', !alone.some(t => H.run('TEXT.holdStill.couplets').includes(t)), alone);
+  const asleep = trial('opinion', 'm.awake = false;');
+  check('a sleeping horror beside you is not part of it', asleep.bored === 0 && !asleep.pounce && !asleep.log.some(t => H.run('TEXT.holdStill.couplets').includes(t)), asleep);
+  const mite = trial('mite');
+  check('a calm Mold-Mite still climbs into your lap instead', mite.log.some(t => /climbs into your lap/.test(t)) && !mite.pounce, mite);
+  check('the help and the margin say "hold still"', /hold still/.test(H.run('TEXT.help.map(r => r[1]).join(" ")')) && /hold still/.test(H.run('TEXT.ui.margin ? TEXT.ui.margin.keys : JSON.stringify(TEXT.ui)')));
+}
+
 check('no console errors', !H.consoleLog.some(l => /^(warn|error)/.test(l)), H.consoleLog.filter(l => /^(warn|error)/.test(l)).slice(0, 3));
 finish();

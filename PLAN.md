@@ -622,6 +622,37 @@ with its git history, and is where all new work happens.
          wait.more useful. "Wait still in silence and hope nothing gets you" - some sort of rhyme
          around that. Small chance the monster nearby doesn't attack you and moves away, but more
          damage if it does attack you?" Taken up as the next question.
+      4. **How should "hold still and hope" work?** Asked: suppose a Second Opinion is beside you
+         and you press space. A narrator couplet sets it up, something like "Stand very still, and
+         say nothing at all, / and perhaps it's somebody else it will maul." Then either it loses
+         interest and wanders a few steps off, or its next blow lands half again as hard (a 4
+         becomes a 6). Whichever option, the Mold-Mite still climbs into your lap as now, the
+         Tuck-You-In and the boss never wander off, and the help line at the bottom of the margin
+         gains "space hold still". Options offered: (1) fixed odds, about 1 in 4 that it wanders
+         off; (2) odds that depend on your fear, about 1 in 3 when calm down to about 1 in 8 at the
+         worst stage; (3) odds that depend on the horror, slow dim ones wandering off easily and
+         sharp ones rarely. Claude suggested 2. JW: "1 for now. Easy to change later." Settled:
+         fixed odds of about 1 in 4. **Built** (11 November), with the colleague's footsteps from
+         question 1. Details Claude decided while building:
+         - "Beside you" means one step away, not on a diagonal (as for every fight), and only an
+           awake horror that is fighting you counts: not one asleep, stunned, dazed, scared,
+           napping, sung to sleep, or a Put-Away running off with your things.
+         - With several horrors beside you, each one rolls on its own.
+         - The couplet goes through the same breaking as the narrator's other rhymes, so at high
+           fear its last word can fail to arrive. Three couplets, picked at random; they are in
+           `TEXT.holdStill`.
+         - Wandering off lasts 3 turns. It walks away from you, says so in the story strip, isn't
+           holding onto you (stepping away from it is free), and you don't hold onto it either.
+         - Otherwise nothing is said until its next blow: then "…was only waiting for you to stop
+           moving" and the blow is half again as hard, rounded up. The extra goes into that next
+           attack whether it lands or misses, and is forgotten if you get away from it first.
+         - The help page line is now "SPACE or .  hold still, and hope."
+         - The colleague's footsteps are "squeak…", written every turn where it is until you first
+           see it, and then never again. No new sound yet (left for the sound group).
+         - Numbers in `RULES.holdStill`.
+      5. **JW's note: a mobile version.** JW: "Also note in the plan that we need a mobile
+         version". Noted: the game needs a version that works on a phone (today it needs a desktop
+         browser and a keyboard). Not yet discussed how; to be taken up as its own item.
 
 Everything below this line is **proposed by Claude and not yet agreed**. Treat the lists as
 possibly incomplete.

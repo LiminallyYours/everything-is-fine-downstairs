@@ -267,7 +267,7 @@ const TEXT = {
       unknownHealth: '?',
       pockets: 'Pockets  {n} of {of}',
       noPockets: 'lint, and dread',
-      keys: '?  help    I  pockets    E  gear    G  pick up',
+      keys: '?  help    I  pockets    E  gear    G  pick up    space  hold still',
     },
     // how your candle is doing, under it in the margin
     candle: { out: 'out!', guttering: 'guttering', low: 'burning low', burning: 'burning', tall: 'tall and bright' },
@@ -401,6 +401,21 @@ const TEXT = {
   },
   opinionCall: 'Somewhere a door opens. "Did somebody ask for a second opinion?"',
 
+  // Holding still beside a horror (space or .), and hoping. The narrator sets it up in a couplet.
+  holdStill: {
+    couplets: [
+      'Stand very still, and say nothing at all, and perhaps it\'s somebody else it will maul.',
+      'Be a lamp, be a chair, be a coat on a hook, and it may not bother to take a good look.',
+      'Hold your breath, little Somebody, quiet as stone, and perhaps it will wander and leave you alone.',
+    ],
+    wander: [ // {The}: the horror, at the start of a sentence
+      '{The} loses interest, and potters off, humming.',
+      '{The} decides you are probably furniture, and wanders away.',
+      '{The} looks straight through you, and goes to look at something else.',
+    ],
+    harder: '{The} was only waiting for you to stop moving.', // said when its blow lands
+  },
+
   // The middle floors' surprises (js/rules/surprises.js), in the narrator's cheerful voice.
   surprises: {
     drawer: {
@@ -455,7 +470,7 @@ const TEXT = {
     ['G', 'pick up what is here. Gold and stubs pick themselves up.'],
     ['I', 'your pockets. 1-9 and 0 use a pocket straight away.'],
     ['E', 'what you wear and wield: hand, head, body and feet.'],
-    ['SPACE or .', 'wait a turn.     > or ENTER: go down the stairs.'],
+    ['SPACE or .', 'hold still, and hope.     > or ENTER: go down the stairs.'],
     ['L / Q / ?', 'the log / give up (press twice) / this help.'],
     ['M / V / F', 'mute sound / narrator voice / calmer effects.'],
   ],

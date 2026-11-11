@@ -123,7 +123,7 @@ const MONSTERS = {
     verbs: ['examines', 'gnaws', 'prods'],
     blurb: 'It has had a look at you, and it does not agree.',
     death: 'The Second Opinion is overruled.',
-    call: { after: 4, near: [5, 10] }, // after this many turns of fighting you, it calls one more (once), from this far away
+    call: { after: 4, near: [5, 10], steps: 'squeak…' }, // after this many turns of fighting you, it calls one more (once), from this far away; until you can see the colleague, its footsteps are written where it walks
   },
   zombie: {
     ch: 'z', name: 'Better-Late-Than-Never', bare: true, color: '#8fbe9f', hp: 16, atk: 6, def: 1, xp: 10, speed: 0.5, ai: 'chase',

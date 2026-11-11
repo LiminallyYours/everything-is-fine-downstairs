@@ -412,6 +412,7 @@ function wait() {
   const p = G.player;
   const mite = G.level.monsters.find(m => m.d.lap && m.awake && !m.frenzy && !m.disguised && !(m.stun > 0) && manhattan(m, p) === 1);
   if (mite) { climbIntoLap(mite); return true; }
+  if (holdStill()) return true;
   if (RNG.chance(0.05)) msg(RNG.pick(TEXT.idle), C.gray);
   return true;
 }

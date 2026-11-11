@@ -85,6 +85,13 @@ const RULES = (function freezeDeep(o) {
     hit: 0.2,                 // your blows land this much less often (combat.playerHit is 0.85)
     escape: 0.15,             // getting away from a fight works this much less often
   },
+  // Holding still (space or .) with an awake horror beside you is a gamble, for each one beside you.
+  holdStill: {
+    wander: 0.25,             // the chance it loses interest and wanders off...
+    turns: 3,                 // ...for this many turns, not holding onto you
+    harder: 1.5,              // otherwise its next blow lands this much harder (rounded up)
+    exempt: ['tuck', 'nibbler'], // never fooled: bedtime is already the timer, and the boss is tuned on its own
+  },
 
   // How horrors behave in general (each one's own numbers are in content/data.js).
   monsters: {

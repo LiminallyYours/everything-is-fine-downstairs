@@ -53,7 +53,7 @@ function escapeChance(runnerSpeed, holderSpeed, tucked) {
 // Is this horror fighting you right now (awake, next to you, and in a state to hold on)?
 function engaged(m) {
   return m.hp > 0 && m.awake && !m.disguised && manhattan(m, G.player) === 1
-    && !(m.stun > 0) && !(m.dazed > 0) && !(m.fear > 0) && !(m.d.ai === 'thief' && m.carry);
+    && !(m.stun > 0) && !(m.dazed > 0) && !(m.fear > 0) && !(m.bored > 0) && !(m.d.ai === 'thief' && m.carry);
 }
 
 // Every step a monster takes goes through here. If it's next to you and tries to step away,
@@ -61,7 +61,7 @@ function engaged(m) {
 // Returns false if it was held.
 function moveMonster(L, m, x, y, voluntary = true) {
   const p = G.player;
-  if (voluntary && m.awake && !p.hidden && manhattan(m, p) === 1 && Math.abs(x - p.x) + Math.abs(y - p.y) !== 1) {
+  if (voluntary && m.awake && !(m.bored > 0) && !p.hidden && manhattan(m, p) === 1 && Math.abs(x - p.x) + Math.abs(y - p.y) !== 1) {
     if (!RNG.chance(escapeChance(speedOf(m), 1))) {
       if (m.fear > 0 || (m.d.ai === 'thief' && m.carry)) msg(`${cap(theM(m))} tries to get away, but you are not letting it.`, C.gray);
       return false;
@@ -132,6 +132,7 @@ function monsterAct(L, m, dist) {
     return;
   }
   if (m.napping) return; // Nap Time: lying down, eyes shut, perfectly still
+  if (m.bored > 0) { m.bored--; if (!flee(L, m, dist)) wander(L, m); return; } // you held still, and it lost interest
   if (!m.awake) {
     if (RNG.chance(RULES.monsters.sleepWander)) wander(L, m);
     return;
@@ -151,6 +152,7 @@ function monsterAct(L, m, dist) {
     if (flee(L, m, dist) || !adjacent || m.d.ai === 'thief') return;
   }
   if (m.d.ai === 'erratic' && RNG.chance(RULES.monsters.erraticWander)) { wander(L, m); return; }
+  if (!adjacent) m.pounce = false; // you got away: whatever it was saving, it isn't any more
   if (adjacent) { monsterAttack(m); return; }
   if (m.d.ai === 'ghost') drift(L, m);
   else approach(L, m, dist);
@@ -172,6 +174,34 @@ function callForOpinion(L, m, dist) {
   Object.assign(c, { awake: true, answering: true });
   msg(TEXT.opinionCall, C.red);
   Sound.play('thud', 0.5);
+}
+
+// Holding still beside a horror (space or .), and hoping. For each awake horror beside you: it may
+// lose interest and wander off for a few turns, or else its next blow lands harder. The narrator
+// sets it up in a couplet. Returns false if there was nobody beside you to hold still for.
+function holdStill() {
+  const L = G.level, H = RULES.holdStill;
+  const near = L.monsters.filter(m => engaged(m) && !m.napping && !(m.lulled > 0) && !H.exempt.includes(m.type));
+  if (!near.length) return false;
+  msg(breakRhyme(RNG.pick(TEXT.holdStill.couplets)), C.purple);
+  for (const m of near) {
+    if (RNG.chance(H.wander)) {
+      Object.assign(m, { bored: H.turns, pounce: false });
+      if (G.encounter && G.encounter.m === m) G.encounter = null;
+      msg(fill(RNG.pick(TEXT.holdStill.wander), { The: cap(theM(m)) }), C.green);
+    } else m.pounce = true;
+  }
+  return true;
+}
+
+// The Second Opinion's colleague, on its way: until you can see it, its footsteps are written in
+// the dark where it walks, every turn, the way a Tick-Tock Tot's ticking is.
+function colleagueSteps(L) {
+  for (const m of L.monsters) {
+    if (!m.answering || m.arrived) continue;
+    if (L.visible[idx(m.x, m.y)]) { m.arrived = true; continue; }
+    if (m.awake && !m.napping && !(m.lulled > 0)) FX.word(m.x, m.y, m.d.call.steps);
+  }
 }
 
 // The Mold-Mite: wait beside it instead of fighting, and it climbs into your lap and sleeps.
@@ -207,12 +237,18 @@ function monsterAttack(m) {
   const p = G.player;
   // The blow lands (or doesn't) first; only then do you get to choose how to answer it.
   const threat = G.threat = { m, turn: G.turn, t: FX.now, result: 'miss' };
+  const pounce = m.pounce;
+  m.pounce = false; // whatever it was saving goes into this blow, landed or not
   if (m.d.ai === 'thief' && !m.carry && RNG.chance(m.d.steal.chance) && steal(m)) { threat.result = 'steal'; return; }
   if (!RNG.chance(RULES.combat.monsterHit)) {
     msg(cap(fill(RNG.pick(TEXT.monMiss), { The: cap(theM(m)) })), C.gray);
     return;
   }
-  const dmg = rollDamage(m.d.atk + (m.bonusAtk || 0), playerDef());
+  let dmg = rollDamage(m.d.atk + (m.bonusAtk || 0), playerDef());
+  if (pounce) {
+    dmg = Math.ceil(dmg * RULES.holdStill.harder);
+    msg(fill(TEXT.holdStill.harder, { The: cap(theM(m)) }), C.red);
+  }
   FX.lunge(m, p.x - m.x, p.y - m.y);
   FX.recoil(p, p.x - m.x, p.y - m.y);
   hurtPlayer(dmg, m.type);
