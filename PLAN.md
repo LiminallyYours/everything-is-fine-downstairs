@@ -695,6 +695,15 @@ with its git history, and is where all new work happens.
       type for the verse. JW: "2". Settled: a built-in hand-lettered font for headings, labels, the
       margin and the help pages; the verse stays in book type, printed like ink. Claude picks the
       font while building and shows it to JW; it is easy to swap.
+    - **How it looks, 4: ink that looks like ink** (11 November). Asked: every line is drawn the
+      same thickness all along and shading is flat colour; real pen-and-ink has lines that go thick
+      and thin as the pen presses, blots where the pen paused, and shadows made of crossed lines.
+      Options offered: (1) all three, always: the most ink-like, but a busier map and some drawing
+      speed; (2) thick-and-thin lines and blots only, flat shading stays; (3) thick-and-thin lines
+      and hatching always, with blots that get more frequent as the page gets eerier (a careful hand
+      on a calm page, spilled ink on a frightened one). Claude suggested 3. JW: "3". Settled: 3.
+      The "how it looks" group has now all been discussed, with the candle and the eyes decided
+      earlier; it is built next.
 
 Everything below this line is **proposed by Claude and not yet agreed**. Treat the lists as
 possibly incomplete.
