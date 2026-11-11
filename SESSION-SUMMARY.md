@@ -34,9 +34,11 @@ The first version of the game is kept, untouched, in `../sillygame/` on the Mac 
   each settled item recorded there with JW's answer word for word; a group is built once all of it
   has been discussed, then tests, `python3 build.py`, README, this file and `PLAN.md`, commit
   (author `LiminallyYours <64442823+LiminallyYours@users.noreply.github.com>`) and push.
-- **Next:** show JW the new look and take up anything he wants changed (the details are in
-  `PLAN.md`, item 11, "How it looks: built", including one open question: the made-up horrors
-  at the edge of your light). Then the story group, then sound. Still open: whether floors 3 to 5 need tougher horrors, once JW
+- **Next:** first build the one decided change not yet built: the made-up horrors and treasures
+  that appear at the edge of your light when you're frightened must be drawn so they are
+  unmistakably not real (JW chose this; `PLAN.md`, item 11, at the end of "How it looks: built").
+  Then take up anything JW wants changed in the new look (screenshots were shown; he hasn't
+  reacted to them yet). Then the story group, then sound. Still open: whether floors 3 to 5 need tougher horrors, once JW
   has played; and a mobile version (JW: "we need a mobile version"), not yet discussed.
 - **Project tracking stays in these files** in the repository (JW, 11 November), not a Claude
   artifact.

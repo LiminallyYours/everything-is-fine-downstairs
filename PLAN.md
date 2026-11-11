@@ -762,6 +762,17 @@ with its git history, and is where all new work happens.
         of your light when you are frightened (they are drawn as real horrors and things, then
         vanish). They are not in the dark, so the eyes decision didn't cover them, but they do teach
         that what you see might not be there.
+        **Asked** (11 November): when you're frightened, a fake horror or a fake treasure sometimes
+        appears just inside your light, then vanishes; it's not in the dark, so the eyes decision
+        didn't cover it, but it teaches the same lesson the made-up eyes did. Options offered:
+        (1) keep them as they are; (2) make them unmistakably wrong: drawn in pale, scratchy ink, so
+        a careful player can tell they're not real; (3) replace them with the abstract things (a
+        faceless smile or a toy at the edge of your light). Claude suggested 2. JW: "2." Settled:
+        the made-up horrors and treasures at the edge of your light are drawn so they are
+        unmistakably not real. **Not built yet:** JW asked for a hand-off to a fresh session first;
+        the next session builds it. (Today they are drawn at a little over half strength with
+        scratchy lines; "unmistakably" means going clearly further, such as pale paper-coloured ink
+        with the outline broken up, so no careful player mistakes one for a real horror.)
       - Tests: a new suite, `tests/suites/looks.js` (17 checks). The golden transcript was
         re-recorded: the menu pages are now written in runs of hand lettering, not typed one letter
         at a time, so the recording groups their words differently; the toy block's letter shows up
