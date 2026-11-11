@@ -592,6 +592,36 @@ with its git history, and is where all new work happens.
     - **Working from GitHub only.** JW (11 November): "if my filesystem, id like you to commit/push
       everything and we can start working exclusively from the github repo." Settled: from the
       next session on, the work happens in the GitHub repository, not in the folder on JW's Mac.
+    - **Reviewing "How you play: built"** (11 November, a fresh session, working from GitHub). All
+      tests pass and both versions run in a browser with a clean console. Claude walked JW through
+      the details above. Claude's view: all are tuning to keep except two real choices, the Second
+      Opinion's colleague and the lullaby not working on the Tuck-You-In and the boss; for the
+      lullaby Claude suggested keeping it as built, since it matches JW's choice that those two
+      never get bolder, and asked only about the colleague.
+      1. **How should the Second Opinion's colleague arrive?** Asked: the Second Opinion was
+         already the biggest killer, and with the call added, bot deaths on floor 2 rose from 18
+         to 24 out of 40 games. Right now the colleague just appears somewhere you can't see; the
+         only sign is a line in the story strip ("Somewhere a door opens…") as it arrives. That is
+         close to "a creature hides in the dark and jumps out", which the theme rules out. Options
+         offered: (1) keep it as it is; (2) you can see it coming: its footsteps are written in the
+         dark where it walks (squeak… squeak…), the way the Tick-Tock Tot's ticking already is, so
+         you know which way it's coming from and can finish the fight or leave; (3) it calls later,
+         after 6 turns of fighting instead of 4, still arriving unseen. Claude suggested 2. JW: "2".
+         Settled: the colleague's footsteps are written in the dark where it walks, until you can
+         see it.
+      2. **Where should the project tracking live?** Asked: the plan, the record of decisions and
+         the session notes are text files in the repository, saved with every push. Options
+         offered: (1) stay in the repository files: every decision is saved with the version of the
+         game it produced, and every session already reads them first, but they are plain text on
+         GitHub; (2) move to a Claude artifact: nicer to read, easy on a phone, but it lives apart
+         from the game, can drift out of step, and isn't in the game's history; (3) both, the files
+         official and an artifact as a readable copy, which is one more thing to keep updated.
+         Claude suggested 1. JW: "1." Settled: tracking stays in the repository files.
+      3. **JW's note: waiting is barely used.** JW: "the mold hood into your lap but the wait
+         button is so under used I didn't even know it existed and it's my game. We need to make
+         wait.more useful. "Wait still in silence and hope nothing gets you" - some sort of rhyme
+         around that. Small chance the monster nearby doesn't attack you and moves away, but more
+         damage if it does attack you?" Taken up as the next question.
 
 Everything below this line is **proposed by Claude and not yet agreed**. Treat the lists as
 possibly incomplete.
