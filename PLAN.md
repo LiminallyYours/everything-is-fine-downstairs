@@ -682,6 +682,19 @@ with its git history, and is where all new work happens.
       (2) wronger as the page gets eerier (depth, fear, eerie moments), so floor 1 stays cute for a
       calm player; (3) both: one wrong detail always, more creeping in as the page gets eerier.
       Claude suggested 3. JW: "3." Settled: both.
+    - **How it looks, 3: hand-inked lettering** (11 November). Asked: the map, margin and verse
+      pages use a book typeface (Baskerville) only Macs have, falling back to Georgia elsewhere; the
+      help page, legend, pockets and log use a typewriter font (Courier); none of it looks hand-made.
+      Options offered: (1) book type printed like ink everywhere, typewriter dropped: letters
+      slightly off their line, uneven darkness, the odd blot, trembling more as the page gets
+      eerier; nothing added, but non-Macs still look different; (2) a free hand-lettered font built
+      into the game file (about 50–100 KB) for headings, labels, the margin and the help pages,
+      replacing the typewriter, with the long verse staying in book type; the same on every
+      computer, which helps the web and later phone versions; (3) letters drawn with the wobbly pen,
+      only for titles; (4) leave it. Claude suggested 2, with option 1's ink treatment on the book
+      type for the verse. JW: "2". Settled: a built-in hand-lettered font for headings, labels, the
+      margin and the help pages; the verse stays in book type, printed like ink. Claude picks the
+      font while building and shows it to JW; it is easy to swap.
 
 Everything below this line is **proposed by Claude and not yet agreed**. Treat the lists as
 possibly incomplete.
