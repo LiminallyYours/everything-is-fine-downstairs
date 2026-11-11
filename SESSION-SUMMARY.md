@@ -9,25 +9,36 @@ For how to play, see `README.md`. For ideas not yet built, see `SUGGESTED-EDITIO
 
 ## Next session: start here
 
-**This folder (`sillygame2`) is the new version.** The game as it was at the end of the
-restructure is kept, untouched, in `../sillygame/`. `PLAN.md` here holds what JW has decided for
-the new version (the theme, the naming rule, every agreed replacement) and what is still only
-proposed. Section 9 below says what has been built from it.
+**Work from the GitHub repository, LiminallyYours/everything-is-fine-downstairs** (public; the
+game is live at https://liminallyyours.com/everything-is-fine-downstairs/ through GitHub Pages,
+which republishes within a minute or two of every push to `main`). From 11 November 2026 this is
+the only place the project is worked on. JW's Mac still has an old copy in
+`~/Documents/claude-projects/sillygame2`; don't work there, and never push its local branch
+`history-before-github` (it holds his Mac username, his email address and the Seuss-era version).
+The first version of the game is kept, untouched, in `../sillygame/` on the Mac only.
 
-**`RESTRUCTURE-PLAN.md` is finished.** All five steps are committed (see section 8). Up to the
-end of the restructure the game played, looked and sounded exactly as it did on 28 September.
-Section 9 changed its words and pictures on purpose, and the recorded playthrough was
-re-recorded for that.
-
-- **Before changing anything:** `cd tests && npm ci` once, then `npm test` (about a minute).
-  It must say ALL PASSED. `tests/README.md` lists every command.
-- **If you change behaviour on purpose** (a balance tweak, a reworded line), `npm test` will
-  fail on the golden transcript. That's expected. Look at the diff, re-record with
-  `npm run golden:record`, and say why in the commit.
-- **Where to change things:** numbers in `js/config/rules.js` (README, "Where to tune"); words
-  in `js/content/`; drawings in `js/draw/`; game logic in `js/rules/`.
-- **Good next jobs:** a real playtest with your eyes and ears, then the small fixes the
-  restructure found (both in `SUGGESTED-EDITIONS.md`).
+- **Setting up:** clone the repository, then `cd tests && npm ci` and `npm test` (one to five
+  minutes depending on the machine). It must say ALL PASSED. `tests/README.md` lists every command.
+- **If you change behaviour on purpose,** `npm test` fails on the golden transcript. That's
+  expected: look at the diff, re-record with `npm run golden:record`, and say why in the commit.
+- **Looking at it in a real browser:** a headless Chrome driven by Playwright works on both
+  `index.html` and the single file (`python3 build.py` builds `dist/`, which is not in git).
+  Check the console stays clean.
+- **No danger measurements any more.** JW (11 November): "in the future, we don't need a danger
+  measurement check." `tests/measure.js` stays in the project but is no longer part of the routine.
+- **Where to change things:** numbers in `js/config/rules.js` (README, "Where to tune"); each
+  horror's own numbers in its entry in `js/content/data.js`; words in `js/content/`; drawings in
+  `js/draw/`; game logic in `js/rules/`.
+- **How JW works through the plan:** `PLAN.md`, item 11, is the running record. One question at
+  a time, in plain words, with numbered options, what each leads to and which Claude would pick;
+  each settled item recorded there with JW's answer word for word; a group is built once all of it
+  has been discussed, then tests, `python3 build.py`, README, this file and `PLAN.md`, commit
+  (author `LiminallyYours <64442823+LiminallyYours@users.noreply.github.com>`) and push.
+- **Next:** the "how it looks" group in `PLAN.md` ("Proposed improvements, by category",
+  Visual), plus two things JW already decided for it: a candle in the margin that shows how full
+  it is, and eyes in the dark only for real horrors with the made-up dark things made abstract.
+  Then the story, then sound. Still open: whether floors 3 to 5 need tougher horrors, once JW
+  has played.
 
 ## Where things stand
 
@@ -35,12 +46,8 @@ re-recorded for that.
   `dist/everything-is-fine-downstairs.html`, which you rebuild with `python3 build.py` after any change.
 - **Size:** 29 JavaScript files in folders (`config/`, `content/`, `rules/`, `sound/`, `draw/`),
   about 7,700 lines. No libraries, no build step, nothing to install to play.
-- **Git and the web:** the repository is public on GitHub as LiminallyYours/everything-is-fine-downstairs,
-  and GitHub Pages serves the game at https://liminallyyours.com/everything-is-fine-downstairs/.
-  GitHub's history starts fresh on 11 November 2026 (see section 12). The earlier history,
-  which includes the Dr. Seuss-based version and some personal details, is kept only on JW's Mac,
-  on the local branch `history-before-github`; never push that branch. `dist/` is not in git;
-  `python3 build.py` rebuilds it.
+- **Git and the web:** see "Next session: start here". GitHub's history starts fresh on 11
+  November 2026 (section 12). `dist/` is not in git; `python3 build.py` rebuilds it.
 - **Tests:** `tests/`, run with `npm test`. Screenshot baselines are kept locally in
   `tests/out/` (not in git), because fonts render slightly differently on each machine.
 - **Backups:** `backup-claudeignor/`, `backup2-claudeignore/` and `backup3-claudeignore/` are your
@@ -206,6 +213,27 @@ The second group from `PLAN.md`, each decided by JW there:
 - **Moved to GitHub,** public, with GitHub Pages. JW chose a fresh start: the game as it was on
   11 November is the first commit there, because the old history held his Mac username, his
   email address and the Seuss-era version.
+
+### 13. How you play (11 Nov)
+The third group from `PLAN.md`, each decided by JW there:
+- **Three kinds of rhyme,** picked before you recite (R, then ← ↑ → or 1–3): a shove (as
+  before), a lullaby (horrors near you sleep, unhurt, until any noise) and a tongue-twister (the
+  nearest horror is hurt badly). `js/rules/rhyme.js`, `RULES.rhyme.lullaby` and `.twister`.
+- **A hoarse voice:** rhymes close together give a shorter fuse and smudged words, up to three
+  stages; rest brings it back (`RULES.rhyme.hoarse`, margin tag "hoarse").
+- **Dark rooms** on floors 2 to 5: always dark inside, with better gear in them
+  (`RULES.darkRooms`, `js/rules/floors.js`).
+- **Tricks:** the Mold-Mite sleeps in your lap if you wait beside it; the Second Opinion calls a
+  colleague after a few turns of fighting; the Tick-Tock Tot's ticking is now always written
+  ("tick… tock…") and stops when it gets close (each in its own entry in `content/data.js`).
+- **Also decided, for later groups:** the candle in the margin should show how full it is, and
+  eyes in the dark should only ever mean a real horror (`PLAN.md`, item 11).
+- New suite `tests/suites/howyouplay.js` (47 checks) and a golden scenario, `howyouplay`. Two
+  golden scenarios changed so they still do what they were for: the Mold-Mite that kills you is
+  made frantic (otherwise it would settle in your lap while you wait), and the bedtime scenario
+  keeps the Tuck-You-In within earshot rather than relying on the layout.
+- **Measured before and after** (numbers in `PLAN.md`): somewhat more dangerous, mostly on floor
+  2, where the Second Opinion now brings a colleague.
 
 ## Decisions worth remembering
 

@@ -44,7 +44,7 @@ check('hitting it does nothing', st.hp === 999, st.hp);
 G.player.verve = 3;
 H.run('startRhyme(); G.rhyme.fuseT0 = 1; answerRhyme(G.rhyme.options.indexOf(G.rhyme.answer)); finishRhyme();');
 check('a good rhyme stuns it', st.stun > 0 && G.stats.rhymeWins === 1, { stun: st.stun, wins: G.stats.rhymeWins });
-G.player.verve = 3; H.run('startRhyme()'); H.tick(20000);
+G.player.verve = 3; H.run("startRhyme('shove')"); H.tick(20000);
 check('a rhyme fuse that burns out closes the duel and counts as a failure', G.mode !== 'rhyme' && G.stats.rhymeFails === 1, { mode: G.mode, fails: G.stats.rhymeFails });
 for (let i = 0; i < 10 && G.mode === 'card'; i++) { H.press('Enter'); H.tick(40); } // a page for whatever the bad rhyme made
 G.player.hp = 1; G.player.maxHp = 30; st.stun = 0;
@@ -134,7 +134,7 @@ if (gh) {
 let drewOk = true;
 try {
   H.run('for (const t of Object.keys(BESTIARY)) { showBeastPage(t); G.page.t0 = -1e9; draw(); } G.mode = "play"; G.page = null;');
-  H.run('for (const c of COUPLETS) { G.player.verve = 3; startRhyme(); G.rhyme.fuseT0 = FX.now; G.page.t0 = -1e9; draw(); } G.mode = "play"; G.page = null;');
+  H.run('for (const c of COUPLETS) { G.player.verve = 3; startRhyme("shove"); G.rhyme.fuseT0 = FX.now; G.page.t0 = -1e9; draw(); } G.mode = "play"; G.page = null;');
   H.run('G.player.dread = 90; G.player.hp = 3; G.player.poisoned = 3; G.player.confused = 3; G.player.sensing = 3; G.player.hidden = true; G.level.stalker = G.level.monsters[0] || {x:0,y:0}; draw();');
 } catch (e) { drewOk = false; console.log(e.stack); }
 check('every bestiary page, rhyme page and a frightened map draw cleanly', drewOk);

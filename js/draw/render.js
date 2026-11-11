@@ -222,6 +222,7 @@ function drawPlay() {
       if (L.seen[i]) drawTerrain(L, x, y, sx(x), sy(y), S, !!L.visible[i]);
     }
   }
+  drawDarkRoom(L, S, x0, y0, x1, y1);
   drawStains(L, S);
   for (const tt of FX.teeth) zigzag(sx(tt.x) + S * 0.1, sy(tt.y) + S * 0.5, sx(tt.x) + S * 0.9, sy(tt.y) + S * 0.5, 4, S * 0.18, { w: 1.6, color: C.red });
   drawThings(L, p, S);
@@ -310,7 +311,7 @@ function drawThings(L, p, S) {
     things.push([ay, 3, () => {
       const cx = sx(ax) + S / 2, by = sy(ay) + S * 0.9 - lift * S;
       if (m.disguised) drawItem(BLANK_GEAR.head, cx, sy(m.y) + S * 0.55, S);
-      else if (!(m.napping ? lyingDown(cx, by, S, () => drawMonster(m, cx, by, S)) : drawMonster(m, cx, by, S))) glyph(m.d.ch, m.x, m.y, m.d.color);
+      else if (!(m.napping || m.lulled > 0 ? lyingDown(cx, by, S, () => drawMonster(m, cx, by, S)) : drawMonster(m, cx, by, S))) glyph(m.d.ch, m.x, m.y, m.d.color);
       if (!m.disguised && !m.d.invulnerable && m.hp < m.maxHp) {
         const hw = S * (m.type === 'nibbler' ? 1.4 : 0.6), hy = sy(ay) + S * 0.97;
         line(cx - hw / 2, hy, cx + hw / 2, hy, { w: 0.7, color: C.dim, noScratch: true });
@@ -326,6 +327,11 @@ function drawThings(L, p, S) {
     const cx = sx(px) + S / 2, by = sy(py) + S * 0.9 - plift * S;
     if (p.hidden) drawBarrel(unit(cx, by, S), S, true);
     else drawPlayer(cx, by, S, { wick: p.wick, confused: p.confused > 0, gear: p.gear });
+    // Mold-Mites asleep in your lap, small, curled up, breathing
+    (p.hidden ? [] : p.lap || []).forEach((m, k) => {
+      const lx = cx + (k % 2 ? -1 : 1) * S * (0.34 + 0.14 * Math.floor(k / 2)), ly = by + S * 0.02;
+      lyingDown(lx, ly, S * 0.7, () => drawMonster(m, lx, ly, S * 0.7));
+    });
   }]);
   things.sort((a, b) => a[0] - b[0] || a[1] - b[1]);
   for (const t of things) t[2]();
@@ -559,6 +565,34 @@ function drawTendrils(L, p, x0, y0, x1, y1, d) {
         }
         stroke(pts, { w: 1.3, alpha: 0.85, noScratch: true, step: 0 });
       }
+    }
+  }
+}
+
+// A dark room: ink fills it wherever your light isn't, and the doorways hang with ink, like a
+// curtain somebody drew. It shows on the map once you have glimpsed a doorway.
+function drawDarkRoom(L, S, x0, y0, x1, y1) {
+  const r = L.darkRoom;
+  if (!r || !r.seen) return;
+  ctx.fillStyle = INK;
+  for (let y = Math.max(r.y, y0); y < Math.min(r.y + r.h, y1 + 1); y++) {
+    for (let x = Math.max(r.x, x0); x < Math.min(r.x + r.w, x1 + 1); x++) {
+      if (L.visible[idx(x, y)] || !L.seen[idx(x, y)]) continue;
+      ctx.globalAlpha = 0.82;
+      ctx.fillRect(sx(x), sy(y), S + 0.5, S + 0.5);
+    }
+  }
+  ctx.globalAlpha = 1;
+  for (const [x, y, ox, oy] of darkRoomDoors(L)) {
+    if (!L.seen[idx(ox, oy)] || x < x0 || x > x1 || y < y0 || y > y1) continue;
+    // drips along the edge between the doorway and the room
+    const ex = sx(x) + S / 2 - (x - ox) * S / 2, ey = sy(y) + S / 2 - (y - oy) * S / 2;
+    for (let k = -2; k <= 2; k++) {
+      const len = S * (0.25 + 0.2 * (hash(x * 7 + y * 13 + k) % 1));
+      const along = k * S * 0.18, sway = Math.sin(Ink.t * 2 + k) * S * 0.02;
+      const [ax, ay] = x !== ox ? [ex, ey + along] : [ex + along, ey];
+      const [dx, dy] = x !== ox ? [(x - ox) * len, sway] : [sway, (y - oy) * len];
+      stroke([[ax, ay], [ax + dx, ay + dy]], { w: 1.6, color: INK, step: 0 });
     }
   }
 }
@@ -921,6 +955,8 @@ function drawMargin(p) {
     [p.darkTurns, tg.dark, C.red],
     [p.wick <= 0, tg.candleOut, C.red],
     [clumsy(), tg.trembling, C.red],
+    [p.hoarse > 0, p.hoarse > 0 && fill(tg.hoarse, { n: p.hoarse }), C.pink],
+    [p.lap && p.lap.length, p.lap && (p.lap.length > 1 ? fill(tg.laps, { n: p.lap.length }) : tg.lap), C.green],
     [L.stalker, tg.bedtime, C.red],
     [!L.stalker && !L.isBoss && L.turnsHere >= due - RULES.stalker.musicBoxLead, tg.musicBox, C.pink],
     [L.tiles[idx(p.x, p.y)] === T.STAIRS, tg.stairs, C.blue],

@@ -7,7 +7,7 @@ const stalkerDue = depth => ruleAt(RULES.stalker.due, depth); // turns on a floo
 function lightRadius() {
   const p = G.player, L = G.level;
   if (!p || !L) return 1;
-  if (p.hidden || p.darkTurns > 0 || p.wick <= 0) return 1;
+  if (p.hidden || p.darkTurns > 0 || p.wick <= 0 || inDarkRoom(L, p.x, p.y)) return 1;
   return clamp(Math.ceil(1 + (L.floor.light - 1) * Math.min(1, p.wick / RULES.candle.full)), 1, L.floor.light);
 }
 
@@ -25,8 +25,73 @@ function floorEnter(L) {
   if (L.depth === 3) placeSocks(L);
   L.stains = [];
   placeVignettes(L);
+  placeDarkRoom(L);
   placeGhosts(L);
   planSurprise(L);
+}
+
+// You hear a Tick-Tock Tot coming before you see it: "tick…", "tock…", written where it is, every
+// turn, through walls. When it gets close, it goes silent. Then it pounces.
+function totTicks(L) {
+  const p = G.player;
+  for (const m of L.monsters) {
+    if (!m.d.tick || !m.awake || m.napping || m.lulled > 0 || L.visible[idx(m.x, m.y)]) continue;
+    const d = manhattan(m, p), T2 = m.d.tick;
+    if (d <= T2.silent || d > T2.hear) continue;
+    m.tock = !m.tock;
+    Sound.play('tick', 1.2 - d / T2.hear, clamp((m.x - p.x) / 8, -1, 1));
+    FX.word(m.x, m.y, m.tock ? 'tock…' : 'tick…');
+  }
+}
+
+// --- Dark rooms: one room on some floors where the light will not go, with a prize in it. ----
+
+const inRect = (r, x, y) => !!r && x >= r.x && x < r.x + r.w && y >= r.y && y < r.y + r.h;
+const inDarkRoom = (L, x, y) => inRect(L.darkRoom, x, y);
+
+function placeDarkRoom(L) {
+  L.darkRoom = null;
+  const D = RULES.darkRooms;
+  if (L.isBoss || !D.floors.includes(L.depth)) return;
+  const rooms = RNG.shuffle(L.rooms.filter(r => r.w >= 3 && r.h >= 3 && !inRect(r, L.start.x, L.start.y)
+    && !(L.stairs && inRect(r, L.stairs.x, L.stairs.y)) && !L.fixtures.some(f => inRect(r, f.x, f.y))));
+  const r = rooms[0];
+  if (!r) return;
+  L.darkRoom = { x: r.x, y: r.y, w: r.w, h: r.h, seen: false, entered: false };
+  const c = center(r), free = (x, y) => passable(L.tiles[idx(x, y)]) && L.tiles[idx(x, y)] !== T.STAIRS && !L.items.some(it => it.x === x && it.y === y);
+  const spot = free(c.x, c.y) ? c : pickSpot(L, r);
+  const prize = randomGear(L.depth + D.better);
+  if (spot && prize) dropItem(L, spot.x, spot.y, prize);
+}
+
+// Every turn: the first glimpse of a dark room's doorway, and the first step inside.
+function darkRoomTurn(L) {
+  const r = L.darkRoom, p = G.player;
+  if (!r) return;
+  if (!r.seen && darkRoomDoors(L).some(([, , ox, oy]) => L.visible[idx(ox, oy)])) {
+    r.seen = true;
+    msg(TEXT.darkRoom.notice, C.purple);
+    addDread(RULES.darkRooms.noticeDread);
+  }
+  if (!r.entered && inDarkRoom(L, p.x, p.y)) {
+    r.entered = true;
+    r.seen = true;
+    msg(TEXT.darkRoom.enter, C.purple);
+  }
+}
+
+// The ways into a dark room: [x, y] just inside, and [ox, oy] just outside.
+function darkRoomDoors(L) {
+  const r = L.darkRoom, out = [];
+  if (!r) return out;
+  for (let y = r.y; y < r.y + r.h; y++) for (let x = r.x; x < r.x + r.w; x++) {
+    if (x !== r.x && x !== r.x + r.w - 1 && y !== r.y && y !== r.y + r.h - 1) continue;
+    for (const [dx, dy] of DIR4) {
+      const ox = x + dx, oy = y + dy;
+      if (inMap(ox, oy) && !inRect(r, ox, oy) && passable(L.tiles[idx(ox, oy)])) out.push([x, y, ox, oy]);
+    }
+  }
+  return out;
 }
 
 // Once per turn, after the monsters move.
@@ -46,19 +111,12 @@ function floorTurn(L) {
   if (inDarkness()) G.stats.darkTurns++;
   if (p.hidden) G.stats.hiddenTurns++;
   stalkerTick(L);
+  darkRoomTurn(L);
   surpriseTurn(L);
   if (L.depth === 4) tideTurn(L);
   if (L.depth === 5) clockTurn(L);
   if (L.depth === 6) chewTurn(L);
-  // You hear a Tick-Tock Tot before you see it.
-  for (const m of L.monsters) {
-    if (m.type !== 'tot' || !m.awake || L.visible[idx(m.x, m.y)]) continue;
-    const d = manhattan(m, p), range = RULES.floors.tickRange;
-    if (d <= range) {
-      Sound.play('tick', 1.2 - d / range, clamp((m.x - p.x) / 8, -1, 1));
-      if (RNG.chance(RULES.floors.tickWord)) FX.word(m.x, m.y, 'tick…');
-    }
-  }
+  totTicks(L);
   // An Ahem clears its throat in the dark before it reaches you.
   for (const m of L.monsters) {
     if (m.type !== 'wraith' || !m.awake || L.visible[idx(m.x, m.y)]) continue;

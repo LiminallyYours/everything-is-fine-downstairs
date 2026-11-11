@@ -58,6 +58,7 @@ function pageAdvance(pg) {
 
 // Every frame: narrate lines as they appear, and fire the page's onDone once.
 function pageTick(pg) {
+  if (pg.hold) return; // waiting for something first (which kind of rhyme)
   const lines = pageLines(pg), n = pageShown(pg);
   while (pg.spoken < n - 1) {
     pg.spoken++;
@@ -257,6 +258,7 @@ function drawRhymePage(pg, lines, el) {
   const r = G.rhyme;
   ctx.textAlign = 'center';
   ctx.textBaseline = 'alphabetic';
+  if (pg.hold) return drawRhymeKinds();
   serif(clamp(H * 0.026, 14, 24), 'italic');
   ctx.fillStyle = C.red;
   ctx.fillText(pg.final ? TEXT.pages.lastRhyme : TEXT.pages.recite, W / 2, H * 0.14);
@@ -292,7 +294,8 @@ function drawRhymePage(pg, lines, el) {
   if (!r.fuseT0) return;
   const cx = W / 2, cy = H * 0.66, dx = Math.min(W * 0.24, 300), dy = H * 0.085;
   const tier = dreadTier();
-  const opt = i => (tier >= 2 && Math.random() < 0.04 * tier ? glitch(r.options[i], FX.now + i) : r.options[i]);
+  const words = r.shown || r.options; // a hoarse voice smudges them
+  const opt = i => (tier >= 2 && Math.random() < 0.04 * tier ? glitch(words[i], FX.now + i) : words[i]);
   const os = clamp(H * 0.03, 16, 28);
   serif(os, 'italic');
   ctx.fillStyle = INK;
@@ -324,6 +327,39 @@ function drawRhymePage(pg, lines, el) {
   serif(clamp(H * 0.018, 11, 16), 'italic');
   ctx.fillStyle = C.gray;
   ctx.fillText(TEXT.pages.pick, W / 2, H * 0.93);
+}
+
+// Which rhyme? Three kinds, by arrow (left, up, right) or 1 to 3. The last kind used is marked.
+function drawRhymeKinds() {
+  const p = G.player, K = TEXT.rhymeKinds, last = p.lastRhymeKind || 'shove';
+  serif(clamp(H * 0.026, 14, 24), 'italic');
+  ctx.fillStyle = C.red;
+  ctx.fillText(TEXT.pages.recite, W / 2, H * 0.14);
+  serif(clamp(H * 0.05, 24, 48));
+  ctx.fillStyle = INK;
+  ctx.fillText(TEXT.pages.whichRhyme, W / 2, H * 0.3);
+  if (p.hoarse) {
+    serif(clamp(H * 0.02, 12, 18), 'italic');
+    ctx.fillStyle = C.pink;
+    ctx.fillText(TEXT.pages.hoarse, W / 2, H * 0.36);
+  }
+  const cx = W / 2, cy = H * 0.6, dx = Math.min(W * 0.3, 360), os = clamp(H * 0.03, 16, 28);
+  const spots = [[cx - dx, cy + os, -1, 0], [cx, cy - H * 0.1, 0, -1], [cx + dx, cy + os, 1, 0]];
+  RHYME_KINDS.forEach((kind, i) => {
+    const [x, y, ax, ay] = spots[i];
+    serif(os, kind === last ? 'bold italic' : 'italic');
+    ctx.fillStyle = kind === last ? C.purple : INK;
+    const label = `${i + 1}  ${K[kind].name}`, half = ctx.measureText(label).width / 2;
+    ctx.fillText(label, x, y);
+    serif(clamp(H * 0.018, 11, 16), 'italic');
+    ctx.fillStyle = C.gray;
+    ctx.fillText(K[kind].desc, x, y + os * 1.1);
+    if (ay) inkArrow(x, y - os * 1.5, 0, -1, os);           // above the middle one
+    else inkArrow(x + ax * (half + os * 1.2), y - os * 0.3, ax, 0, os); // beside the side ones
+  });
+  serif(clamp(H * 0.018, 11, 16), 'italic');
+  ctx.fillStyle = C.gray;
+  ctx.fillText(TEXT.pages.whichKeys, W / 2, H * 0.93);
 }
 
 // ---------------------------------------------------------------------------------------

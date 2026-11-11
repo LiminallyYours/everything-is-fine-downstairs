@@ -26,6 +26,7 @@ const SPEECH = {
     hit: ['Does it hurt when I do THIS?', 'Mm. As I thought.'],
     hurt: ['I DISAGREE!', 'In my opinion: ow!'],
     die: ['I should like... a third opinion...'],
+    call: ["I'd like a second opinion on this.", 'Colleague! Come and look at THIS.', 'Most unusual. I must consult.'],
   },
   zombie: {
     spot: ["Sorry I'm late. Is this where it goes?", 'Coming... coming...', "Wait for me. I'm not fast."],

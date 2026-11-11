@@ -140,6 +140,13 @@ function onEncounterKey(k) {
 
 function onRhymeKey(k) {
   const r = G.rhyme;
+  if (G.page && G.page.hold) { // which kind of rhyme?
+    const i = /^[1-3]$/.test(k) ? Number(k) - 1 : RHYME_KIND_KEYS.indexOf(k);
+    if (i >= 0) chooseRhymeKind(RHYME_KINDS[i]);
+    else if (isEnter(k)) chooseRhymeKind(G.player.lastRhymeKind || 'shove');
+    else if (k === 'Escape') cancelRhyme();
+    return;
+  }
   if (r.result) {
     if (FX.now - r.result.t > RULES.ui.resultMs) finishRhyme();
     return;

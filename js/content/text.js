@@ -168,6 +168,9 @@ const TEXT = {
     lastRhyme: 'The Last Rhyme',
     listening: 'the Nibbler is listening, with its mouth open',
     pick: 'pick the word that rhymes',
+    whichRhyme: 'Which rhyme?',
+    whichKeys: '←  ↑  →  or 1, 2, 3 to choose · Enter: the same as last time · Esc: never mind',
+    hoarse: '(your voice is hoarse)',
     rhymes: 'It rhymes!',
     noRhyme: 'That does not rhyme.',
     burntOut: 'The fuse burns out.',
@@ -282,6 +285,9 @@ const TEXT = {
       here: 'something here: G to pick up',
       threat: 'A attack back · U use something',
       trembling: 'trembling', // the highest fear: your blows miss more, and getting away fails more
+      hoarse: 'hoarse · {n}', // rhyming too often: shorter fuses and smudged words; rest brings your voice back
+      lap: 'a Mold-Mite in your lap', // any noise wakes it
+      laps: '{n} Mold-Mites in your lap',
     },
     storySoFar: 'THE STORY SO FAR',
     splash: { press: 'Press any key.', dare: 'If you dare.', best: '(best with the sound on and the lights off)' },
@@ -357,6 +363,43 @@ const TEXT = {
       keys: '↑↓ read the headstones   Esc go back',
     },
   },
+
+  // The three kinds of rhyme (js/rules/rhyme.js), picked before you recite.
+  rhymeKinds: {
+    shove: { name: 'a Shove', desc: 'everything near you reels back' },
+    lullaby: { name: 'a Lullaby', desc: 'everything near you nods off' },
+    twister: { name: 'a Tongue-Twister', desc: 'the nearest horror gets the worst of it' },
+  },
+  lullaby: {
+    hit: 'It rhymes, softly. {n} horrors lie down and close their eyes. Shh.',
+    one: 'It rhymes, softly. {The} lies down and closes its eyes. Shh.',
+    nobody: 'It rhymes, softly. Nobody is here to be sung to. You feel a little sleepy yourself.',
+    hums: '{The} hums along, and forgets what it was doing.',
+    woken: 'Somebody wakes up from their lullaby. They are cross about it.',
+  },
+  twister: {
+    hit: 'It rhymes, fast and twisty and twice as hard. {The} gets the worst of it.',
+    nobody: 'It rhymes, fast and twisty. Your tongue is very proud of itself. Nobody else is here.',
+  },
+  hoarse: {
+    worse: 'Your voice is going hoarse. The next rhyme will come out thinner.',
+    worst: 'Your voice is very hoarse now. The words come out smudged.',
+    better: 'Your voice comes back a little.',
+  },
+
+  // Dark rooms (js/rules/floors.js): always dark inside, and something nice in each.
+  darkRoom: {
+    notice: 'There is a room here where the light will not go. Something is waiting in it. Something nice. Probably.',
+    enter: 'Your candle shrinks to a dot. It is not frightened. It is only being polite.',
+  },
+
+  // The Mold-Mite in your lap, and the Second Opinion's second opinion.
+  lap: {
+    climb: 'The Mold-Mite climbs into your lap, mumbles "mmf, sorry," and falls asleep.',
+    wake: 'The Mold-Mite in your lap wakes with a start and bites you. "Mmf! Sorry!"',
+    stairs: 'The Mold-Mite hops out of your lap at the stairs and waves goodbye. Mmf.',
+  },
+  opinionCall: 'Somewhere a door opens. "Did somebody ask for a second opinion?"',
 
   // The middle floors' surprises (js/rules/surprises.js), in the narrator's cheerful voice.
   surprises: {

@@ -143,12 +143,13 @@ function makeCtx(H, rec) {
         ctx.key(' ', ms);
       }
     },
-    // A rhyme duel, played by keys: let the couplet appear, then answer (true = the rhyme,
-    // false = a wrong word, null = let the fuse burn out).
-    rhyme(answer, { natural = false, god = true } = {}) {
+    // A rhyme duel, played by keys: pick the kind (key 1, 2 or 3; a shove by default), let the
+    // couplet appear, then answer (true = the rhyme, false = a wrong word, null = let the fuse burn out).
+    rhyme(answer, { natural = false, god = true, kind = '1' } = {}) {
       if (god) ctx.god();
       ctx.key('r', 34);
       if (G.mode !== 'rhyme') return false;
+      if (G.page && G.page.hold) ctx.key(kind, 34);
       if (natural) { for (let t = 0; t < 200 && !G.rhyme.fuseT0; t++) H.tick(34); }
       else { ctx.key('Enter', 34); ctx.key('Enter', 34); for (let t = 0; t < 60 && !G.rhyme.fuseT0; t++) H.tick(34); }
       if (answer === null) { for (let t = 0; t < 700 && G.mode === 'rhyme'; t++) H.tick(34); }

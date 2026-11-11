@@ -196,8 +196,6 @@ const RULES = (function freezeDeep(o) {
       every: 12,              // turns between crunches somewhere nearby...
       gnaw: 0.3,              // ...each with this chance that a wall eats a hole in itself
     },
-    tickRange: 10,            // you hear an unseen Tick-Tock Tot within this many steps
-    tickWord: 0.45,           // chance its "tick…" is written down
     ahemRange: 8,             // an unseen Ahem within this many steps may clear its throat...
     ahemWord: 0.3,            // ...with this chance each turn, written down where it is
   },
@@ -211,6 +209,14 @@ const RULES = (function freezeDeep(o) {
     drawer: { turns: 30, minDist: 3, cutsOff: 20 }, // Floor 3: shut this many turns, at least minDist steps from you, cutting off at least cutsOff cells
     bath: { warm: 3, drain: 8, warmDread: -5 },     // Floor 4: lovely warm turns (and the Dread they take off), then turns of pulling
     nap: { turns: 30, frenzy: 8, zzz: 0.25 },       // Floor 5: how long the nap lasts, how long they're frantic if woken, chance of a written "zzz"
+  },
+
+  // Dark rooms: one room on each of these floors is always dark inside, whatever your candle,
+  // and holds a prize: a piece of gear up to `better` tiers above what the floor usually gives.
+  darkRooms: {
+    floors: [2, 3, 4, 5],
+    better: 1,
+    noticeDread: 3,           // the shiver the first time you see into one
   },
 
   // Ghosts of earlier Somebodies, and the graveyard they come from.
@@ -254,6 +260,18 @@ const RULES = (function freezeDeep(o) {
     offendFrenzy: 4,          // ...into a frenzy this long
     badConfused: 4,           // or confuses you this long
     lastWrongHurt: 4,         // a wrong Last Rhyme hurts you this much
+    // Three kinds of rhyme, picked before you recite. The shove is the numbers above.
+    lullaby: { turns: 12 },   // horrors within reach fall asleep this long (any noise wakes them)
+    twister: { damage: [6, 10], stun: 2 }, // one horror (the nearest) takes this, and reels this long
+    // A hoarse voice: each rhyme soon after the last makes you hoarser; resting brings it back.
+    hoarse: {
+      within: 30,             // a rhyme within this many turns of the last one makes you hoarser...
+      most: 3,                // ...up to this many stages
+      rest: 25,               // one stage comes back every this many turns without a rhyme
+      fuseMs: 1500,           // each stage burns the fuse this much shorter...
+      minFuseMs: 4000,        // ...but never shorter than this
+      blot: 0.12,             // and blots out this share of each word's letters, per stage
+    },
   },
 
   // Full-page verse: when each line appears, in milliseconds.

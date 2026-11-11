@@ -102,6 +102,7 @@ const MONSTERS = {
     verbs: ['nibbles', 'gums', 'mumbles at'],
     blurb: 'It mumbles moldy lullabies to itself.',
     death: 'The Mold-Mite mumbles its last: "mmf."',
+    lap: true,                // wait beside it instead of fighting, and it climbs into your lap and sleeps
   },
   bat: {
     ch: 'b', name: "Yesterday's Soup", color: '#c9a0ff', hp: 5, atk: 2, def: 0, xp: 3, speed: 1.5, ai: 'erratic',
@@ -122,6 +123,7 @@ const MONSTERS = {
     verbs: ['examines', 'gnaws', 'prods'],
     blurb: 'It has had a look at you, and it does not agree.',
     death: 'The Second Opinion is overruled.',
+    call: { after: 4, near: [5, 10] }, // after this many turns of fighting you, it calls one more (once), from this far away
   },
   zombie: {
     ch: 'z', name: 'Better-Late-Than-Never', bare: true, color: '#8fbe9f', hp: 16, atk: 6, def: 1, xp: 10, speed: 0.5, ai: 'chase',
@@ -154,6 +156,7 @@ const MONSTERS = {
     verbs: ['tick-tocks', 'bites', 'kicks'],
     blurb: "Wound far too tight. It's very fast.",
     death: 'The Tick-Tock Tot winds down... dowwwn... d o w n.',
+    tick: { hear: 10, silent: 3 }, // out of sight you hear it ticking (and see "tick… tock…") this many steps away; this close, it goes silent
   },
   giraffe: {
     ch: 'L', name: 'Bottom Half – Giraffe', bare: true, color: '#e8a860', hp: 26, atk: 7, def: 2, xp: 25, speed: 1, ai: 'chase',

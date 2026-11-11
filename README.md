@@ -38,7 +38,7 @@ Browsers won't play audio until you press a key, which is why the game opens on 
 | `G` | Pick up what's here. Walking onto an item only tells you it's there. Gold and candle stubs are still scooped up automatically. |
 | `E` | What you wear and wield: four slots (hand, head, body, feet), separate from your pockets. Put things on or take them off; each change takes a turn. |
 | Space or `.` | Wait a turn. |
-| `R` | **Recite a Rhyme.** You get half a couplet and a burning fuse. Pick the rhyming word with an arrow key (or 1–4). The fuse lasts 12 seconds when you're calm, down to 7.5 when you're coming undone. If you're right, horrors within 3 steps are stunned, shoved and hurt. If you're wrong, something embarrassing happens. Costs 1 ♪. |
+| `R` | **Recite a Rhyme.** First pick which kind (← ↑ → or 1–3; Enter repeats the last kind; Esc changes your mind for free): **a Shove** (horrors within 3 steps are stunned, shoved and hurt a little), **a Lullaby** (horrors within 3 steps lie down asleep, unhurt, until any noise wakes them) or **a Tongue-Twister** (the nearest horror is hurt badly and reels). Then you get half a couplet and a burning fuse; pick the rhyming word with an arrow key (or 1–4). The fuse lasts 12 seconds when you're calm, down to 7.5 when you're coming undone. If you're wrong, something embarrassing happens. Costs 1 ♪. Rhyme again soon after and your voice goes **hoarse**: a shorter fuse and smudged words, for a while. |
 | `I` | Your pockets (↑↓ choose, Enter use or wear, D drop, E equipment, Esc close). |
 | `1`–`9`, `0` | Use the item in that pocket slot. |
 | `>` or Enter | Go down the stairs while standing on `>`. |
@@ -132,6 +132,14 @@ wall and puddle is drawn live in shaky ink lines that are never quite straight o
   - a shorter fuse on your rhymes
   - at the last stage, **trembling**: your blows miss more and getting away fails more. The
     margin says so. Light, food, a good rhyme or hiding bring you back down.
+- **A hoarse voice.** A rhyme within 30 turns of the last one makes you hoarser (up to three
+  stages, shown in the margin): each stage burns the fuse 1.5 seconds shorter and blots out
+  letters of the words on offer. Every 25 turns without a rhyme brings a stage back. The Last
+  Rhyme is never cut short.
+- **Dark rooms.** On floors 2 to 5, one room is always dark inside, whatever your candle: your
+  light shrinks to a dot in there, and from outside you can't see past its doorway. Each holds a
+  piece of gear a little better than the floor usually gives. The narrator mentions it the first
+  time you glimpse its doorway, and the doorway hangs with ink.
 - **The horrors are bolder in the dark.** With your candle out, or at the last stage of Dread,
   sleeping horrors nearby may wake even though you can't see them, and the ones already awake
   move faster. Not the Tuck-You-In or the final boss: they stay as they are.
@@ -177,7 +185,7 @@ wall and puddle is drawn live in shaky ink lines that are never quite straight o
   sting and shows its page: an ink portrait and a verse. Every page you've seen is in the
   bestiary (B on the title screen).
 - **Monsters talk.** Speech bubbles appear when they spot you, hit you or die. You can hear
-  a Tick-Tock Tot ticking before you can see it.
+  a Tick-Tock Tot ticking before you can see it, until it goes quiet, close by.
 - **Death is personal.** Your tombstone gets a rhyming epitaph plus one line about how the
   run actually went (*"They died with 2 snacks uneaten. Such waste. Such taste."*). Then a
   sad trombone plays, and on a Mac the *Cellos* voice sings it to you if it's installed.
@@ -198,15 +206,15 @@ wall and puddle is drawn live in shaky ink lines that are never quite straight o
 
 | | Name | Trick |
 | --- | --- | --- |
-| `m` | Mumbling Mold-Mite | Weak. The boss coughs them up. |
+| `m` | Mumbling Mold-Mite | Weak. The boss coughs them up. Wait beside one instead of fighting and it climbs into your lap and sleeps, harmless, until any noise wakes it (then it bites, apologizing). It hops off at the stairs. |
 | `b` | Yesterday's Soup | Fast and erratic. Can slop your candle half out. |
 | `w` | Put-Away | Takes things from your pockets and runs. Bonk it to get them back. |
-| `g` | Second Opinion | Has brought its own teeth. |
+| `g` | Second Opinion | Has brought its own teeth. Fight one for 4 turns and it calls a colleague, who arrives from somewhere out of sight (once; the colleague can't call another). |
 | `z` | Better-Late-Than-Never | Slow, hits very hard. |
 | `s` | Ahem | Comes through walls. Each cough shrinks your flame. |
 | `H` | Nothing-to-Worry-About | Pretends to be a nest lying on the floor. |
 | `T` | Empty Sandwich | Splits in two when you hit it. |
-| `t` | Tick-Tock Tot | Very fast. You can hear it ticking. |
+| `t` | Tick-Tock Tot | Very fast. Out of sight within 10 steps you hear it, and "tick… tock…" is written where it is. Within 3 steps it goes silent. |
 | `L` | Bottom Half – Giraffe | Four legs and some knees. Tough. |
 | `j` | Sockling | Rises from sock graves when you take a sock. |
 | `Ω` | Tuck-You-In | Comes at bedtime. Can't be hurt. |
@@ -280,7 +288,9 @@ every number commented. Each monster's, item's and floor's own numbers stay with
 | Barrels, socks, the tide, the clock, the biting walls | `RULES.floors` |
 | Ghosts, and how many graves the graveyard keeps | `RULES.ghosts` |
 | The odd rooms' odds and rewards | `RULES.rooms` (amounts their words mention, like the well's 20 coins, stay in `js/rules/vignettes.js`; the words are in `js/content/vignette-words.js`) |
-| Rhyme fuse length, reach and effects | `RULES.rhyme` |
+| Rhyme fuse length, reach and effects; the lullaby, the tongue-twister and the hoarse voice | `RULES.rhyme` |
+| Dark rooms: which floors, how much better the prize | `RULES.darkRooms` |
+| The Mold-Mite's lap, the Second Opinion's call, the Tick-Tock Tot's ticking | each horror's own entry in `js/content/data.js` (`lap`, `call`, `tick`) |
 | How long verse lines hang; captions, cards and effects | `RULES.pages`, `RULES.ui`, `RULES.fx` |
 | Loudness of the drone, music box, heartbeat and narrator | `RULES.audio` (each sound's own shape is in `js/sound/audio.js`) |
 | A monster's health, attack, speed, XP, and its tricks (snuffing, stealing, splitting, the Nibbler's phases) | its entry in `MONSTERS`, `js/content/data.js` |

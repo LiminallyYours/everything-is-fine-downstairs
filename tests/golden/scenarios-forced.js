@@ -92,7 +92,7 @@ module.exports = (add) => {
     c.roomy();
     c.setup('alone, walled in, sound off', `(() => { const L = G.level, p = G.player; L.monsters = []; p.verve = p.maxVerve; p.dread = 0; for (const [dx, dy] of DIR8) L.tiles[idx(p.x + dx, p.y + dy)] = T.WALL; })()`);
     c.key('m', 0);
-    c.key('r', 34); c.key('Enter', 34); c.key('Enter', 34);
+    c.key('r', 34); c.key('1', 34); c.key('Enter', 34); c.key('Enter', 34);
     for (let t = 0; t < 60 && !G.rhyme.fuseT0; t++) c.tick(34);
     c.key(['ArrowUp', 'ArrowRight', 'ArrowDown', 'ArrowLeft'][G.rhyme.options.findIndex(o => o !== G.rhyme.answer)], 500);
     c.force(0.75);                                                     // the bad rhyme curdles into a mite... with no room for one
@@ -535,7 +535,11 @@ module.exports = (add) => {
     c.readPages();
     for (let i = 0; i < c.val('SPEECH.tuck.idle.length'); i++) {
       c.arm('SPEECH.tuck.idle', i);
-      c.setup('keep your distance', '(() => { const L = G.level, s = L.stalker; if (manhattan(s, G.player) < 4) { const f = farthestSpot(L, G.player, L.rooms); s.x = f.x; s.y = f.y; } })()');
+      // within earshot but not too close: 6 to 12 steps away (so the idle lines don't depend on the layout)
+      c.setup('keep your distance', `(() => { const L = G.level, s = L.stalker, p = G.player, d = s && manhattan(s, p);
+        if (d >= 6 && d <= 12) return; const dist = distanceMap(L, p.x, p.y);
+        for (let i = 0; i < L.tiles.length; i++) { const x = i % MAP_W, y = (i / MAP_W) | 0, m = Math.abs(x - p.x) + Math.abs(y - p.y);
+          if (dist[i] >= 6 && dist[i] <= 12 && m >= 6 && m <= 12 && passable(L.tiles[i]) && !monsterAt(x, y)) { s.x = x; s.y = y; return; } } })()`);
       c.until(() => c.armed() === 0, ' ', 80, 68);
       c.disarm();
     }
@@ -660,7 +664,8 @@ module.exports = (add) => {
       c.arm('TEXT.epitaphs', n % epitaphs);
       const [kind, arg] = how.split(':');
       if (kind === 'monster' || kind === 'putaway') {
-        c.spawnNext(kind === 'putaway' ? 'putaway' : arg, 'm.awake = true; m.hp = m.maxHp = 300;');
+        // (a Mold-Mite is made frantic, or it would settle in your lap while you wait)
+        c.spawnNext(kind === 'putaway' ? 'putaway' : arg, `m.awake = true; m.hp = m.maxHp = 300;${arg === 'mite' ? ' m.frenzy = 999;' : ''}`);
         if (kind === 'putaway') { c.until(() => !!c.val('G.stats.lastStolen'), ' ', 60, 34); c.setup('the Put-Away is gone; a Second Opinion takes its place', 'G.level.monsters = []; G.player.hp = 1;'); c.spawnNext('opinion', 'm.awake = true; m.hp = m.maxHp = 300;'); }
         c.setup('one hit from the end', 'G.player.hp = 1;');
         for (let t = 0; t < 80 && G.mode !== 'dead'; t++) { if (G.mode === 'card') c.readPages(); else if (G.mode === 'encounter') c.key('Escape'); else c.key(' ', 68); }
@@ -740,6 +745,55 @@ module.exports = (add) => {
     c.skipPages();
     c.quiet();
     c.key(' ', 300);
+  });
+
+  // ---------------------------------------------------------------------------------------
+  // How you play (November 2026): the three kinds of rhyme picked by key, a hoarse voice, a dark
+  // room, a Mold-Mite in your lap, the Second Opinion's colleague, and the Tick-Tock Tot heard coming.
+  add('howyouplay', 161, c => {
+    const { G } = c;
+    c.newGame();
+    c.quiet();
+    c.roomy();
+    const crowd = (label, type) => c.setup(label, `(() => { const L = G.level, p = G.player; L.monsters = []; p.verve = p.maxVerve = 6;
+      for (const [dx, dy] of [[1, 0], [-1, 0], [0, 2]]) if (passable(L.tiles[idx(p.x + dx, p.y + dy)]) && !monsterAt(p.x + dx, p.y + dy)) { const m = spawnMonster(L, '${type}', p.x + dx, p.y + dy); m.awake = true; m.hp = m.maxHp = 40; } })()`);
+    // R, then Escape: never mind
+    c.key('r', 300); c.key('Escape', 200);
+    crowd('three Second Opinions around you, then a lullaby', 'opinion');
+    c.rhyme(true, { kind: '2' }); c.readPages();
+    c.wait(3, 200);
+    c.key('ArrowUp', 100); c.key('ArrowUp', 100); c.key('ArrowUp', 100); // walking about: a bump wakes them, perhaps
+    crowd('three again, then a tongue-twister', 'opinion');
+    c.rhyme(true, { kind: '3' }); c.readPages();
+    c.setup('voice rested', 'G.player.hoarse = 0; G.player.lastRhymeTurn = null; G.level.monsters = [];');
+    for (let i = 0; i < 4; i++) { c.rhyme(i !== 2, { kind: '1' }); c.readPages(); }
+    c.wait(c.val('RULES.rhyme.hoarse.rest') + 1, 34);
+    // a Mold-Mite: wait beside it, then bump a wall
+    c.setup('voice rested, nobody about', 'G.player.hoarse = 0; G.level.monsters = [];');
+    c.spawnNext('mite', 'm.awake = true;');
+    c.wait(4, 200);
+    for (let i = 0; i < 6; i++) c.key(['ArrowUp', 'ArrowLeft', 'ArrowDown', 'ArrowRight'][i % 4], 100);
+    c.readPages();
+    // a Second Opinion that won't go down
+    c.setup('a Second Opinion with plenty of health', 'G.level.monsters = [];');
+    const d = c.spawnNext('opinion', 'm.awake = true; m.hp = m.maxHp = 999;');
+    for (let i = 0; i < 6; i++) { c.key(c.arrow(d), 200); if (G.mode === 'encounter') c.key('a', 200); c.readPages(); }
+    // a Tick-Tock Tot, out of sight and coming
+    c.floor(5);
+    c.quiet();
+    c.roomy();
+    c.setup('a Tot coming, out of sight', `(() => { const L = G.level, p = G.player, dist = distanceMap(L, p.x, p.y);
+      for (let i = 0; i < L.tiles.length; i++) { const x = i % MAP_W, y = (i / MAP_W) | 0;
+        if (dist[i] >= 9 && dist[i] <= 11 && !L.visible[i] && passable(L.tiles[i]) && !monsterAt(x, y)) { const t = spawnMonster(L, 'tot', x, y); t.awake = true; return; } } })()`);
+    c.wait(6, 200);
+    // a dark room, from its doorway to its middle
+    c.floor(3);
+    c.quiet();
+    c.setup('at the doorway of the dark room', `(() => { const L = G.level, p = G.player, d = darkRoomDoors(L)[0]; p.x = d[2]; p.y = d[3]; p.hidden = false;
+      computeFOV(L, p.x, p.y, lightRadius()); updateCamera(true); })()`);
+    c.wait(2, 200);
+    c.setup('inside it', `(() => { const L = G.level, p = G.player, r = L.darkRoom; p.x = r.x + (r.w >> 1); p.y = r.y + (r.h >> 1); computeFOV(L, p.x, p.y, lightRadius()); })()`);
+    c.wait(3, 300);
   });
 
   // ---------------------------------------------------------------------------------------

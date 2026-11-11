@@ -60,7 +60,7 @@ const groups = {
       tick(300); snap('07-floor' + d);
     }
     for (const t of ['opinion', 'tuck', 'nibbler']) { run(`showBeastPage('${t}')`); tick(12000); snap('08-beast-' + t); }
-    run('toPlay(); G.player.verve = 3; startRhyme();'); tick(4500); snap('09-rhyme');
+    run('toPlay(); G.player.verve = 3; startRhyme("shove");'); tick(4500); snap('09-rhyme');
     press('ArrowUp'); tick(300); snap('10-rhyme-result');
     tick(2000);
     run(`G.player.inv.push(makeItem('weapon', 1), makeItem('armor', 0), makeItem('potion', 'poison'), {kind:'sock', id:'argyle'}); G.mode = 'play';`);

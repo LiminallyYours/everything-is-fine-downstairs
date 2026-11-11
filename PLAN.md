@@ -457,14 +457,14 @@ with its git history, and is where all new work happens.
       recite: a shove (as now), a lullaby (nearby horrors fall asleep, no harm done) and a
       tongue-twister (heavy harm to one horror, the rest untouched); (2) the choice inside the
       couplet, each word on offer doing something different; (3) keep one kind and fix only the
-      cost. Claude suggested 1. JW: "1". Settled: three kinds of rhyme. Not yet built.
+      cost. Claude suggested 1. JW: "1". Settled: three kinds of rhyme. **Built** (11 November).
     - **How you play, 2: what should a rhyme cost?** Asked: today a rhyme costs one ♪, a ♪ comes
       back every 30 turns, and you can hold 3 (more as you level up), so it feels free. Options
       offered: (1) each rhyme burns candle wax, the tongue-twister most; (2) your voice gets
       hoarse: a rhyme soon after the last one gets a shorter fuse and trickier words, and resting
       brings your voice back; (3) a ♪ comes back every 60 turns instead of 30; (4) no extra cost.
-      Claude suggested 1. JW: "2". Settled: a hoarse voice. A ♪ still costs one ♪ as now. Not yet
-      built.
+      Claude suggested 1. JW: "2". Settled: a hoarse voice. A ♪ still costs one ♪ as now.
+      **Built** (11 November).
     - **How you play, 3: what reason should there be to go into the dark?** Asked: "the dark" is
       not a place but your own light shrinking (candle low or out, the clock's lights-out on floor
       5, hiding in a barrel), so you cannot choose it. Options offered: (1) a key blows out and
@@ -475,14 +475,14 @@ with its git history, and is where all new work happens.
       only way a candle lights again is walking onto a candle stub, and there is no way to blow
       it out on purpose. Settled: dark rooms with a prize. Claude will choose the details while
       building (about one per floor, the prize a piece of gear a little better than the floor
-      usually gives) and show them to JW afterwards. Not yet built.
+      usually gives) and show them to JW afterwards. **Built** (11 November).
     - **How you play, 4: tricks for the plain horrors.** Asked: most horrors just walk at you;
       only the Put-Away, the Nothing-to-Worry-About, the Ahem and the Empty Sandwich do something
       you can outwit; in bot games the Second Opinion and the Mumbling Mold-Mite were the biggest
       killers. Options offered: (1) a trick for every plain horror (eight); (2) a trick for the
       three you meet most: the Mumbling Mold-Mite, the Second Opinion and the Tick-Tock Tot;
       (3) leave it. Claude suggested 2. JW: "2." Settled: tricks for those three, each proposed
-      to JW one at a time. Not yet built.
+      to JW one at a time. **Built** (11 November), as the three entries below.
     - **JW's note for the "how it looks" group: the candle status needs to be better.** JW: "the
       candle status needs to be better. maybe an illustrated candle that has a fill level?" Today
       the margin's drawn candle does shrink as wax burns, but against the most wax a candle can
@@ -495,7 +495,7 @@ with its git history, and is where all new work happens.
       noise wakes it and it bites, apologizing; (2) its mumbling is a warning: louder as it nears,
       quiet just before it bites; (3) its lullaby makes you drowsy (a lost turn) unless you hum
       back with a rhyme. Claude suggested 1. JW: "1". Settled: the Mold-Mite sits in your lap if
-      you let it. Not yet built.
+      you let it. **Built** (11 November).
     - **Trick 2 of 3: the Second Opinion.** Asked: a doctor-ish horror ("Let's have a look at
       you", "I DISAGREE!") and the biggest killer in bot games. Options offered: (1) it takes
       notes: after each blow that lands it stops a turn to write down its findings, giving you a
@@ -505,14 +505,17 @@ with its git history, and is where all new work happens.
       dangerous, not less. Claude suggested 1. JW: "3". Settled: it calls for another opinion.
       Claude will choose the details while building (how long a fight must last, and that each
       one calls only once, so they don't multiply without end) and show them to JW afterwards;
-      the danger measurements before and after will show what it does to deaths. Not yet built.
+      the danger measurements before and after will show what it does to deaths. **Built** (11
+      November).
     - **Trick 3 of 3: the Tick-Tock Tot.** Asked: a wind-up toy with a key in its back, the
       fastest horror, whose verse says it ticks when it's coming. Options offered: (1) it winds
       down: after a few turns of running it stops for a couple of turns to wind itself up again;
       (2) turn its key: step into it from behind and it totters off backwards (needs a drawing
       that shows which way it faces); (3) you can hear it coming: its ticking shows through walls
       as written "tick... tock", and it goes silent just before it pounces. Claude suggested 1.
-      JW: "3". Settled: you can hear it coming. Not yet built.
+      JW: "3". Settled: you can hear it coming. **Built** (11 November). The game already had some
+      of this (a ticking sound within 10 steps, and a written "tick…" now and then); it now writes
+      "tick…" and "tock…" every turn and goes silent within 3 steps.
     - **JW's note: the eyes in the dark** (for the "how it looks" group). JW: "there are eyes in
       the dark in the game...but rarely actual monsters when you get to that areas. i think we
       need a creepy sense of things in the dark...but those eyes imply an actual thing might be
@@ -528,6 +531,67 @@ with its git history, and is where all new work happens.
       (4) eyes tell the truth only when you are calm. Claude suggested 1. JW: "1". Settled: eyes
       only for real horrors; the made-up things in the dark become abstract. To be built with the
       "how it looks" group.
+    - **How you play: built** (11 November). Details Claude decided while building, which JW has
+      not yet seen:
+      - Rhymes: R opens a page asking "Which rhyme?": ← ↑ → or 1 to 3 pick a shove, a lullaby or a
+        tongue-twister; Enter repeats the last kind; Esc changes your mind with no ♪ spent and no
+        turn taken. All three calm you as much as a shove always did. A wrong word does what a wrong
+        word always did, whatever the kind.
+      - The lullaby: horrors within 3 steps lie down asleep for 12 turns, unhurt, drawn lying on
+        their sides. They don't move or see you. Any noise (the same noises that end nap time)
+        wakes every one of them, cross but not frantic. After 12 turns they are simply asleep,
+        and wake as usual if they see you. The Tuck-You-In and the Nibbler can't be sung to sleep:
+        they hum along and are stunned, as by a shove.
+      - The tongue-twister: the nearest horror within 3 steps takes 6 to 10 and reels for 2 turns
+        (the Nibbler for its usual 2). Nobody else is touched.
+      - The hoarse voice: a rhyme within 30 turns of the last makes you one stage hoarser, up to 3.
+        Each stage burns the fuse 1.5 seconds shorter (never below 4 seconds) and blots out about an
+        eighth of the letters of each word on offer (never a whole word). Every 25 turns without a
+        rhyme brings one stage back. The margin says "hoarse · 2". The Last Rhyme is never affected.
+      - Dark rooms: one on each of floors 2 to 5, never the room you start in, the stairs' room or
+        an odd room's. Inside, your light shrinks to one step whatever your candle, and it counts
+        as the dark (fear rises as in the dark). From outside you can't see more than one step
+        into it. Its prize is a piece of gear rolled as if the floor were one deeper. Horrors can be
+        in it like anywhere else. The first glimpse of a doorway brings a line from the narrator
+        and a small shiver of fear; the first step inside, another line. On the map, the parts of
+        it you've seen stay inked over, and its doorways hang with drips of ink.
+      - The Mold-Mite: waiting (space or .) while an awake Mold-Mite is directly beside you, not
+        frantic and not stunned, puts it in your lap on that turn instead. It is drawn small and
+        lying down beside you, and the margin says so. Several can pile in. Any noise wakes them
+        all: each hops down right beside you (never on a diagonal) and bites once. At the stairs
+        they hop out and stay behind.
+      - The Second Opinion: counts the turns it spends fighting you (beside you and awake); at 4 it
+        calls. The colleague appears 5 to 10 walking steps away, somewhere you can't see, awake. It
+        can't call another, and each one calls only once. If there's nowhere for a colleague to come
+        from, the call goes unanswered (and still counts as its one call).
+      - Two recorded test scenarios changed so they still do what they were for: the Mold-Mite that
+        kills you in the "deaths" scenario is made frantic (otherwise it would settle in your lap
+        while you wait), and the bedtime scenario keeps the Tuck-You-In 6 to 12 steps away instead
+        of relying on the floor's layout.
+      **The comparison** (`tests/measure.js`, before and after this group):
+      - 40 full games by a bot that can die: deaths on floors 1, 2 and 3 went from 9, 18 and 12 to
+        8, 24 and 8; the average deepest floor from 2.1 to 2.0. Second Opinions killed 19 bots
+        instead of 16.
+      - Crossing one floor to the stairs with 60 health, 8 tries each, how many died:
+
+        | Floor | Lit and calm, before → after | Candle out and highest fear, before → after |
+        | --- | --- | --- |
+        | 2 | 1 → 1 | 1 → 4 |
+        | 3 | 3 → 3 | 6 → 6 |
+        | 4 | 5 → 3 | 8 → 7 |
+        | 5 | 7 → 8 | 8 → 8 |
+
+      - So: somewhat more dangerous, mostly on floor 2, where the Second Opinion now brings a
+        colleague. The dark rooms also change every floor's layout, so differences of one or two
+        are noise. The bot doesn't use the new rhymes or the lap on purpose (it presses keys more
+        or less at random), so a player who does will find the game a little easier than the bot
+        does, and one who rhymes constantly will find it harder.
+    - **No more danger measurements.** JW (11 November): "in the future, we don;t need a danger
+      measurement check." Settled: later groups are built without running `tests/measure.js`
+      before and after.
+    - **Working from GitHub only.** JW (11 November): "if my filesystem, id like you to commit/push
+      everything and we can start working exclusively from the github repo." Settled: from the
+      next session on, the work happens in the GitHub repository, not in the folder on JW's Mac.
 
 Everything below this line is **proposed by Claude and not yet agreed**. Treat the lists as
 possibly incomplete.

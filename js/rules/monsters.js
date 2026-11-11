@@ -85,6 +85,16 @@ function monstersAct(L) {
   const dist = distanceMap(L, p.x, p.y), bold = horrorsBold(), B = RULES.bold;
   for (const m of L.monsters.slice()) {
     if (m.hp <= 0) continue;
+    if (m.lulled > 0) { // sung to sleep: still and unseeing until it wears off, or a noise
+      m.lulled--;
+      if (L.visible[idx(m.x, m.y)] && RNG.chance(RULES.surprises.nap.zzz)) FX.word(m.x, m.y, 'zzz');
+      continue;
+    }
+    // The Second Opinion: a fight that drags on, and it calls a colleague (once).
+    if (m.d.call && !m.called && !m.answering && engaged(m)) {
+      m.fightTurns = (m.fightTurns || 0) + 1;
+      if (m.fightTurns >= m.d.call.after) callForOpinion(L, m, dist);
+    }
     // Bold: a sleeping horror nearby wakes, whether or not you can see it. They're delighted.
     // (Not the Tuck-You-In or the boss: RULES.bold.exempt.)
     const boldHere = bold && !B.exempt.includes(m.type);
@@ -144,6 +154,52 @@ function monsterAct(L, m, dist) {
   if (adjacent) { monsterAttack(m); return; }
   if (m.d.ai === 'ghost') drift(L, m);
   else approach(L, m, dist);
+}
+
+// A colleague arrives, from somewhere out of sight a little way off. It can't call another.
+function callForOpinion(L, m, dist) {
+  m.called = true;
+  const [near, far] = m.d.call.near, cells = [];
+  for (let i = 0; i < L.tiles.length; i++) {
+    const x = i % MAP_W, y = (i / MAP_W) | 0;
+    if (dist[i] < near || dist[i] > far || L.visible[i] || !passable(L.tiles[i]) || L.tiles[i] === T.STAIRS) continue;
+    if (monsterAt(x, y) || fixtureAt(L, x, y)) continue;
+    cells.push([x, y]);
+  }
+  speak(m, 'call', 1);
+  if (!cells.length) return;
+  const [x, y] = RNG.pick(cells), c = spawnMonster(L, m.type, x, y);
+  Object.assign(c, { awake: true, answering: true });
+  msg(TEXT.opinionCall, C.red);
+  Sound.play('thud', 0.5);
+}
+
+// The Mold-Mite: wait beside it instead of fighting, and it climbs into your lap and sleeps.
+function climbIntoLap(m) {
+  const p = G.player, L = G.level;
+  L.monsters.splice(L.monsters.indexOf(m), 1);
+  if (G.encounter && G.encounter.m === m) G.encounter = null;
+  p.lap = (p.lap || []).concat([m]);
+  msg(TEXT.lap.climb, C.green);
+  FX.say(p, 'mmf…', m.d.color, 1600);
+}
+
+// Any noise: the Mold-Mites in your lap wake with a start, hop down and bite (apologizing).
+function wakeLap() {
+  const p = G.player, L = G.level;
+  if (!p || !L || !p.lap || !p.lap.length) return;
+  const lap = p.lap;
+  p.lap = [];
+  for (const m of lap) {
+    // it hops down right beside you (not on a diagonal, so it can bite)
+    const s = RNG.shuffle(DIR4.slice()).map(([dx, dy]) => [p.x + dx, p.y + dy])
+      .find(([x, y]) => inMap(x, y) && passable(L.tiles[idx(x, y)]) && !monsterAt(x, y) && !fixtureAt(L, x, y));
+    if (!s) continue; // nowhere to hop down to: it rolls away into the dark
+    Object.assign(m, { x: s[0], y: s[1], awake: true, energy: 0 });
+    L.monsters.push(m);
+    msg(TEXT.lap.wake, C.red);
+    if (p.hp > 0) monsterAttack(m);
+  }
 }
 
 function monsterAttack(m) {

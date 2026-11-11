@@ -26,10 +26,16 @@ function surpriseTurn(L) {
 }
 
 // Anything noisy: a blow, a rhyme, a scroll read aloud, a potion smashing, bumping into a wall,
-// the clock striking. It wakes everybody from Nap Time at once.
+// the clock striking. It wakes everybody from Nap Time at once, everybody sung to sleep by a
+// lullaby, and the Mold-Mites in your lap.
 function makeNoise() {
   const L = G.level, s = L && L.surprise;
+  if (!L) return;
   if (s && s.kind === 'nap' && s.stage === 'napping') SURPRISES.nap.wake(L, s);
+  const lulled = L.monsters.filter(m => m.lulled > 0);
+  for (const m of lulled) Object.assign(m, { lulled: 0, awake: true });
+  if (lulled.length) msg(TEXT.lullaby.woken, C.red);
+  wakeLap();
 }
 
 const isWater = t => t === T.WATER || t === T.DEEP;

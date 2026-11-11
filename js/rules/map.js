@@ -148,6 +148,7 @@ function computeFOV(L, px, py, r) {
   for (let y = Math.max(0, py - r); y <= Math.min(MAP_H - 1, py + r); y++) {
     for (let x = Math.max(0, px - r); x <= Math.min(MAP_W - 1, px + r); x++) {
       const dx = x - px, dy = y - py;
+      if (L.darkRoom && inDarkRoom(L, x, y) && Math.max(Math.abs(dx), Math.abs(dy)) > 1) continue; // the light will not go in
       if (dx * dx + dy * dy <= r2 && lineClear(L, px, py, x, y)) vis[idx(x, y)] = 1;
     }
   }

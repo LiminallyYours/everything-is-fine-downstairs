@@ -60,7 +60,8 @@ function newGame() {
   const S = RULES.player.start;
   G.player = {
     x: 0, y: 0, hp: S.hp, maxHp: S.hp, baseAtk: S.atk, baseDef: S.def, level: 1, xp: 0, xpNext: S.xpNext,
-    verve: S.verve, maxVerve: S.verve, verveTimer: 0, regenTimer: 0,
+    verve: S.verve, maxVerve: S.verve, verveTimer: 0, regenTimer: 0, hoarse: 0, hoarseTimer: 0, lastRhymeTurn: null,
+    lastRhymeKind: 'shove', lap: [],
     gear: { hand: null, head: null, body: null, feet: null }, inv: [], gold: 0, kills: 0,
     confused: 0, poisoned: 0, poisonBy: '', sensing: 0,
     wick: S.wick, dread: 0, hidden: false, darkTurns: 0, slowed: false,
@@ -408,6 +409,9 @@ function heal(n) {
 function wait() {
   G.stats.waits++;
   G.stats.waitsInRow++;
+  const p = G.player;
+  const mite = G.level.monsters.find(m => m.d.lap && m.awake && !m.frenzy && !m.disguised && !(m.stun > 0) && manhattan(m, p) === 1);
+  if (mite) { climbIntoLap(mite); return true; }
   if (RNG.chance(0.05)) msg(RNG.pick(TEXT.idle), C.gray);
   return true;
 }
@@ -418,6 +422,7 @@ function descend() {
     msg(TEXT.prompts.noStairs, C.gray);
     return;
   }
+  if (p.lap && p.lap.length) { msg(TEXT.lap.stairs, C.green); p.lap = []; }
   msg(RNG.pick(TEXT.descend), C.purple);
   Sound.play('stairs');
   enterFloor(G.depth + 1);
@@ -449,7 +454,7 @@ function endTurn() {
 function noticeMonsters(L) {
   const p = G.player;
   for (const m of L.monsters) {
-    if (m.disguised || m.napping || !L.visible[idx(m.x, m.y)]) continue;
+    if (m.disguised || m.napping || m.lulled > 0 || !L.visible[idx(m.x, m.y)]) continue;
     if (p.hidden && m.d.ai !== 'boss' && m.type !== 'tuck') continue; // they can't see into the barrel
     if (!m.awake) speak(m, 'spot', 0.6);
     m.awake = true;
@@ -490,6 +495,7 @@ function tickStatus() {
     p.regenTimer = 0;
     if (p.hp < p.maxHp) p.hp++;
   }
+  restVoice(p);
   if (p.confused > 0 && --p.confused === 0) msg('The room stops wibbling. Mostly.', C.pink);
   if (p.sensing > 0 && --p.sensing === 0) msg('Your eyeballs stop itching.', C.gray);
   if (p.verve < p.maxVerve && ++p.verveTimer >= RULES.player.verveTurns) {
