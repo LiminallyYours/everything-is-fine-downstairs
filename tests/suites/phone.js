@@ -394,7 +394,7 @@ function corridor(Hh) {
   Hc.run(`{ globalThis.__drawn = []; const f = ctx.fillText.bind(ctx);
     ctx.fillText = function (s, x, y, mw) { const w = ctx.measureText(s).width, a = ctx.textAlign, m = ctx.getTransform();
       const left = a === 'center' ? x - w / 2 : a === 'right' || a === 'end' ? x - w : x;
-      __drawn.push([String(s), (m.a * left + m.c * y + m.e) / dpr, (m.a * (left + w) + m.c * y + m.e) / dpr, (m.b * left + m.d * y + m.f) / dpr]);
+      __drawn.push([String(s), (m.a * left + m.c * y + m.e) / dpr, (m.a * (left + w) + m.c * y + m.e) / dpr, (m.b * left + m.d * y + m.f) / dpr, parseFloat(ctx.font.match(/([\\d.]+)px/)[1]) * Math.hypot(m.a, m.b) / dpr]);
       return mw === undefined ? f(s, x, y) : f(s, x, y, mw); }; }`);
   const V = Hc.run('({ x: View.x, y: View.y, w: View.w, h: View.h })');
   const sides = Hc.run(`(() => { updateCamera(true); const p = G.player, cx0 = Math.floor(View.camX), cy0 = Math.floor(View.camY), cols = Math.ceil(View.w / View.S), rows = Math.ceil(View.h / View.S);
@@ -416,13 +416,17 @@ function corridor(Hh) {
   check('written sounds from outside the view are drawn inside its edge, on the side they come from (the map is 26 high, so on a phone mostly left and right)', res.left && res.right && Object.values(res).every(v => v === 'ok'), { res, sides });
 
   // --- 6. Nothing is cut off at either size (every word drawn on screen, real canvas) ----------
-  const cut = [];
+  const cut = [], tiny = [], keyWords = [];
+  const KEYISH = /\bPress\b|\bpress [A-Z>?]|\(G to|I, then D|Enter to|see E\.|Arrow keys|in the margin|\(pocket \d/;
   const look = (Hx, where2, mapOK) => {
     Hx.run('__drawn = []');
     Hx.frame();
     const [Wd, Hd] = Hx.run('[W, H]'), Vw = Hx.run('({ x: View.x, y: View.y, w: View.w, h: View.h })');
-    for (const [s, l, r, y] of Hx.run('__drawn')) {
+    for (const [s, l, r, y, px] of Hx.run('__drawn')) {
       if (!s.trim()) continue;
+      const PICTURE = ['happy deathday', 'LOST & FOUND']; // lettered on the odd rooms' pictures: part of the drawing, which scales
+      if (px < 12 - 0.01 && s.trim().length > 1 && !PICTURE.includes(s)) tiny.push(`${where2}: "${s.slice(0, 30)}" ${px.toFixed(1)}px`);
+      if (KEYISH.test(s)) keyWords.push(`${where2}: "${s.slice(0, 60)}"`);
       const inMapArea = y > Vw.y && y < Vw.y + Vw.h;
       if (mapOK && inMapArea && Hx.G.mode === 'play') continue; // the map's own words move with the map (and are clipped to it, as on a computer)
       if (l < -1 || r > Wd + 1 || y < 0 || y > Hd + 2) cut.push(`${where2}: "${s.slice(0, 30)}" ${Math.round(l)}..${Math.round(r)} @${Math.round(y)}`);
@@ -433,13 +437,20 @@ function corridor(Hh) {
     Hx.run(`{ globalThis.__drawn = []; const f = ctx.fillText.bind(ctx);
       ctx.fillText = function (s, x, y, mw) { const w = ctx.measureText(s).width, a = ctx.textAlign, m = ctx.getTransform();
         const left = a === 'center' ? x - w / 2 : a === 'right' || a === 'end' ? x - w : x;
-        __drawn.push([String(s), (m.a * left + m.c * y + m.e) / dpr, (m.a * (left + w) + m.c * y + m.e) / dpr, (m.b * left + m.d * y + m.f) / dpr]);
+        __drawn.push([String(s), (m.a * left + m.c * y + m.e) / dpr, (m.a * (left + w) + m.c * y + m.e) / dpr, (m.b * left + m.d * y + m.f) / dpr, parseFloat(ctx.font.match(/([\\d.]+)px/)[1]) * Math.hypot(m.a, m.b) / dpr]);
         return mw === undefined ? f(s, x, y) : f(s, x, y, mw); }; }`);
     const tag = `${w}x${h}`;
     look(Hx, tag + ' splash');
     Hx.tapXY(100, 100);
     look(Hx, tag + ' title');
     startGame(Hx);
+    look(Hx, tag + ' first steps');
+    Hx.run(`{ const p = G.player; for (const t of TEXT.tips) msg(t, C.gray); msg(TEXT.prompts.stairs); msg(fill(TEXT.prompts.bonesHere, { who: 'Somebody #3' })); msg(fill(TEXT.prompts.manyHere, { n: 2, list: 'a sock', last: 'a nest' }));
+      msg(fill(TEXT.prompts.pocketsFull, { the: 'the Spork' })); msg(fill(TEXT.prompts.pickedUp, { item: 'a nest', key: 3 })); msg(TEXT.prompts.giveUp); }`);
+    Hx.press('l'); Hx.tick(60); look(Hx, tag + ' the log, with every tip'); Hx.press('Escape'); Hx.tick(60);
+    Hx.run(`G.player.inv = [makeItem('weapon', 1), makeItem('armor', 0), { kind: 'pair', id: 'argyle' }]`);
+    for (let r = 0; r < 3; r++) { Hx.run('G.mode = "inventory"; G.back = "play"; G.invSel = ' + r); look(Hx, tag + ' pockets row ' + r, false); }
+    Hx.run('G.mode = "play"; G.invSel = 0');
     Hx.run(`{ const p = G.player; p.gold = 4321; p.poisoned = 5; p.confused = 3; p.hoarse = 2; p.dread = 95; p.inv = [makeItem('weapon', 2), makeItem('armor', 1), makeItem('potion', 'heal'), makeItem('potion', 'heal'), makeItem('scroll', 'fear'), makeItem('food', 'eggs'), makeItem('food', 'ham'), makeItem('potion', 'poison'), {kind:'sock', id:'argyle'}, makeItem('armor', 0)];
       msg('The Second Opinion gnaws you, and then writes it down in a little notebook, with a diagram. (-3)'); }`);
     look(Hx, tag + ' play', true);
@@ -459,6 +470,8 @@ function corridor(Hh) {
     Hx.press('g'); Hx.tick(100); look(Hx, tag + ' graveyard');
   }
   check('at 390x844 and 412x915 no words run off the screen, on any page or panel', cut.length === 0, cut.slice(0, 12));
+  check('on a phone no lettering is smaller than 12 pixels (the small lettering is drawn larger)', tiny.length === 0, tiny.slice(0, 12));
+  check('on a phone no story line, tip, tag, prompt or description names a key or the margin (they say what to tap)', keyWords.length === 0, keyWords.slice(0, 12));
 }
 
 check('at both sizes, everything you can tap is at least a fingertip (44 by 44)', tooSmall.length === 0, tooSmall.slice(0, 10));
@@ -472,6 +485,18 @@ for (const [w, h] of SIZES.slice(1)) { // the second size, quickly through the m
   Hz.run('PhoneMenu.open = true'); Hz.tick(60); sizesOK(Hz, `${w} menu`); Hz.run('PhoneMenu.open = false');
   Hz.press('r'); Hz.tick(100); sizesOK(Hz, `${w} which rhyme`);
   check(`${w}x${h}: everything you can tap is at least a fingertip, and on the screen`, tooSmall.length === 0 && offScreen.length === 0, tooSmall.concat(offScreen).slice(0, 10));
+}
+
+// --- 6a. The phone's swapped words still match the computer's ---------------------------------
+{
+  const Hw = createGame({ seed: SEED, width: 390, height: 844 });
+  const res = Hw.run(`(() => { const all = []; const walk = (o, path) => { if (path === 'TEXT.ui.phone') return;
+      if (typeof o === 'string') all.push(o); else if (o && typeof o === 'object') for (const k of Object.keys(o)) walk(o[k], path + '.' + k); };
+    walk(TEXT, 'TEXT'); return TEXT.ui.phone.instead.map(([from]) => [from, all.some(t => t.includes(from.split('#')[0]) && t.includes(from.split('#').pop()))]); })()`);
+  const lost = res.filter(([, ok]) => !ok).map(([from]) => from);
+  check('every line the phone swaps for touch words still appears in the computer\'s words (a reworded line would fail here)', lost.length === 0, lost);
+  const said = Hw.run(`[phoneWords(TEXT.prompts.firstFloor), phoneWords(fill(TEXT.prompts.pickedUp, { item: 'a nest', key: 3 }))]`);
+  check('the phone says the first floor\'s hint and a pick-up for a finger', !/Arrow keys|Press/.test(said[0]) && said[1] === 'You pick up a nest.', said);
 }
 
 // --- 6b. Skip: the rest of an unfolding page at once (the corner button, or S) -------------
@@ -488,8 +513,8 @@ for (const [w, h] of SIZES.slice(1)) { // the second size, quickly through the m
   const keys = Hk.keys(), spoke = Hk.spoken.length;
   const all = Hk.run('pageShown(G.page) === G.page.times.length && pageDone(G.page)');
   Hk.tick(1500);
-  check('a page unfolding line by line has a skip button in its corner; it sends S and shows the rest of the page at once',
-    !!btn && btn.y < 80 && shownBefore < lines && same(keys, ['s']) && all && Gk.mode === 'story', { btn, shownBefore, lines, keys });
+  check('a page unfolding line by line has a skip button where its "tap, to go on" will be; it sends S and shows the rest of the page at once',
+    !!btn && btn.y > 844 * 0.8 && shownBefore < lines && same(keys, ['s']) && all && Gk.mode === 'story', { btn, shownBefore, lines, keys });
   check('after a skip the narrator reads none of the skipped lines, and the button is gone (a tap goes on, as before)',
     Hk.spoken.length === spoke && !Hk.find('skip') && (Hk.tapXY(195, 400), same(Hk.keys(), ['Enter'])), { spoke, now: Hk.spoken.length });
   for (let i = 0; i < 30 && Gk.mode !== 'play'; i++) { Hk.press('Enter'); Hk.tick(40); }

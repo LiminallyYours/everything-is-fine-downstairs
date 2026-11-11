@@ -427,7 +427,7 @@ function drawWords(L, S) {
     const age = FX.now - w.t0, a = clamp(Math.min(age / 200, (life - age) / 500), 0, 1);
     const lit = L.visible[idx(w.x, w.y)];
     if (Phone.on && pinnedWord(w, a, S)) continue; // outside the phone's smaller view: at its edge
-    serif(S * (w.big ? 0.55 : 0.32), 'italic');
+    serif(Phone.on ? sm(S * (w.big ? 0.55 : 0.32)) : S * (w.big ? 0.55 : 0.32), 'italic');
     ctx.globalAlpha = a * 0.85;
     ctx.fillStyle = lit ? INK : '#efe3c8';
     ctx.fillText(w.text, sx(w.x) + S / 2 + Math.sin(age * 0.004 + w.seed * 9) * S * 0.08, sy(w.y) + S * 0.45 - (age / life) * S * 0.45);
@@ -842,7 +842,7 @@ function drawFaceOff(p, S) {
 
 // Speech balloons, hand-drawn.
 function drawBubbles(L, p, S) {
-  const size = clamp(S * 0.36, 12, 17), [lean, wobble] = [Ink.lean, Ink.wobble];
+  const size = Phone.on ? sm(clamp(S * 0.36, 12, 17)) : clamp(S * 0.36, 12, 17), [lean, wobble] = [Ink.lean, Ink.wobble];
   Ink.lean = 0; // words stay upright, however crooked the world gets
   Ink.wobble = Math.min(wobble, 1.5);
   for (const b of FX.bubbles) {
@@ -1192,7 +1192,7 @@ function drawCaption() {
   // whole messages only, newest first, up to four lines
   let lines = [];
   for (let i = G.log.length - 1; i >= G.logMark; i--) {
-    const wrapped = wrapPx(G.log[i].text, maxW).map(l => [l, G.log[i].color]);
+    const wrapped = wrapPx(Phone.on ? phoneWords(G.log[i].text) : G.log[i].text, maxW).map(l => [l, G.log[i].color]);
     if (lines.length && lines.length + wrapped.length > 4) break;
     lines = wrapped.concat(lines);
   }

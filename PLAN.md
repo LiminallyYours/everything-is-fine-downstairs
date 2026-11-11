@@ -986,6 +986,40 @@ with its git history, and is where all new work happens.
         exactly as before; a small "S skip" in the corner would be easy to add.
       - Tests: 5 more checks in `tests/suites/phone.js` (50 now). The golden transcript didn't
         change.
+    - **Mobile version: four more changes** (11 November). JW: "can you make these changes: 1) map
+      slightly more zoomed in (less space visible, more detail visible), 2) there are some "press key
+      whatever" style messages still around in phone mode that don't apply. 3) Skip messages should
+      be there the tap messages are.  4) the smallest fonts should be a little bit larger". **Built**,
+      on a phone only (the computer is unchanged, golden transcript too). Details Claude decided,
+      which **JW has not yet seen**:
+      1. **Zoomed in:** `RULES.phone.across` from 13 to 12 (squares 32 pixels on a 390-wide phone,
+         from 30). Your light now reaches past the screen's sides on floors 1 to 5 (8, 7, 7, 6, 6
+         squares against 6 each side), so warnings pinned to the edge matter more.
+      2. **No more key words on a phone.** This goes further than JW's earlier choice (2, under
+         "asked while building", which left the story lines as written): the story lines, tips and
+         item descriptions that name a key or the margin are now said for a finger too, still without
+         the rules knowing about phones: the phone swaps the words as it draws them (the story
+         strip, the news ribbon, the log, the pockets page). The swaps are listed in
+         `TEXT.ui.phone.instead`: "Arrow keys to walk. Press ? for help…" becomes "Tap around you to
+         walk. Help is in the menu, if you are the sort who asks."; "Press > or Enter to descend"
+         becomes "Tap yourself to descend"; "(G to pick it up)" becomes "(tap Pick up)"; "(Drop
+         something: I, then D.)" becomes "(Drop something: Pockets, then Drop.)"; "Press Q
+         again. (Any other key keeps you going.)" becomes "Tap Give up again. (Anything else keeps
+         you going.)"; "(Enter to wear it, or see E.)" becomes "(tap Wear to put it on.)"; the
+         pocket number after picking something up is left off; and the two tips about "the margin"
+         say "at the top". A test fails if any computer line these match is reworded.
+      3. **Skip sits where the "tap, to go on" prompt goes:** at the bottom, centred, as "tap here to
+         skip" in the prompt's red, gently pulsing, in a faint box a fingertip tall. (Before, it was
+         a small button in the top corner.)
+      4. **Larger small lettering:** everything the phone draws under 16 pixels is 2 pixels larger,
+         never past 16 (`RULES.phone.smallTextPx`): the menu button's word, the floor, the tags, the
+         story strip (now a little taller to fit), pinned warnings, the card's notes, row notes and
+         labels, the pockets and gear pages' small lines, the title's tagline and notes, the rhyme
+         pages' small lines, help and the log. Also on the map: sounds written in the dark and speech
+         bubbles. Nothing a phone draws is now under 12 pixels, except two words lettered on the odd
+         rooms' pictures ("happy deathday", "LOST & FOUND"), which are part of the drawings.
+      Also: a chosen row's highlighter no longer pokes past the edge of its panel. Tests: 4 more
+      checks in `tests/suites/phone.js` (54 now).
 
 12. **The mobile version: the design to build** (agreed with JW, 11 November 2026; the questions
     and his answers are in item 11, under "A mobile version"). **Built** 11 November 2026: what

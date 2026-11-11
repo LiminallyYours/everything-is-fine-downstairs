@@ -312,6 +312,10 @@ the same web address, switching to the phone layout by itself on an upright phon
   across instead of 15 (JW); and a **skip** button on pages still appearing line by line, which
   shows the rest at once and stops the narrator (JW chose this of four options; S on a computer).
   `tests/suites/phone.js` has 50 checks now.
+- **Four more (JW, same day):** the map zoomed in to 12 squares across; no line on a phone names a
+  key any more (the phone swaps those words as it draws them, `TEXT.ui.phone.instead`); skip moved
+  to where "tap, to go on" appears; the small lettering 2 pixels larger (`RULES.phone.smallTextPx`).
+  54 checks in `phone.js`.
 
 ## Decisions worth remembering
 

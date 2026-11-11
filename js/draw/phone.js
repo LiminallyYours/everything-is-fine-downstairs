@@ -53,7 +53,7 @@ function layoutPhone() {
   const left = Safe.l, w = W - Safe.l - Safe.r, top = Safe.t + 2, bottom = H - Safe.b - 6;
   PhoneBox.top = { x: left, y: top, w, h: 52 };
   PhoneBox.buttons = { x: left + 8, y: bottom - f, w: w - 16, h: f };
-  const stripH = 58;
+  const stripH = 66;
   Object.assign(LogBox, { x: left, y: PhoneBox.buttons.y - stripH - 6, w, h: stripH });
   const mapY = top + PhoneBox.top.h;
   Object.assign(View, { x: left, y: mapY, w, h: LogBox.y - mapY });
@@ -82,7 +82,7 @@ function phoneButton(x, y, w, h, label, keys, o = {}) {
   w = Math.max(w, f);
   h = Math.max(h, f);
   phoneBox(x, y, w, h, { lit: o.lit, color: o.color, fillAlpha: o.dim ? 0.5 : 0.97 });
-  hand(o.size || 16, o.style || '');
+  hand(sm(o.size || 16), o.style || '');
   ctx.textAlign = 'center';
   ctx.textBaseline = 'middle';
   ctx.fillStyle = o.dim ? C.dim : o.color || INK;
@@ -103,6 +103,22 @@ function fitFont(str, size, maxW, style, face) {
 // A page title, letters spaced out, made to fit across the phone.
 function fitTitle(title, size) {
   fitFont(title.toUpperCase().split('').join(' '), size, W * 0.9, '', FONT_TITLE);
+}
+
+// The small lettering, a little larger on a phone (RULES.phone.smallTextPx), never past 16.
+const sm = n => (n < 16 ? Math.min(16, n + RULES.phone.smallTextPx) : n);
+
+// Words that name a key or the margin, said for a finger (TEXT.ui.phone.instead), as they are drawn.
+let insteadRules = null;
+function phoneWords(str) {
+  if (!insteadRules) {
+    insteadRules = TEXT.ui.phone.instead.map(([from, to]) => {
+      const pattern = from.split('#').map(part => part.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')).join('\\d+');
+      return [new RegExp(pattern, 'g'), to];
+    });
+  }
+  for (const [re, to] of insteadRules) str = str.replace(re, to);
+  return str;
 }
 
 // Key presses that move a list's choice from `from` to `to` (one arrow press per row).
@@ -144,10 +160,19 @@ function drawPhone(inGame) {
     case 'bestiary': drawBestiary(); drawPhoneBookButtons(); break;
     default: if (pageMode) drawPage(G.page);
   }
-  // a page still unfolding line by line: a skip button in its corner (S); a tap elsewhere is Enter, as before
+  // a page still unfolding line by line: skip (S), where the page's "tap, to go on" will be; a tap elsewhere is Enter, as before
   if (canSkip()) {
-    const f = RULES.phone.fingertip;
-    phoneButton(W - Safe.r - 84, Safe.t + 8, 76, f, TEXT.ui.phone.skip, ['s'], { size: 16, style: 'italic', color: C.gray, name: 'skip' });
+    const f = RULES.phone.fingertip, w = Math.min(W * 0.6, 220), y = H - H * 0.05 - f / 2 - 6;
+    phoneBox(W / 2 - w / 2, y, w, f, { color: C.red, w: 0.9, fillAlpha: 0.6 });
+    serif(clamp(H * 0.02, 12, 18), 'italic');
+    ctx.textAlign = 'center';
+    ctx.textBaseline = 'middle';
+    ctx.globalAlpha = 0.55 + 0.35 * Math.sin(FX.now * 0.003);
+    ctx.fillStyle = C.red;
+    ctx.fillText(TEXT.ui.phone.skip, W / 2, y + f / 2 + 1);
+    ctx.globalAlpha = 1;
+    ctx.textBaseline = 'alphabetic';
+    Taps.add(W / 2 - w / 2, y, w, f, { keys: ['s'], name: 'skip' });
   }
   if (PhoneMenu.open) drawPhoneMenu();
 }
@@ -200,7 +225,7 @@ function drawPhoneTop(p) {
   const mx = T.x + T.w - f - 6, my = cy - f / 2;
   phoneBox(mx, my, f, f, { lit: PhoneMenu.open });
   for (let i = 0; i < 3; i++) line(mx + 12, my + 11 + i * 6, mx + f - 12, my + 11 + i * 6, { w: 1.4, noScratch: true, step: 0 });
-  hand(10);
+  hand(sm(10));
   ctx.textAlign = 'center';
   ctx.fillStyle = C.gray;
   ctx.fillText(TEXT.ui.phone.menuButton, mx + f / 2, my + f - 6);
@@ -211,7 +236,7 @@ function drawPhoneTop(p) {
   ctx.fillStyle = INK;
   const nameW = Math.min(108, T.w * 0.27);
   ctx.fillText(fitText(phrase('somebody', { n: G.runNo }), nameW), x0, T.y + 21);
-  hand(12, 'italic');
+  hand(sm(12), 'italic');
   ctx.fillStyle = L.floor.wall;
   ctx.fillText(fitText(phrase('floorOf', { n: G.depth, of: FLOORS.length }), nameW), x0, T.y + 39);
   // then health, the candle, rhymes and coins share what's left
@@ -220,7 +245,7 @@ function drawPhoneTop(p) {
   const low = p.hp <= p.maxHp / 3, frac = clamp(p.hp / p.maxHp, 0, 1);
   if (frac > 0) stroke(rect(left, T.y + 12, healthW * frac, 11), { closed: true, w: 0, fill: C.red, fillAlpha: low ? 0.85 : 0.55, step: 0 });
   stroke(rect(left, T.y + 12, healthW, 11), { closed: true, w: 1 });
-  hand(14, 'bold');
+  hand(sm(14), 'bold');
   ctx.fillStyle = low ? C.red : INK;
   ctx.fillText(`${Math.max(0, p.hp)}/${p.maxHp}`, left, T.y + 41);
   // the candle you have, inside a faint outline of the fullest candle there can be
@@ -237,7 +262,7 @@ function drawPhoneTop(p) {
   const gx = nx + notesW + 10;
   Ink.calm(20);
   drawItem({ kind: 'gold' }, gx + 8, cy, 18);
-  hand(15, 'bold');
+  hand(sm(15), 'bold');
   ctx.fillStyle = INK;
   ctx.fillText(fitText(String(p.gold), coinW - 18), gx + 19, cy + 6);
 }
@@ -248,20 +273,21 @@ function drawPhoneTags(p) {
   PhoneBox.tagsH = 0;
   if (!tags.length) return;
   let tx = View.x + 6, ty = View.y + 6;
-  hand(13, 'italic');
+  const ts = sm(13), th = ts + 9;
+  hand(ts, 'italic');
   ctx.textAlign = 'left';
   ctx.textBaseline = 'alphabetic';
   for (const [, label, col] of tags) {
     const tw = Math.min(ctx.measureText(label).width + 16, View.w - 12);
-    if (tx + tw > View.x + View.w - 6) { tx = View.x + 6; ty += 24; }
+    if (tx + tw > View.x + View.w - 6) { tx = View.x + 6; ty += th + 4; }
     Ink.calm(40);
-    stroke(rect(tx, ty, tw, 20), { closed: true, w: 0.9, color: col, fill: PAPER, fillAlpha: 0.92, noScratch: true });
-    hand(13, 'italic');
+    stroke(rect(tx, ty, tw, th), { closed: true, w: 0.9, color: col, fill: PAPER, fillAlpha: 0.92, noScratch: true });
+    hand(ts, 'italic');
     ctx.fillStyle = col;
-    ctx.fillText(fitText(label, tw - 12), tx + 8, ty + 14);
+    ctx.fillText(fitText(label, tw - 12), tx + 8, ty + th * 0.7);
     tx += tw + 6;
   }
-  PhoneBox.tagsH = ty + 24 - View.y;
+  PhoneBox.tagsH = ty + th + 4 - View.y;
 }
 
 // The story so far: its last two lines, the newest highlighted. Tap it for all of it.
@@ -270,7 +296,7 @@ function drawPhoneStrip() {
   Ink.calm(40);
   stroke(rect(px, py, pw, ph), { closed: true, w: 1.1, fill: '#f7f0dd', fillAlpha: 0.95 });
   const title = TEXT.ui.storySoFar.split('').join(' ');
-  ctx.font = `11px ${FONT_HAND}`;
+  ctx.font = `${sm(11)}px ${FONT_HAND}`;
   const ttw = ctx.measureText(title).width;
   ctx.fillStyle = '#f7f0dd';
   ctx.fillRect(b.x + b.w / 2 - ttw / 2 - 8, py - 6, ttw + 16, 12);
@@ -278,12 +304,12 @@ function drawPhoneStrip() {
   ctx.textAlign = 'center';
   ctx.textBaseline = 'alphabetic';
   ctx.fillText(title, b.x + b.w / 2, py + 4);
-  const size = 14, lh = size * 1.3, maxW = pw - 20, cx = px + pw / 2;
+  const size = sm(14), lh = size * 1.3, maxW = pw - 20, cx = px + pw / 2;
   const undone = dreadTier() === 3, bottomFloor = G.depth === FLOORS.length;
   const lines = [];
   for (let i = G.log.length - 1; i >= 0 && lines.length < 2; i--) {
     const m = G.log[i], fresh = i >= G.logMark;
-    let t = m.text;
+    let t = phoneWords(m.text);
     if (!fresh && undone) t = glitch(t, i);
     if (!fresh && bottomFloor) t = nibble(t, i);
     serif(size, fresh ? '' : 'italic');
@@ -291,7 +317,7 @@ function drawPhoneStrip() {
     for (let k = wrapped.length - 1; k >= 0 && lines.length < 2; k--) lines.unshift({ t: wrapped[k], col: m.color, fresh });
   }
   lines.forEach((l, i) => {
-    const y = py + 10 + (i + 1) * lh - 4 + (2 - lines.length) * lh;
+    const y = py + 7 + (i + 1) * lh + (2 - lines.length) * lh;
     serif(size, l.fresh ? '' : 'italic');
     if (l.fresh) {
       const tw = ctx.measureText(l.t).width;
@@ -309,7 +335,7 @@ function pinnedWord(w, a, S) {
   const wx = sx(w.x) + S / 2, wy = sy(w.y) + S / 2;
   const inside = wx >= View.x && wx <= View.x + View.w && wy >= View.y && wy <= View.y + View.h;
   if (inside) return false;
-  serif(w.big ? 17 : 14, 'italic');
+  serif(w.big ? 17 : sm(14), 'italic');
   const tw = ctx.measureText(w.text).width, bw = tw + 22, bh = 22;
   const top = View.y + 4 + PhoneBox.tagsH, bottom = View.y + View.h - bh - 4;
   const x = clamp(wx - bw / 2, View.x + 4, View.x + View.w - bw - 4), y = clamp(wy - bh / 2, top, Math.max(top, bottom));
@@ -389,13 +415,13 @@ function drawPhoneFaceOff(p, S, m, enc, th) {
   if (enc) opts.push([enc.engaged ? K.backAway : K.leave, ['Escape']]);
   opts.forEach(([label, keys], i) => phoneButton(x0 + 10 + (i % 2) * (bw + 10), by + Math.floor(i / 2) * (f + 6), bw, f, label, keys, { size: 15, name: 'card:' + keys[0] }));
   if (!enc) {
-    hand(14, 'italic');
+    hand(sm(14), 'italic');
     ctx.textAlign = 'center';
     ctx.fillStyle = C.gray;
     ctx.fillText(U.walkAway, x0 + 10 + bw * 1.5 + 10, by + f + 6 + f / 2 + 5);
   }
   if (note) {
-    hand(12, 'italic');
+    hand(sm(12), 'italic');
     ctx.textAlign = 'left';
     ctx.fillStyle = C.gray;
     ctx.fillText(fitText(note, w - 20), x0 + 12, y0 + h - 10);
@@ -420,7 +446,14 @@ function panelFrame(title, color) {
 
 // One row of a list: highlighted if chosen, a drawing on the left, words, and a note on the right.
 function phoneRow(x, y, w, h, o) {
-  if (o.sel) stroke([[x + 4 + h * 0.35, y + h * 0.55], [x + w - 4 - h * 0.35, y + h * 0.5]], { w: h * 0.7, color: '#f2cf4a', alpha: 0.4, noScratch: true, step: 0 });
+  if (o.sel) { // the highlighter stays inside its row
+    ctx.save();
+    ctx.beginPath();
+    ctx.rect(x, y, w, h);
+    ctx.clip();
+    stroke([[x + 4 + h * 0.35, y + h * 0.55], [x + w - 4 - h * 0.35, y + h * 0.5]], { w: h * 0.7, color: '#f2cf4a', alpha: 0.4, noScratch: true, step: 0 });
+    ctx.restore();
+  }
   line(x + 4, y + h, x + w - 4, y + h, { w: 0.5, color: C.faint, noScratch: true, step: 0 });
   let tx = x + 10;
   if (o.item) {
@@ -434,7 +467,7 @@ function phoneRow(x, y, w, h, o) {
   ctx.textBaseline = 'alphabetic';
   let noteW = 0;
   if (o.note) {
-    hand(13, 'italic');
+    hand(sm(13), 'italic');
     noteW = ctx.measureText(o.note).width + 8;
     ctx.textAlign = 'right';
     ctx.fillStyle = o.noteColor || C.gray;
@@ -442,11 +475,11 @@ function phoneRow(x, y, w, h, o) {
     ctx.textAlign = 'left';
   }
   if (o.label) {
-    hand(12, 'italic');
+    hand(sm(12), 'italic');
     ctx.fillStyle = o.sel ? C.red : C.gray;
-    ctx.fillText(o.label, tx, y + 14);
+    ctx.fillText(o.label, tx, y + 15);
   }
-  hand(o.size || 17, o.style || '');
+  hand(sm(o.size || 17), o.style || '');
   ctx.fillStyle = o.color || INK;
   ctx.fillText(fitText(o.text, x + w - tx - noteW - 6), tx, y + (o.label ? h - 9 : h / 2 + 6));
   if (o.keys) Taps.add(x, y, w, h, { keys: o.keys, name: o.name });
@@ -460,9 +493,10 @@ function drawPhonePockets() {
   const btnY = P.y + P.h - f - 10;
   let y = P.y + 38;
   // what's below the rows: the chosen thing's description, then your numbers
-  const desc = it ? wrapPx(itemDesc(it), P.w - 30) : [];
+  hand(sm(14), 'italic');
+  const desc = it ? wrapPx(phoneWords(itemDesc(it)), P.w - 30) : [];
   const stats = [fill(U.level, { level: p.level, xp: p.xp, next: p.xpNext }), fill(U.numbers, { atk: playerAtk(), def: playerDef(), gold: p.gold })];
-  const below = Math.min(3, desc.length) * 18 + stats.length * 18 + 16;
+  const below = Math.min(3, desc.length) * 20 + stats.length * 20 + 16;
   const rowH = clamp((btnY - y - below) / Math.max(1, n), f, 50);
   if (!n) {
     hand(16, 'italic');
@@ -477,12 +511,12 @@ function drawPhonePockets() {
       keys: () => stepKeys(G.invSel, i, n, true), name: 'pocket:' + i });
   });
   y += Math.max(1, n) * rowH + 10;
-  hand(14, 'italic');
+  hand(sm(14), 'italic');
   ctx.textAlign = 'left';
   ctx.fillStyle = C.teal;
-  for (const l of desc.slice(0, 3)) { if (y + 18 < btnY - stats.length * 18) { ctx.fillText(l, P.x + 14, y + 12); y += 18; } }
+  for (const l of desc.slice(0, 3)) { if (y + 20 < btnY - stats.length * 20) { ctx.fillText(l, P.x + 14, y + 13); y += 20; } }
   ctx.fillStyle = C.gray;
-  for (const s of stats) { if (y + 18 < btnY) { ctx.fillText(fitText(s, P.w - 28), P.x + 14, y + 14); y += 18; } }
+  for (const s of stats) { if (y + 20 < btnY) { ctx.fillText(fitText(s, P.w - 28), P.x + 14, y + 15); y += 20; } }
   // what you can do with the row you've picked
   const btns = [];
   if (it) btns.push([gearSlot(it) ? B.wear : B.use, ['Enter']]);
@@ -508,10 +542,10 @@ function drawPhoneGear() {
   });
   y += SLOTS.length * slotH + 10;
   const [slot, label] = SLOTS[G.gearSel], fits = gearCandidates(slot);
-  hand(14, 'italic');
+  hand(sm(14), 'italic');
   ctx.textAlign = 'left';
   ctx.fillStyle = C.gray;
-  ctx.fillText(fill(U.from, { slot: label.toLowerCase() }) + (fits.length ? '  ' + B.wearOne : ''), P.x + 12, y + 12);
+  ctx.fillText(fitText(fill(U.from, { slot: label.toLowerCase() }) + (fits.length ? '  ' + B.wearOne : ''), P.w - 24), P.x + 12, y + 13);
   y += 20;
   if (!fits.length) { ctx.fillStyle = C.dim; ctx.fillText(U.none, P.x + 20, y + 12); y += 20; }
   const room = Math.max(1, Math.floor((btnY - 48 - y) / f));
@@ -522,11 +556,11 @@ function drawPhoneGear() {
       keys: [String(k + 1)], name: 'wear:' + k });
     y += f;
   });
-  hand(14);
+  hand(sm(14));
   ctx.textAlign = 'left';
   ctx.fillStyle = INK;
   ctx.fillText(fill(U.numbers, { atk: playerAtk(), def: playerDef() }), P.x + 12, btnY - 26);
-  hand(12, 'italic');
+  hand(sm(12), 'italic');
   ctx.fillStyle = C.dim;
   ctx.fillText(fitText(U.turn, P.w - 24), P.x + 12, btnY - 8);
   const btns = [];
@@ -603,7 +637,7 @@ function drawPhoneTitle() {
   ctx.fillStyle = C.gray;
   ctx.fillText(fitText(U.subtitle, W * 0.92), cx, y);
   y += clamp(H * 0.022, 14, 19) * 1.3;
-  serif(14, 'italic');
+  serif(sm(14), 'italic');
   ctx.fillStyle = C.dim;
   for (const l of wrapPx(tagline, W * 0.86).slice(0, 2)) { ctx.fillText(l, cx, y); y += 18; }
   // the bottom: who has been lost so far, and the silent switch
@@ -612,7 +646,7 @@ function drawPhoneTitle() {
   let note = lost.length ? fill(U.lost, { n: lost.length }) : U.noneLost;
   if (onOne >= 3) note += fill(U.floorOne, { n: onOne });
   else if (lost.length) note += fill(U.recent, { run: lost[lost.length - 1].run, killer: lost[lost.length - 1].killer });
-  serif(13, 'italic');
+  serif(sm(13), 'italic');
   const noteLines = wrapPx(note, W * 0.88).slice(0, 2);
   let ny = H - Safe.b - 12;
   ctx.fillStyle = C.dim;
@@ -674,14 +708,14 @@ function drawPhoneRhymeKinds() {
     ctx.textAlign = 'center';
     ctx.fillStyle = mine ? C.purple : INK;
     ctx.fillText(K[kind].name, W / 2, y + bh * 0.45);
-    serif(14, 'italic');
+    serif(sm(14), 'italic');
     ctx.fillStyle = C.gray;
     ctx.fillText(fitText(K[kind].desc, bw - 16), W / 2, y + bh * 0.78);
     Taps.add(x, y, bw, bh, { keys: [String(i + 1)], name: 'kind:' + kind });
     y += bh + 12;
   });
   phoneButton(x + bw * 0.2, y + 6, bw * 0.6, f, PU.whichNever, ['Escape'], { size: 17, style: 'italic', name: 'kind:never' });
-  serif(13, 'italic');
+  serif(sm(13), 'italic');
   ctx.textAlign = 'center';
   ctx.fillStyle = C.gray;
   ctx.fillText(PU.whichLast, W / 2, y + f + 30);
@@ -720,7 +754,7 @@ function drawPhoneRhymeWords(r) {
     star(fx1, fy, 7 + Math.random() * 5, { w: 1, fill: '#e07a10', fillAlpha: 0.8, noScratch: true });
   }
   ctx.textAlign = 'center';
-  serif(14, 'italic');
+  serif(sm(14), 'italic');
   ctx.fillStyle = C.gray;
   ctx.fillText(TEXT.ui.phone.pick, W / 2, fy + 34);
 }
@@ -798,7 +832,7 @@ function drawPhoneHelp() {
       if (!draw) return;
       Ink.calm(icon);
       legendIcon(ch, cx + icon * 0.4, cy - size * 0.35, icon * 0.8);
-      hand(size * 0.8);
+      hand(Math.max(size * 0.8, sm(12)));
       ctx.textAlign = 'left';
       ctx.fillStyle = INK;
       ctx.fillText(fitText(desc, colW - icon - 6), cx + icon, cy);
@@ -810,9 +844,9 @@ function drawPhoneHelp() {
     return y + after.length * lh;
   };
   let size = 16;
-  while (size > 10 && lay(size, false) > bottom) size -= 0.5;
+  while (size > sm(12) && lay(size, false) > bottom) size -= 0.5;
   lay(size, true);
-  hand(14, 'italic');
+  hand(sm(14), 'italic');
   ctx.textAlign = 'center';
   ctx.fillStyle = C.dim;
   ctx.fillText(PU.close, W / 2, S.y + S.h - 14);
@@ -821,16 +855,16 @@ function drawPhoneHelp() {
 function drawPhoneLog() {
   const S = phoneSheet(TEXT.ui.logTitle);
   Taps.add(0, 0, W, H, { keys: ['Escape'], name: 'close' });
-  const size = 15, lh = size * 1.3, top = S.y + 50, bottom = S.y + S.h - 40;
+  const size = sm(15), lh = size * 1.3, top = S.y + 50, bottom = S.y + S.h - 40;
   const lines = [];
   serif(size);
   for (let i = G.log.length - 1; i >= 0 && lines.length * lh < bottom - top; i--) {
-    const wrapped = wrapPx(G.log[i].text, S.w - 28);
+    const wrapped = wrapPx(phoneWords(G.log[i].text), S.w - 28);
     for (let k = wrapped.length - 1; k >= 0 && lines.length * lh < bottom - top; k--) lines.unshift([wrapped[k], G.log[i].color]);
   }
   ctx.textAlign = 'left';
   lines.forEach(([l, col], k) => { ctx.fillStyle = col; ctx.fillText(l, S.x + 14, top + k * lh + size); });
-  hand(14, 'italic');
+  hand(sm(14), 'italic');
   ctx.textAlign = 'center';
   ctx.fillStyle = C.dim;
   ctx.fillText(TEXT.ui.phone.close, W / 2, S.y + S.h - 14);

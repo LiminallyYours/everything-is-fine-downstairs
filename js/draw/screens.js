@@ -101,7 +101,7 @@ function drawBestiary() {
   if (!G.page || G.page.style !== 'beast' || G.page.title !== MONSTERS[seen[G.bestSel]].name) showBeastPage(seen[G.bestSel], true);
   drawPage(G.page);
   ctx.textAlign = 'right';
-  serif(14, 'italic');
+  serif(Phone.on ? sm(14) : 14, 'italic');
   ctx.fillStyle = C.dim;
   ctx.fillText(fill(U.page, { n: G.bestSel + 1, seen: seen.length, all: Object.keys(BESTIARY).length }), W - 24, 30 + (Phone.on ? Safe.t : 0));
 }

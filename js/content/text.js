@@ -381,7 +381,7 @@ const TEXT = {
         on: 'on', off: 'off',
       },
       splash: 'Tap anywhere.',
-      skip: 'skip', // on a page still unfolding line by line: the rest of it at once (S on a keyboard)
+      skip: 'tap here to skip', // on a page still unfolding line by line: the rest of it at once (S on a keyboard)
       sideways: ['Turn your phone upright, please.', 'Everything is fine downstairs, but only this way up.'],
       silent: 'No sound? Turn the silent switch off.',
       tomb: { again: 'be born again (worse)', graveyard: 'the graveyard', title: 'the title' },
@@ -406,6 +406,26 @@ const TEXT = {
       book: { back: 'back', close: 'close the book', next: 'next' },
       graveyard: { close: 'Go back' },
       close: 'Tap anywhere to close.', // the help and the log
+      // Lines from the story, tips and item descriptions that name a key or the margin, said for a
+      // finger: [the computer's words, the phone's]. Swapped only as they are drawn on a phone, so
+      // the rules never know. A # stands for any number. tests/suites/phone.js checks each
+      // left-hand side still appears in the computer's words, so a reworded line can't slip past.
+      instead: [
+        ['Arrow keys to walk. Press ? for help if you are the sort who asks.', 'Tap around you to walk. Help is in the menu, if you are the sort who asks.'],
+        ['Press > or Enter to descend (gulp).', 'Tap yourself to descend (gulp).'],
+        ['(G to search them)', '(tap Pick up to search them)'],
+        ['(G to pick it up)', '(tap Pick up)'],
+        ['(G to pick them up)', '(tap Pick up)'],
+        ['(Drop something: I, then D.)', '(Drop something: Pockets, then Drop.)'],
+        ['Press Q again. (Any other key keeps you going.)', 'Tap Give up again. (Anything else keeps you going.)'],
+        [' (pocket #)', ''],
+        ['(Enter to wield it, or see E.)', '(tap Wear to wield it.)'],
+        ['(Enter to wear it, or see E.)', '(tap Wear to put it on.)'],
+        ['(Enter to wear them.)', '(tap Wear to put them on.)'],
+        ['until you press G.', 'until you tap Pick up.'],
+        ['Watch it burn down in the margin.', 'Watch it burn down at the top.'],
+        ['the little notes in the margin are', 'the little notes at the top are'],
+      ],
       help: [
         ['Tap around you', 'walk that way: the map is cut into four, meeting at you. Hold your finger down to keep walking.'],
         ['Into a horror', 'face it, and tap what to do. Out of a fight: maybe.'],

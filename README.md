@@ -57,10 +57,11 @@ during a run). If you left a run unfinished, **C** carries on with it.
 Open the same web address on your phone and hold it upright: the game switches to a phone layout
 by itself (held sideways, it asks you to turn it). Every tap is turned into the key press the
 keyboard would send, so the game itself is exactly the same. A keyboard attached to the phone
-works too.
+works too. Where a line would tell you to press a key ("(G to pick it up)"), the phone says what
+to tap instead ("(tap Pick up)"), and the small lettering is drawn a little larger.
 
 - **The screen:** a slim line at the top (who and where you are, health, your candle, rhymes,
-  coins, and the **menu** button), your conditions along the top of the map, the map (13 squares
+  coins, and the **menu** button), your conditions along the top of the map, the map (12 squares
   across), the last two lines of the story, and four buttons: **Hold still**, **Rhyme**,
   **Pockets**, **Pick up**.
 - **Walking:** tap anywhere on the map and you step that way: the map is cut into four triangles
@@ -74,7 +75,8 @@ works too.
 - **Pockets and gear:** tap a row to choose it, then tap what to do with it (use or wear, throw a
   potion at a horror, drop; or, on the gear page, put it on or take it off).
 - **Pages of verse:** a tap anywhere does what Enter does (the next line sooner). While a page is
-  still appearing line by line, **skip** in its top corner shows the rest of it at once. In the odd
+  still appearing line by line, **tap here to skip** at the bottom (where "tap, to go on" will
+  be) shows the rest of it at once. In the odd
   rooms, tap a choice; right after the verse finishes (or is skipped) there's half a second when a
   tap only highlights it, so you can't pick one unread.
 - **The menu button:** what you wear and wield, the story so far (or tap the story strip), the
@@ -351,7 +353,7 @@ every number commented. Each monster's, item's and floor's own numbers stay with
 | Dark rooms: which floors, how much better the prize | `RULES.darkRooms` |
 | The Mold-Mite's lap, the Second Opinion's call, the Tick-Tock Tot's ticking | each horror's own entry in `js/content/data.js` (`lap`, `call` with its footstep word, `tick`) |
 | How long verse lines hang; captions, cards and effects | `RULES.pages`, `RULES.ui`, `RULES.fx` |
-| The phone: how many squares across its map shows (`across`), when the phone layout is used, the fingertip size, how fast a held finger walks, and the two speed settings (sharpness, redrawing less often when nothing is happening) | `RULES.phone` (its words are in `TEXT.ui.phone`) |
+| The phone: how many squares across its map shows (`across`), when the phone layout is used, the fingertip size, how much larger its small lettering is (`smallTextPx`), how fast a held finger walks, and the two speed settings (sharpness, redrawing less often when nothing is happening) | `RULES.phone` (its words are in `TEXT.ui.phone`; the lines it says for a finger instead of naming a key are `TEXT.ui.phone.instead`) |
 | Loudness of the drone, music box, heartbeat and narrator | `RULES.audio` (each sound's own shape is in `js/sound/audio.js`) |
 | A monster's health, attack, speed, XP, and its tricks (snuffing, stealing, splitting, the Nibbler's phases) | its entry in `MONSTERS`, `js/content/data.js` |
 | What a potion or scroll does (`power`, `thrown`), how often items turn up (`freq`), and what you read when you drink, throw or read one (`drink`, `splash`, `read`) | `POTIONS`, `SCROLLS`, `FOODS`, `WEAPONS`, `ARMORS` in `js/content/data.js` (the words all items share, like names, slots and equipping, are in `TEXT.items`) |

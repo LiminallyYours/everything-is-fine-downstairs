@@ -336,10 +336,11 @@ const RULES = (function freezeDeep(o) {
   // The phone layout (js/draw/phone.js) and touch (js/touch.js). It switches on by itself when the
   // screen is taller than it is wide and no wider than `maxWidth`; a computer never sees any of it.
   phone: {
-    across: 13,               // HOW MANY SQUARES ACROSS the phone's map shows. Change this one number after trying it on a phone.
+    across: 12,               // HOW MANY SQUARES ACROSS the phone's map shows. Change this one number after trying it on a phone.
     maxWidth: 700,            // the phone layout is used on a screen taller than it is wide and at most this wide (CSS pixels)
     sidewaysHeight: 500,      // a touch screen held sideways and at most this tall asks to be turned upright
     fingertip: 44,            // the smallest any button or choice is drawn, in CSS pixels (a fingertip)
+    smallTextPx: 2,           // the small lettering on a phone is drawn this many pixels larger (never past 16)
     // speed
     holdDelayMs: 350,         // hold a finger down this long and you keep walking that way...
     holdRepeatMs: 150,        // ...one step every this many milliseconds, until you lift it (or a horror comes into view)
