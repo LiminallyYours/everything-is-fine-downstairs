@@ -653,6 +653,16 @@ with its git history, and is where all new work happens.
       5. **JW's note: a mobile version.** JW: "Also note in the plan that we need a mobile
          version". Noted: the game needs a version that works on a phone (today it needs a desktop
          browser and a keyboard). Not yet discussed how; to be taken up as its own item.
+    - **How it looks, 1: bringing the eerie look forward** (11 November). Asked: today the page
+      only goes wobbly, leaning and ink-soaked as your fear rises, so a careful player stays calm
+      and sees a cute storybook the whole way down. Options offered: (1) a little wrong from the
+      start: slight wobble, lean and ink at the edges even when calm, so the jump from calm to
+      terrified looks smaller; (2) eerier the deeper you go: floor 1 as now, each floor down
+      starting a step further along, so the bottom floor looks "afraid" even when calm, and
+      everyone sees the full eerie look by the end; (3) eerie moments: the page lurches to the
+      full terrified look for a few seconds when you meet a horror for the first time, step into a
+      dark room, or a floor surprise starts, then settles (could feel like a gimmick); (4) leave
+      it. Claude suggested 2. JW: "2 and 3?"
 
 Everything below this line is **proposed by Claude and not yet agreed**. Treat the lists as
 possibly incomplete.
