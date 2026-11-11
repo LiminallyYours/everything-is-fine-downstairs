@@ -785,6 +785,11 @@ with its git history, and is where all new work happens.
         at a time, so the recording groups their words differently; the toy block's letter shows up
         as drawn text; and one measurement now counts the made-up things in the dark instead of
         made-up eyes (same count, 182). Nothing that happens in play changed in any scenario.
+    - **What JW thinks of the new look** (11 November). Asked, after the made-up horrors and
+      treasures were built and the six changes listed again: "What do you think of the new look?
+      Is there anything you'd like changed?" JW: "assume look is good." Settled: no changes to the
+      look. JW then asked what, if anything, must be done before handing a mobile version to
+      Claude Code, and for the earlier mobile design to be checked against everything built since.
 
 Everything below this line is **proposed by Claude and not yet agreed**. Treat the lists as
 possibly incomplete.
