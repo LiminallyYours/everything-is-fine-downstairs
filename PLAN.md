@@ -673,6 +673,15 @@ with its git history, and is where all new work happens.
       look-only parts as proposed; eerie moments come at random times, not tied to events, and
       seldom (Claude's numbers: about once a floor on average, never two within 50 turns), gentler
       with calmer effects.
+    - **How it looks, 2: calm horrors drawn slightly wrong** (11 November). Asked: today the calm
+      drawings are simply cute (the Second Opinion is a round teal creature with a toothy grin, eyes
+      on stalks and a notebook), and the theme asks for happy things that are plainly wrong.
+      Options offered: (1) one wrong detail each, always, cute at a glance and wrong on a second
+      look (the Second Opinion's smile has a second row of teeth behind the first and one eye-stalk
+      looks the other way; the Mold-Mite has one too many little arms), 13 drawings to adjust;
+      (2) wronger as the page gets eerier (depth, fear, eerie moments), so floor 1 stays cute for a
+      calm player; (3) both: one wrong detail always, more creeping in as the page gets eerier.
+      Claude suggested 3. JW: "3." Settled: both.
 
 Everything below this line is **proposed by Claude and not yet agreed**. Treat the lists as
 possibly incomplete.
