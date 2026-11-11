@@ -421,7 +421,7 @@ with its git history, and is where all new work happens.
          (1) keep it for both; (2) leave both out, so only ordinary horrors get bolder; (3) leave
          out the Tuck-You-In only. Claude suggested 2: bedtime is already the timer, and a change
          to the boss should be its own decision. JW: "2". Settled: the Tuck-You-In and the boss
-         never get bolder. Not yet built.
+         never get bolder. **Built** (11 November): `RULES.bold.exempt` lists them.
       2. **When nap time ends quietly.** Asked: if you stay quiet and the 30 turns of nap time
          run out, every napper gets up awake and hunts you, including horrors that were fast
          asleep before nap time began, so a quiet nap leaves the floor more dangerous than before.
@@ -429,7 +429,7 @@ with its git history, and is where all new work happens.
          back to how they were: horrors asleep before nap time stay asleep, ones awake get up
          awake. Claude suggested 2: it matches "left alone, they get up calmly" and rewards
          tiptoeing. JW: "2". Settled: a quiet end to nap time puts each horror back as it was.
-         Being woken by a noise is unchanged (all at once, frantic). Not yet built.
+         Being woken by a noise is unchanged (all at once, frantic). **Built** (11 November).
       3. **How low trembling can push your odds of getting away.** Asked: trembling takes 15
          points off your chance of breaking away, after the usual lowest limit of 20%. In practice
          the lowest odds are 15% against the Tick-Tock Tot (normally 30%) and 20% against the
@@ -437,6 +437,12 @@ with its git history, and is where all new work happens.
          it as it is; (2) never below 20%; (3) leave the Tuck-You-In's 35% alone. Claude suggested
          1: trembling is about your own hands, so it fairly applies to every horror. JW: "1".
          Settled: no change.
+      **The comparison** (`tests/measure.js`, before and after the first two changes): the same
+      numbers almost everywhere. Deaths by floor stayed 9, 18 and 12 on floors 1 to 3, and every
+      floor crossing came out exactly the same. Only the health lost per 100 steps changed: in the
+      dark, 16.7 to 15.3; at the highest fear, 43.5 to 38.6. The bots seldom meet the Tuck-You-In
+      and never reach the boss, and they are rarely quiet through a whole nap, so these changes
+      barely show in bot games; they matter in a long, careful run.
 
 Everything below this line is **proposed by Claude and not yet agreed**. Treat the lists as
 possibly incomplete.

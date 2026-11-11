@@ -48,6 +48,13 @@ const pace = bold => H.run(`(() => { __clear(); const p = G.player, L = G.level;
   const x0 = m.x; for (let k = 0; k < 12; k++) monstersAct(L); return m.x - x0; })()`);
 const slow = pace(false), quick = pace(true);
 check('bold horrors move faster (12 turns of Better-Late-Than-Never)', quick > slow, { calm: slow, bold: quick });
+const paceOf = (type, bold) => H.run(`(() => { __clear(); const p = G.player, L = G.level; ${bold ? 'p.wick = 0; p.dread = 90;' : ''}
+  const m = spawnMonster(L, '${type}', p.x - 10, p.y); m.awake = true; m.energy = -100;
+  monstersAct(L); return +(m.energy + 100).toFixed(3); })()`); // how much it gets to move in a turn
+for (const [type, name] of [['tuck', 'the Tuck-You-In'], ['nibbler', 'the Nameless Nibbler']]) {
+  const calm = paceOf(type, false), dark = paceOf(type, true);
+  check(`${name} never gets bolder: no faster in the dark at the highest fear`, calm === dark, { calm, dark });
+}
 
 // --- 2. Clumsy at the highest fear --------------------------------------------------------
 const hitRate = dread => H.run(`(() => { __clear(); const p = G.player, L = G.level; p.dread = ${dread};
@@ -163,6 +170,12 @@ check('the margin says "trembling" at the highest fear, and not before', tags(90
     for (let k = 0; k < RULES.surprises.nap.turns + 2; k++) { G.turn++; surpriseTurn(L); }
     return { up: L.monsters.slice(0, 3).every(m => m.awake && !m.napping && !m.frenzy), log: G.log.slice(-1)[0].text }; })()`);
   check('left alone, the nap ends and they get up, refreshed (not frantic)', ends.up && /Nap time is over/.test(ends.log), ends);
+  const asWas = H.run(`(() => { __clear(5); const L = G.level, p = G.player;
+    const ms = [['tot', 3, 0, true], ['opinion', -3, 0, false], ['mite', 0, 3, false]].map(([t, dx, dy, up]) => { const m = spawnMonster(L, t, p.x + dx, p.y + dy); m.awake = up; return m; });
+    L.surprise = { kind: 'nap', stage: 'waiting', at: G.turn, tries: 0 }; surpriseTurn(L);
+    for (let k = 0; k < RULES.surprises.nap.turns + 2; k++) { G.turn++; surpriseTurn(L); }
+    return L.monsters.map(m => m.awake && !m.napping); })()`);
+  check('a quiet end puts each back as it was: the awake one gets up, the two that were asleep sleep on', JSON.stringify(asWas) === '[true,false,false]', asWas);
 }
 
 // --- 5. Pockets, grouped and counted -------------------------------------------------------

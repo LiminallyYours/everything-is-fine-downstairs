@@ -9,7 +9,12 @@ candle goes out and before bedtime comes for you.
 
 ## Running it
 
-There's nothing to install. Double-click **`index.html`** (or drag it onto Safari or Chrome),
+**On the web:** https://liminallyyours.com/everything-is-fine-downstairs/ (GitHub Pages, served
+straight from this repository, LiminallyYours/everything-is-fine-downstairs). It needs a desktop
+browser and a keyboard. Saves and the graveyard stay in each browser, so the web copy and a copy
+on your Mac keep separate ones.
+
+**On your Mac:** there's nothing to install. Double-click **`index.html`** (or drag it onto Safari or Chrome),
 keeping the `js/` folder next to it. From Terminal: `open index.html`.
 
 **One file to share:** `dist/everything-is-fine-downstairs.html` is the whole game in a single file,
@@ -129,7 +134,7 @@ wall and puddle is drawn live in shaky ink lines that are never quite straight o
     margin says so. Light, food, a good rhyme or hiding bring you back down.
 - **The horrors are bolder in the dark.** With your candle out, or at the last stage of Dread,
   sleeping horrors nearby may wake even though you can't see them, and the ones already awake
-  move faster.
+  move faster. Not the Tuck-You-In or the final boss: they stay as they are.
 - **Bedtime.** Stay too long on one floor and a music box starts playing somewhere upstairs.
   Soon after, the **Tuck-You-In** (`Ω`) comes down the stairs after you. It can't be hurt.
   A good rhyme will stun it for a few turns. The music box gets louder as it gets closer.
@@ -150,7 +155,8 @@ wall and puddle is drawn live in shaky ink lines that are never quite straight o
     drain keeps one of your things, and says thank you.
   - *Nap Time* (floor 5): every horror on the floor but the Tuck-You-In lies down and stops
     looking. Any noise (a blow, a rhyme, a scroll read aloud, a smashed potion, bumping into a
-    wall, the clock) wakes them all at once, frantic. Otherwise they get up in about 30 turns.
+    wall, the clock) wakes them all at once, frantic. Left alone, after about 30 turns each goes
+    back to how it was: the ones that were awake get up, the ones that were asleep sleep on.
 - **Odd rooms.** Every floor has one or two hand-built set-pieces. Each one stings when you
   first see it, then gives you a verse and three choices when you walk into its centrepiece:
   - *The Tea Party*, where the only guest is asleep (probably)
@@ -267,7 +273,7 @@ every number commented. Each monster's, item's and floor's own numbers stay with
 | Candle length, stub size, when it counts as dark | `RULES.candle` |
 | How long you get before bedtime, and the Tuck-You-In | `RULES.stalker` (`due` is turns per floor, by depth) |
 | How fast Dread rises and falls, and what each stage does | `RULES.dread` |
-| Bolder horrors in the dark (how near, how likely they wake, how much faster) | `RULES.bold` |
+| Bolder horrors in the dark (how near, how likely they wake, how much faster, who never does) | `RULES.bold` |
 | Trembling at the last stage of Dread (how much worse blows and getting away are) | `RULES.clumsy` |
 | When the floor surprises come, and how long each lasts | `RULES.surprises` (the words are in `TEXT.surprises`) |
 | How many horrors and items a floor starts with; what random loot is; which floors' guaranteed gear is always a weapon | `RULES.spawn`, `RULES.loot` (`weaponFloors`), `RULES.map` |

@@ -180,12 +180,13 @@ const SURPRISES = {
 
   // Floor 5. A bell, and "Nap time!" Every horror on the floor (but the Tuck-You-In) lies down
   // and shuts its eyes. They don't see you and don't move. Any noise wakes all of them at once,
-  // frantic; otherwise they get up, refreshed, when the nap is over.
+  // frantic; otherwise, when the nap is over, each goes back to how it was before (awake ones
+  // get up, refreshed; sleeping ones sleep on).
   nap: {
     start(L, s) {
       const sleepers = L.monsters.filter(m => m.type !== 'tuck' && !m.disguised);
       if (!sleepers.length) return false;
-      for (const m of sleepers) Object.assign(m, { napping: true, awake: false, frenzy: 0 });
+      for (const m of sleepers) Object.assign(m, { napping: true, wasAwake: m.awake, awake: false, frenzy: 0 });
       Object.assign(s, { stage: 'napping', until: G.turn + RULES.surprises.nap.turns });
       msg(TEXT.surprises.nap.start, C.purple);
       Sound.play('bell', 0.8);
@@ -194,7 +195,8 @@ const SURPRISES = {
     turn(L, s) {
       const nappers = L.monsters.filter(m => m.napping);
       if (G.turn >= s.until || !nappers.length) {
-        for (const m of nappers) Object.assign(m, { napping: false, awake: true });
+        // A quiet end: each one goes back to how it was. Those asleep before nap time stay asleep.
+        for (const m of nappers) { m.napping = false; m.awake = m.wasAwake !== false; delete m.wasAwake; }
         s.stage = 'over';
         if (nappers.length) msg(TEXT.surprises.nap.over, C.purple);
         return;
@@ -203,7 +205,7 @@ const SURPRISES = {
     },
     wake(L, s) {
       const nappers = L.monsters.filter(m => m.napping);
-      for (const m of nappers) Object.assign(m, { napping: false, awake: true, frenzy: RULES.surprises.nap.frenzy });
+      for (const m of nappers) { Object.assign(m, { napping: false, awake: true, frenzy: RULES.surprises.nap.frenzy }); delete m.wasAwake; }
       s.stage = 'over';
       msg(TEXT.surprises.nap.woken, C.red);
       Sound.play('sting', 0.8);

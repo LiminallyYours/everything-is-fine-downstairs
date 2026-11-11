@@ -35,8 +35,12 @@ re-recorded for that.
   `dist/everything-is-fine-downstairs.html`, which you rebuild with `python3 build.py` after any change.
 - **Size:** 29 JavaScript files in folders (`config/`, `content/`, `rules/`, `sound/`, `draw/`),
   about 7,700 lines. No libraries, no build step, nothing to install to play.
-- **Git:** everything is committed locally (14 commits on top of v1, nothing pushed). `dist/` is
-  not in git; `python3 build.py` rebuilds it.
+- **Git and the web:** the repository is public on GitHub as LiminallyYours/everything-is-fine-downstairs,
+  and GitHub Pages serves the game at https://liminallyyours.com/everything-is-fine-downstairs/.
+  GitHub's history starts fresh on 11 November 2026 (see section 12). The earlier history,
+  which includes the Dr. Seuss-based version and some personal details, is kept only on JW's Mac,
+  on the local branch `history-before-github`; never push that branch. `dist/` is not in git;
+  `python3 build.py` rebuilds it.
 - **Tests:** `tests/`, run with `npm test`. Screenshot baselines are kept locally in
   `tests/out/` (not in git), because fonts render slightly differently on each machine.
 - **Backups:** `backup-claudeignor/`, `backup2-claudeignore/` and `backup3-claudeignore/` are your
@@ -186,6 +190,22 @@ The second group from `PLAN.md`, each decided by JW there:
   The numbers are in `PLAN.md`, item 11.
 - New test suite `tests/suites/danger.js` (35 checks), and a golden scenario, `surprises`. The
   test bot now detours to odd rooms it has seen, so rooms come up in short runs and not by luck.
+
+### 12. A fresh check, GitHub, and two follow-ups (11 Nov)
+- **Checked with fresh eyes:** the rules-and-balance work above passed every test and looked
+  right in a real browser (folder and single file, console clean). No bugs. Three things the
+  last session had decided alone went back to JW (`PLAN.md`, item 11):
+  - The Tuck-You-In and the final boss never get bolder (`RULES.bold.exempt`). **Built.**
+  - When nap time ends quietly, each horror goes back to how it was before: sleeping ones
+    sleep on. Being woken by noise is unchanged. **Built.**
+  - Trembling's penalty to getting away stays as it is.
+- **Tests:** three new checks in `danger.js` (38 now), and one in `targeted.js` for sniffing a
+  lone sock, which had dropped out of the golden recording by chance. The golden transcript was
+  re-recorded for the first change: the only scenarios that changed involve the Tuck-You-In or
+  the boss with fear high or the candle out.
+- **Moved to GitHub,** public, with GitHub Pages. JW chose a fresh start: the game as it was on
+  11 November is the first commit there, because the old history held his Mac username, his
+  email address and the Seuss-era version.
 
 ## Decisions worth remembering
 

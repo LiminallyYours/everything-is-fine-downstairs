@@ -78,6 +78,7 @@ const RULES = (function freezeDeep(o) {
     wakeRange: 8,             // a sleeping horror this many steps away or nearer may wake...
     wake: 0.35,               // ...with this chance each turn, whether or not you can see it
     speed: 0.25,              // awake horrors move this much faster (1 is one step a turn)
+    exempt: ['tuck', 'nibbler'], // never bolder: bedtime is already the timer, and the boss is tuned on its own
   },
   clumsy: {
     fromTier: 3,              // the fear stage that makes you clumsy (the margin says "trembling")

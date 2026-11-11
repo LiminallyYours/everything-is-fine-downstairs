@@ -86,7 +86,9 @@ function monstersAct(L) {
   for (const m of L.monsters.slice()) {
     if (m.hp <= 0) continue;
     // Bold: a sleeping horror nearby wakes, whether or not you can see it. They're delighted.
-    if (bold && !m.awake && !m.disguised && !m.napping && dist[idx(m.x, m.y)] <= B.wakeRange && RNG.chance(B.wake)) {
+    // (Not the Tuck-You-In or the boss: RULES.bold.exempt.)
+    const boldHere = bold && !B.exempt.includes(m.type);
+    if (boldHere && !m.awake && !m.disguised && !m.napping && dist[idx(m.x, m.y)] <= B.wakeRange && RNG.chance(B.wake)) {
       m.awake = true;
       if (L.visible[idx(m.x, m.y)]) speak(m, 'spot', 0.6);
     }
@@ -101,7 +103,7 @@ function monstersAct(L) {
         continue;
       }
     }
-    m.energy += speedOf(m) + (m.frenzy > 0 ? RULES.monsters.frenzySpeed : 0) + (bold && m.awake && !m.napping ? B.speed : 0);
+    m.energy += speedOf(m) + (m.frenzy > 0 ? RULES.monsters.frenzySpeed : 0) + (boldHere && m.awake && !m.napping ? B.speed : 0);
     if (m.frenzy > 0) m.frenzy--;
     while (m.energy >= 1 && m.hp > 0) {
       m.energy -= 1;

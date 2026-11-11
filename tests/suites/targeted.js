@@ -111,6 +111,10 @@ H.run(`for (const s of __socks['${pairId}']) { G.player.x = s.x; G.player.y = s.
 const risen = G.level.monsters.filter(m => m.type === 'sockling').length;
 check('picking up socks makes the socklings rise (from the tombstones nearby)', risen > 0, { propsNear, risen });
 check('two matching socks become a pair', G.player.inv.some(i => i.kind === 'pair'));
+const sniff = H.run(`(() => { const p = G.player, s = JSON.parse(JSON.stringify(Object.values(__socks).flat()[0].item)); p.inv.push(s);
+  const before = p.dread, took = useItem(p.inv.indexOf(s)), last = G.log[G.log.length - 1].text;
+  p.inv.splice(p.inv.indexOf(s), 1); return { took, last, rose: p.dread > before }; })()`);
+check('using a lone sock sniffs it: no turn taken, a line, and a little more Dread', !sniff.took && /sniff the lone sock/.test(sniff.last) && sniff.rose, sniff);
 const def0 = H.run('playerDef()');
 H.run(`useItem(G.player.inv.findIndex(i => i.kind === 'pair'))`);
 check('wearing the pair adds 1 defense', H.run('playerDef()') === def0 + 1, [def0, H.run('playerDef()')]);
