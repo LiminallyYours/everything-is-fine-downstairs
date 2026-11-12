@@ -83,6 +83,8 @@ It records behaviour, not structure, so moving files, adding fields or moving te
 must not change it. If a refactor renames something a scenario *calls* (say a table moves), update
 the scenario code; the baseline itself must stay the same. A scenario that forces a particular
 pick (`arm`) fails if that pick never comes up, so a scenario can't quietly stop reaching a text.
+The deaths scenario forces each tombstone verse from the list that suits that death
+(`TEXT.epitaphsFor`), taking each in turn, so every verse is still shown.
 
 The same scenario always gives the same transcript, whichever worker thread runs it (checked
 with `npm run golden:twice`, and by every fresh `npm test`). Nothing in it depends on fonts or

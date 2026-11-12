@@ -63,8 +63,6 @@ playthrough, so re-record it with `npm run golden:record` in the same commit and
   snack on two stumbly" loses "feet!". Shorten the taunts or allow a fourth line.
 - **The "burning low" candle warning can be skipped.** It fires only when the wick is exactly 40.
   Deep water and snuffing take several points at once, so the wick can jump past it.
-- **"That was a Elixir of Un-Deadening."** The line that names an item you've just identified
-  always says "a", even before a vowel.
 - **Edge cases that disagree by one:** the heartbeat starts at Dread above 55, but the
   "afraid" tier starts at 55 itself. Monster eyes in the dark are hidden at exactly 170 ms into a
   blink, while fake eyes and the title eyes are shown.

@@ -512,7 +512,8 @@ function die() {
   const killer = G.killer || phrase('killers.unknown');
   const who = phrase('somebody', { n: G.runNo });
   const vars = { who, killer, Killer: cap(killer), floor: G.level.floor.name.replace(/^The /, 'the ') };
-  G.epitaph = RNG.pick(TEXT.epitaphs).map(line => fill(line, vars));
+  const by = G.killerId === 'tuck' ? 'tuck' : MONSTERS[G.killerId] ? 'horror' : 'any';
+  G.epitaph = RNG.pick(TEXT.epitaphsFor[by]).map(line => fill(line, vars));
   G.fact = deathFact();
   Sound.setScene('dead');
   Sound.play('death');

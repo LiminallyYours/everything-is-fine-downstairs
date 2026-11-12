@@ -256,7 +256,7 @@ function checkSockPair() {
     if (socks.length < 2) continue;
     p.inv = p.inv.filter(i => i !== socks[0] && i !== socks[1]);
     p.inv.push({ kind: 'pair', id: pattern });
-    msg(`A MATCHING PAIR of ${pattern} socks! Against all odds! Put them on from your equipment (E).`, C.pink);
+    msg(phrase('items.sockPair', { pattern }), C.pink);
     Sound.play('levelup');
   }
 }

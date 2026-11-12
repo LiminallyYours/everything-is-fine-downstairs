@@ -67,7 +67,7 @@ const logHas = re => G.log.some(l => re.test(l.text));
   const woke = H.run(`(() => { ${crowd} __rhyme('lullaby'); G.log.length = 0;
     for (let k = 0; k < 14; k++) tryMove(0, -1);
     return { up: ms.slice(0, 3).every(m => m.awake && !m.lulled), log: G.log.map(l => l.text) }; })()`);
-  check('any noise (bumping a wall) wakes them all, and they are cross about it', woke.up && woke.log.some(t => /wakes up from their lullaby/.test(t)), woke);
+  check('any noise (bumping a wall) wakes them all, and they are cross about it', woke.up && woke.log.some(t => /you sang to sleep wakes up/.test(t)), woke);
   const wearsOff = H.run(`(() => { ${crowd} __rhyme('lullaby'); for (let k = 0; k < RULES.rhyme.lullaby.turns + 2; k++) { G.turn++; monstersAct(G.level); }
     return ms.slice(0, 3).every(m => !m.lulled); })()`);
   check(`left alone, the lullaby wears off after about ${H.run('RULES.rhyme.lullaby.turns')} turns`, wearsOff);

@@ -1040,6 +1040,71 @@ with its git history, and is where all new work happens.
       should at least look the same. what is being worn should be an option from within the
       pocket - not just the main menu." The list, with these priorities, is in `TODO.md`. Nothing
       built yet.
+    - **Content fixes (12 November).** A review of the game's words (not its code), settled with
+      JW in conversation and handed over as a work order (`CONTENT-FIXES.md`, deleted once built).
+      **Built**, words only, except item 3, which changes only which tombstone verse is picked:
+      1. *The Nibbler is round, but the opening story called it long.* The story's lines are now
+         "Down under the town, where the stairs go around, / lives the Nameless Nibbler, all
+         hungry and round." JW: "Nibbler: 1, round".
+      2. *The story promised a spork you never get.* "Take a spork and a snack" became "Take a
+         light and a snack". JW: "#1".
+      3. *Some tombstone verses only work for creatures.* "{Killer} came calling…" and "Roses are
+         gray…" are used only when a horror killed you; "Hush now, {who}…" only when the
+         Tuck-You-In did. Deaths by a hungry wall, tea, birthday wax or spoiled food get the other
+         verses. JW: "1".
+      4. *The lullaby line sounded as if you woke up.* It is now "Everything you sang to sleep
+         wakes up at once. It is all very cross about it." JW: "1".
+      5. *"a Elixir".* The identified-item line now says "an" before a vowel. No decision needed.
+      6. *The shears are plural.* Wielding them says "They feel ominously appropriate." No
+         decision needed.
+      7. *One face was "they" at the Wishing Well.* The one-face outcome says "It teaches you a
+         rhyme. You wish it hadn't. (+1 rhyme)"; the many-faces outcome keeps "They". No decision
+         needed.
+      8. *Two lines for the same thing.* Both of the Nibbler's rhyme-eating lines end "(-1
+         rhyme)". No decision needed.
+      9. *The help page was out of date (computer).* A new R line (see below), and the water entry
+         is "water (deep water is slow)". No decision needed.
+      10. *A keyboard hint on phones.* Finding matching socks says "Put them on from your Pockets."
+          on a phone. No decision needed.
+      11. *The Mirror rhymed a word with itself.* Its last line is "a moment too late. Then it
+          waves, all alone." JW: "1".
+      12. *The Wishing Well said "see" for "show".* Its last line is '"or lean in real close, and
+          I'll show you. You'll see."' JW: "1".
+      13. *The sock floor's long line.* "to be buried in rows, one by one, every year." JW: "1".
+      14. *The Clockwork Nursery's filler line.* "The Tots are wound tight, and they're wearing a
+          bib." JW: "1".
+      15. *A rhyme duel that didn't make sense.* "A-tisket, a-tasket, a coffin, a casket, / I'll
+          pack up your bones in a little green ___!" Answer basket; wrong answers box, sack, bag.
+          JW: "1".
+      16. *A boast that took itself back.* "my rhymes are sharp, and they don't come ___!" (still
+          cheap; still wet, loud, borrowed). JW: "1".
+      17. *Two whispers said the same thing.* "we saved you a seat" became "your name is on the tip
+          of our tongue". JW: "1".
+      Left as they are, as JW decided: the Ahem's bestiary verse ("2"), the "Twinkle, twinkle,
+      little fright" duel ("1"), the Colander of Courage worn on the head ("1"), and the Tick-Tock
+      Tot's "Are you my mummy?" ("1").
+      Claude decided, not yet seen by JW:
+      - **The help page's R line is shorter than written.** The work order's line ("Recite a
+        Rhyme: pick a Shove, a Lullaby or a Tongue-Twister, then the word that rhymes. Costs 1 ♪.")
+        runs past the help box's edge at every window size measured (640 to 2560 wide). It now
+        reads "pick a Shove, a Lullaby or a Tongue-Twister, then the word that rhymes. Costs 1 ♪."
+        (the R beside it already says what the key is), which fits everywhere.
+      - **Which deaths count as a horror's (item 3):** any killer that is one of the horrors,
+        including the Nibbler and the Put-Away. The Tuck-You-In is a horror too, so its death
+        can also get the horror verses and the general ones, as well as "Hush now". Deaths by a
+        poisonous potion, and by "something unspeakable", get the general verses, like the wall,
+        tea, wax and spoiled food.
+      - **"an" follows the game's usual rule** (`aName`): "an" before any name starting with a
+        vowel. It applies to potions and scrolls alike.
+      - **The socks line moved into the words file** (`TEXT.items.sockPair`), so the phone can swap
+        it; before, it was written into the rules code.
+      - **Tests:** the recorded deaths now pick their verse from the ones that suit each death,
+        taking each in turn, so every verse is still shown once or more; one check of the
+        lullaby line was reworded. The golden transcript changed only where these words appear
+        (16 of 20 recordings play out the same apart from the words). Four play differently
+        after a fixed line: three after the new "A-tisket" couplet (a hoarse voice smudges its
+        letters with random numbers, so what follows shifts), and the deaths, where a different
+        verse takes one fewer Enter to read.
 
 12. **The mobile version: the design to build** (agreed with JW, 11 November 2026; the questions
     and his answers are in item 11, under "A mobile version"). **Built** 11 November 2026: what

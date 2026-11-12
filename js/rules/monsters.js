@@ -264,7 +264,7 @@ function monsterAttack(m) {
   }
   if (m.d.ai === 'boss' && p.verve > 0 && RNG.chance(m.d.boss.biteRhyme)) {
     p.verve--;
-    msg('It nibbles a rhyme right out of your head! (-1 ♪)', C.pink);
+    msg('It nibbles a rhyme right out of your head! (-1 rhyme)', C.pink);
   }
 }
 

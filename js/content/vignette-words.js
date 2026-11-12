@@ -78,7 +78,7 @@ const VIGNETTE_WORDS = {
       'The mirror is tall and the mirror is old.',
       'Your reflection is there, as you hoped. As you\'re told.',
       'You lift up your hand, and it lifts up its own,',
-      'a moment too late. Then it waves on its own.',
+      'a moment too late. Then it waves, all alone.',
     ],
     choices: {
       shake: {
@@ -141,7 +141,7 @@ const VIGNETTE_WORDS = {
       'A well in the dark, with a bucket and chain,',
       'and a voice at the bottom that sounds like the rain.',
       '"A coin for a wish," it says, sweet as can be,',
-      '"or lean in real close. I have something to see."',
+      '"or lean in real close, and I\'ll show you. You\'ll see."',
     ],
     choices: {
       coins: {
@@ -152,7 +152,7 @@ const VIGNETTE_WORDS = {
       lean: {
         label: 'Lean in close',
         faces: ['You lean in close.', 'At the bottom there are {dead} faces. They all look like you. They all wave.', "They teach you a rhyme. You wish they hadn't. (+1 rhyme)"],
-        yours: ['You lean in close.', 'At the bottom there is one face. It is yours. It waves.', "They teach you a rhyme. You wish they hadn't. (+1 rhyme)"],
+        yours: ['You lean in close.', 'At the bottom there is one face. It is yours. It waves.', "It teaches you a rhyme. You wish it hadn't. (+1 rhyme)"],
       },
       walk: {
         label: 'Walk on',

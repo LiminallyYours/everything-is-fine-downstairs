@@ -654,14 +654,19 @@ module.exports = (add) => {
   add('deaths', 121, c => {
     const { G } = c;
     c.newGame();
-    const epitaphs = c.val('TEXT.epitaphs.length');
+    // Which tombstone verses suit each death (TEXT.epitaphsFor): a horror's, the Tuck-You-In's, or
+    // any. Each kind takes its verses in turn, so every verse is shown; the Tuck-You-In's death
+    // shows its own verse, the last in its list.
+    const verses = how => (how === 'monster:tuck' ? 'tuck' : /^(monster|putaway|nibbler)/.test(how) ? 'horror' : 'any');
+    const turn = { any: 0, horror: 0, tuck: 0 };
     DEATHS.forEach(([label, depth, code, how], n) => {
       if (n) { c.key('Enter', 300); c.skipPages(); }          // born again (worse)
       if (depth > 1) c.floor(depth);
       c.quiet();
       c.roomy();
       c.setup(`dying ${label}`, `(() => { const p = G.player; p.inv = []; ${code} })()`);
-      c.arm('TEXT.epitaphs', n % epitaphs);
+      const pool = verses(how), size = c.val(`TEXT.epitaphsFor.${pool}.length`);
+      c.arm(`TEXT.epitaphsFor.${pool}`, pool === 'tuck' ? size - 1 : turn[pool]++ % size);
       const [kind, arg] = how.split(':');
       if (kind === 'monster' || kind === 'putaway') {
         // (a Mold-Mite is made frantic, or it would settle in your lap while you wait)

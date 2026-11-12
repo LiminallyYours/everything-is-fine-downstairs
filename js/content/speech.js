@@ -102,7 +102,7 @@ const WHISPERS = [
   'your name tasted like lemons',
   'down, down, further down',
   'is that your shadow? are you sure?',
-  'we saved you a seat',
+  'your name is on the tip of our tongue',
   'one of these walls is breathing',
   'somebody, somebody, nobody',
   'it is almost bedtime',

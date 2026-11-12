@@ -24,9 +24,9 @@ const TEXT = {
     'The townsfolk now call you "{who}",',
     'which is terribly sad, and does not rhyme with anything.',
     '',
-    'Down under the town, where the stair-steps go wrong,',
-    'lives the Nameless Nibbler, who\'s hungry and long.',
-    'Go down! Get it back! Take a spork and a snack.',
+    'Down under the town, where the stairs go around,',
+    'lives the Nameless Nibbler, all hungry and round.',
+    'Go down! Get it back! Take a light and a snack.',
     '(Most Somebodies don\'t. Most Somebodies don\'t come back.)',
   ],
 
@@ -106,8 +106,6 @@ const TEXT = {
       'The moral is simple, the moral is plain:', 'take the stairs up next time. Or at least take a cane.'],
     ['Beneath this small stone, in a very small hole,', 'lies {who}, a somewhat unfortunate soul.',
       'They met {killer}. It did not go well.', 'The rest of the story is too sad to tell.'],
-    ['{Killer} came calling, as horrors will do,', 'and it left the place humming. But where is {who}?',
-      'Ask the dirt. Ask the worms. Ask the moon, if you please.', 'They are down here. With the roots. And the damp. And the fleas.'],
     ['{who} was a Somebody. Now they are none,', 'undone by {killer}, who thought it was fun.',
       'The worms send their thanks and the worms send their love,', 'and a note to the Somebodies still up above.'],
     ['Here lies {who}, who went down the stair,', 'and met {killer}, who was not very fair.',
@@ -118,7 +116,15 @@ const TEXT = {
       'Then dirt. Then a tree.'],
     ['{who} took a step, then another, then three,', 'then {killer} came by, and it wanted some tea.',
       'Now {who} rests here, all tidy and flat.', 'They\'d have liked a nice send-off. They didn\'t get that.'],
+  ],
+  // Only when a horror killed you (they say "it" and call the killer a creature).
+  epitaphsHorror: [
+    ['{Killer} came calling, as horrors will do,', 'and it left the place humming. But where is {who}?',
+      'Ask the dirt. Ask the worms. Ask the moon, if you please.', 'They are down here. With the roots. And the damp. And the fleas.'],
     ['Roses are gray and the violets are dead,', 'and {killer} is sleeping in {who}\'s old bed.'],
+  ],
+  // Only when the Tuck-You-In killed you.
+  epitaphsTuck: [
     ['Hush now, {who}, and don\'t make a peep.', '{Killer} has tucked you in, terribly deep.',
       'Sleep tight. Don\'t let the bedbugs bite.', '(They already have. It is fine. Good night.)'],
   ],
@@ -208,6 +214,7 @@ const TEXT = {
     equip: {
       cannot: "You can't wear or wield {item}. (Try using it instead.)",
       hand: 'You wield the {item}. It feels ominously appropriate.{swap}',
+      handThey: 'You wield the {item}. They feel ominously appropriate.{swap}', // the shears (they're plural)
       head: 'You put the {item} on your head. You feel braver, and considerably taller.{swap}',
       body: 'You put on the {item}. Snug as a bug in a... bug.{swap}',
       feet: 'You put on the matching {pattern} socks. For the first time in ages, your feet are warm.{swap}',
@@ -221,10 +228,11 @@ const TEXT = {
     },
     emptyPocket: 'Pocket {key} is empty, like the name-shaped hole in your heart.',
     sniff: 'You sniff the lone sock. You regret it immediately.',
+    sockPair: 'A MATCHING PAIR of {pattern} socks! Against all odds! Put them on from your equipment (E).',
     drop: 'You drop {the}. It lands with a sad little flop.',
     drink: 'You drink the {item}.',
     read: 'You read the {item} aloud.',
-    identified: '(That was a {name}.)',
+    identified: '(That was {name}.)',
     eat: 'You eat {the}. Delicious! Probably. (+{n})',
     spoiled: '{bad} (+{n}, but poisoned)',
     throw: 'You throw the {item} at {them}. Smash!',
@@ -422,6 +430,7 @@ const TEXT = {
         ['(Enter to wield it, or see E.)', '(tap Wear to wield it.)'],
         ['(Enter to wear it, or see E.)', '(tap Wear to put it on.)'],
         ['(Enter to wear them.)', '(tap Wear to put them on.)'],
+        ['Put them on from your equipment (E).', 'Put them on from your Pockets.'],
         ['until you press G.', 'until you tap Pick up.'],
         ['Watch it burn down in the margin.', 'Watch it burn down at the top.'],
         ['the little notes in the margin are', 'the little notes at the top are'],
@@ -452,7 +461,7 @@ const TEXT = {
     one: 'It rhymes, softly. {The} lies down and closes its eyes. Shh.',
     nobody: 'It rhymes, softly. Nobody is here to be sung to. You feel a little sleepy yourself.',
     hums: '{The} hums along, and forgets what it was doing.',
-    woken: 'Somebody wakes up from their lullaby. They are cross about it.',
+    woken: 'Everything you sang to sleep wakes up at once. It is all very cross about it.',
   },
   twister: {
     hit: 'It rhymes, fast and twisty and twice as hard. {The} gets the worst of it.',
@@ -542,7 +551,7 @@ const TEXT = {
   help: [
     ['ARROW KEYS', 'walk. Into a horror: face it. Out of a fight: maybe.'],
     ['A', 'attack whatever is next to you (or whatever just bit you).'],
-    ['R', 'Recite a Rhyme: pick the word that rhymes. Costs 1 ♪.'],
+    ['R', 'pick a Shove, a Lullaby or a Tongue-Twister, then the word that rhymes. Costs 1 ♪.'],
     ['U', 'use something on the horror beside you (throw potions!).'],
     ['G', 'pick up what is here. Gold and stubs pick themselves up.'],
     ['I', 'your pockets. 1-9 and 0 use a pocket straight away.'],
@@ -557,7 +566,7 @@ const TEXT = {
     ['%', '#b8e07a', 'food (heals, calms you)'], [')', '#8fb8ff', 'weapon'],
     ['[', '#4fd6c8', 'armor... or is it?'], ['$', '#ffe066', 'Tootle-Coins (score)'],
     ['¡', '#ffb050', 'candle stub (more light)'], ['§', '#ff8fc8', 'a lone sock (careful)'],
-    ['†', '#d8d0c0', 'bones of a previous you'], ['~', '#3f7fcf', 'water (≈ is deep & slow)'],
+    ['†', '#d8d0c0', 'bones of a previous you'], ['~', '#3f7fcf', 'water (deep water is slow)'],
     ['"', '#5f9a4a', 'tall grass, or hair (hides things)'], [',', '#8a7a62', 'crumbs, bones, junk (harmless)'], ['o', '#b08a5a', 'barrel (walk in to hide)'],
   ],
   tips: [
@@ -573,4 +582,12 @@ const TEXT = {
     "Tip: if the narrator says it's nothing to worry about, worry.",
     'Tip: the Ahem comes through walls. Walls are no comfort.',
   ],
+};
+
+// The tombstone verses that suit each kind of death (die() in js/rules/game.js picks from one):
+// some only work when a horror killed you, one only for the Tuck-You-In.
+TEXT.epitaphsFor = {
+  any: TEXT.epitaphs,
+  horror: TEXT.epitaphs.concat(TEXT.epitaphsHorror),
+  tuck: TEXT.epitaphs.concat(TEXT.epitaphsHorror, TEXT.epitaphsTuck),
 };

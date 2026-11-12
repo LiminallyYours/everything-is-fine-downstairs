@@ -56,7 +56,8 @@ function equip(i) {
   p.gear[slot] = it;
   if (old) p.inv.push(old);
   const swap = old ? phrase('items.equip.swap', { old: itemName(old) }) : '';
-  if (slot === 'hand') msg(phrase('items.equip.hand', { item: itemName(it), swap }), C.blue);
+  if (slot === 'hand') msg(gearId(it) === 'shears' ? phrase('items.equip.handThey', { item: itemName(it), swap }) // they're plural
+    : phrase('items.equip.hand', { item: itemName(it), swap }), C.blue);
   else if (slot === 'head') msg(phrase('items.equip.head', { item: itemName(it), swap }), C.teal);
   else if (slot === 'body') msg(phrase('items.equip.body', { item: itemName(it), swap }), C.teal);
   else {
@@ -268,7 +269,7 @@ function drink(it) {
       msg(POTION_BY.sight.drink, C.teal);
       break;
   }
-  if (!wasKnown) msg(phrase('items.identified', { name: POTION_BY[it.id].name }), C.gray);
+  if (!wasKnown) msg(phrase('items.identified', { name: aName(POTION_BY[it.id].name) }), C.gray);
 }
 
 function readScroll(it) {
@@ -337,7 +338,7 @@ function readScroll(it) {
       break;
     }
   }
-  if (!wasKnown) msg(phrase('items.identified', { name: SCROLL_BY[it.id].name }), C.gray);
+  if (!wasKnown) msg(phrase('items.identified', { name: aName(SCROLL_BY[it.id].name) }), C.gray);
 }
 
 function eat(it) {
@@ -399,7 +400,7 @@ function throwPotion(i, m) {
         break;
     }
   }
-  if (!wasKnown) msg(phrase('items.identified', { name: POTION_BY[it.id].name }), C.gray);
+  if (!wasKnown) msg(phrase('items.identified', { name: aName(POTION_BY[it.id].name) }), C.gray);
   G.invSel = clamp(G.invSel, 0, Math.max(0, pocketRows(p).length - 1));
   return true;
 }

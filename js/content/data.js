@@ -49,7 +49,7 @@ const FLOORS = [
     monsters: [['opinion', 3], ['zombie', 3], ['mimic', 2], ['wraith', 2], ['bat', 1]],
     verse: [
       'Where do lost socks go? Why, they go down to here,',
-      'to be buried in rows, one sock at a time, every year.',
+      'to be buried in rows, one by one, every year.',
       'Some socks are just socks. Some socks have a twin.',
       "Some twins have a mouth. Don't put your foot in.",
     ],
@@ -75,7 +75,7 @@ const FLOORS = [
     monsters: [['tot', 3], ['thing', 2], ['mimic', 2], ['wraith', 2], ['giraffe', 2]],
     verse: [
       'Tick-tock goes the nursery, tock-tick goes the crib.',
-      "The Tots are wound tight, and they don't wear a bib.",
+      "The Tots are wound tight, and they're wearing a bib.",
       "They'll count down your minutes, they'll count down your toes,",
       "and where Bottom Half's top half is, nobody knows.",
     ],

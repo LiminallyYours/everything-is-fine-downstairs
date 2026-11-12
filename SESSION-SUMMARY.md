@@ -321,6 +321,17 @@ the same web address, switching to the phone layout by itself on an upright phon
 - **Then:** on a phone the music box and the floors' hum play at half their loudness, so the
   narrator comes through (JW chose half; `RULES.phone.musicVolume`). 55 checks in `phone.js`.
 
+### 17. A bug review and the content fixes (12 Nov)
+- **Bug review.** Three read-throughs (rules, phone, computer) plus random play on both layouts
+  found about 28 problems; none crash ordinary play. They are listed in `TODO.md` with JW's first
+  priorities. Nothing on that list is built: JW said "don't execute yet".
+- **Content fixes.** 17 word fixes JW settled in conversation (the story's Nibbler is round, no
+  spork, tombstone verses that suit the killer, "an Elixir", the shears are "they", the Mirror and
+  Well lines, two duels, a whisper, the help page and more), built from the work order
+  `CONTENT-FIXES.md`, which is now deleted. The full list, and the details Claude decided (a
+  shorter help line for R than written, because the written one doesn't fit), are in `PLAN.md`,
+  item 11.
+
 ## Decisions worth remembering
 
 | Decision | Why |
@@ -371,5 +382,5 @@ Before the restructure, it was checked like this:
 - A settings page, seeded runs, and unlocks between runs: see
   `SUGGESTED-EDITIONS.md`.
 - Small inconsistencies the restructure found and deliberately left alone (two cut-off Nibbler
-  taunts, a candle warning that can be skipped, "a Elixir", two off-by-one edge cases): see
-  "Small fixes" in `SUGGESTED-EDITIONS.md`.
+  taunts, a candle warning that can be skipped, two off-by-one edge cases): see
+  "Small fixes" in `SUGGESTED-EDITIONS.md`. ("a Elixir" was fixed on 12 November.)

@@ -241,7 +241,8 @@ wall and puddle is drawn live in shaky ink lines that are never quite straight o
   bestiary (B on the title screen).
 - **Monsters talk.** Speech bubbles appear when they spot you, hit you or die. You can hear
   a Tick-Tock Tot ticking before you can see it, until it goes quiet, close by.
-- **Death is personal.** Your tombstone gets a rhyming epitaph plus one line about how the
+- **Death is personal.** Your tombstone gets a rhyming epitaph (one that suits what killed you:
+  some only fit a horror, and the Tuck-You-In has its own) plus one line about how the
   run actually went (*"They died with 2 snacks uneaten. Such waste. Such taste."*). Then a
   sad trombone plays, and on a Mac the *Cellos* voice sings it to you if it's installed.
 

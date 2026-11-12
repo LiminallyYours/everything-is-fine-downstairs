@@ -70,6 +70,10 @@ the page; JW's own phone is probably fine.
   - The coin count runs under the menu button once you have 5 or 6 rhymes.
   - The graveyard shows only 6 to 9 headstones, with no way to reach older ones.
   - At 320 wide, card titles lose their endings, sometimes the damage number ("−12").
+- [ ] **P6. A sound warning in the console on the first tap.** On a phone the first tap starts
+  the sound as the finger touches down, which Chrome doesn't allow yet ("The AudioContext was
+  not allowed to start"); it does start when the finger lifts, so sound works. It was already
+  there before 12 November. (`js/touch.js`: start the sound only when the finger lifts.)
 
 ### Computer
 - [ ] **C3. The graveyard keeps 40 graves but shows only 15.** Down past the 15th moves an
