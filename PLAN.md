@@ -1029,6 +1029,17 @@ with its git history, and is where all new work happens.
       with its wind, play at half their loudness (`RULES.phone.musicVolume`, 0.5). Claude decided,
       not yet heard by JW: sound effects and the heartbeat are as before; the computer is
       unchanged. Tests: 1 more check (55 now).
+    - **Bug review** (12 November). JW: "do a quick review of this project and find notable
+      bugs/problems and high impact quick wins/improvements and suggest them to me", then "i
+      suspect there are more bugs on the regular and mobile versions, both. please examine and
+      report back". Claude reported about 28 problems (phone, computer, game rules) and asked
+      which group to fix first: (1) the clear-cut bugs as one batch; (2) tablets first; (3) small
+      phones first; (4) something else. Claude recommended 1 (no design choices, small, low
+      risk). JW: "keep this list somewhere as a to-do list.  initial priorities: capture, will be
+      amended, don't execute yet: Phone - 2, 3, 5. Computer: 1, 2, 4, 5, 7. Also tap and skip
+      should at least look the same. what is being worn should be an option from within the
+      pocket - not just the main menu." The list, with these priorities, is in `TODO.md`. Nothing
+      built yet.
 
 12. **The mobile version: the design to build** (agreed with JW, 11 November 2026; the questions
     and his answers are in item 11, under "A mobile version"). **Built** 11 November 2026: what

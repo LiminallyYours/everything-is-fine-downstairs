@@ -34,6 +34,8 @@ The first version of the game is kept, untouched, in `../sillygame/` on the Mac 
   each settled item recorded there with JW's answer word for word; a group is built once all of it
   has been discussed, then tests, `python3 build.py`, README, this file and `PLAN.md`, commit
   (author `LiminallyYours <64442823+LiminallyYours@users.noreply.github.com>`) and push.
+- **To do:** `TODO.md` lists the bugs found on 12 November, with JW's first priorities at the
+  top. JW: "don't execute yet": wait for his go-ahead, and expect the priorities to change.
 - **Next:** JW tries the mobile version on his Android phone (section 16). The details Claude
   decided while building it are listed in `PLAN.md`, item 11, under "Mobile version: built", for
   JW to look over. The likeliest things to tune after that are all in `RULES.phone`: how many squares

@@ -317,6 +317,7 @@ js/touch.js              touch on a phone: each tap becomes the key press the ke
 build.py                 bundles everything into dist/everything-is-fine-downstairs.html
 tests/                   headless tests, the golden transcript and screenshots (cd tests && npm ci && npm test; see tests/README.md)
 SUGGESTED-EDITIONS.md    ideas for future versions that haven't been built yet
+TODO.md                  known bugs still to fix, with JW's priorities
 ```
 
 Any monster or item without a drawing falls back to its old letter, so a missing drawing never
